@@ -225,7 +225,7 @@ class couponMarkBJ(couponGeneric):
         sketchPlane = self.part.faces.findAt(((self.len1/2, self.partitionRadius, 0),))
         sketchUpEdge = self.part.edges.findAt(((self.len2/2, self.partitionRadius, 0),))
         transform = self.part.MakeSketchTransform(sketchPlane=sketchPlane[0], sketchUpEdge=sketchUpEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
-        self.partitionSketch = self.model.ConstrainedSketch(name='sketch2', sheetSize=50.0, gridSpacing=1.0, transform=transform)
+        self.partitionSketch = self.model.ConstrainedSketch(name=self.partitionSketchName+'_1', sheetSize=50.0, gridSpacing=1.0, transform=transform)
         g, v = self.partitionSketch.geometry, self.partitionSketch.vertices
         self.partitionSketch.setPrimaryObject(option=SUPERIMPOSE)
         self.part.projectReferencesOntoSketch(sketch=self.partitionSketch, filter=COPLANAR_EDGES)
@@ -290,62 +290,6 @@ class couponMarkBJ(couponGeneric):
         ## partition ==>> at section E
         self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xE).id
         self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)
-    def __createMesh(self):
-        ## seed ==>> global
-        self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
-        ## seed ==>> outer arc edge AA'
-        self.edgesOuterCyl = self.getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
-        self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
-        self.part.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FIXED)
-        ## seed ==>> outer radial edges
-        self.edgesOuterRadial = self.getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
-        self.__seedOuterRadial((0.0, self.partitionRadius+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
-        self.__seedOuterRadial((0.0, 0.0, -(self.partitionRadius+self.lenTol)), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
-        ## seed ==>> edge Bb
-        self.edgesOuterCylAtB = self.getByCylinderDifference(self.part.edges, (self.xB-self.lenTol, 0, 0), (self.xB+self.lenTol, 0, 0), (self.yB+self.lenTol), (self.partitionRadius+self.lenTol))
-        self.edgesOuterArcAtB = self.getArcEdge(self.edgesOuterCylAtB)
-        self.edgesOuterRadialAtB = self.getByDifference(self.edgesOuterCylAtB, self.edgesOuterArcAtB)
-        ratioBias = self.part.getEdgeSeeds(self.edgesOuterRadial[0], attribute=BIAS_RATIO)
-        elemNum = self.part.getEdgeSeeds(self.edgesOuterRadial[0], attribute=NUMBER)
-        self.__seedOuterRadial((self.xB, self.partitionRadius+self.lenTol, 0.0), ratio=ratioBias, number=elemNum)
-        self.__seedOuterRadial((self.xB, 0.0, -(self.partitionRadius+self.lenTol)), ratio=ratioBias, number=elemNum)
-        ## sweep path ==>> outer frustum (solid at angle)
-        self.cellsOuterInclined = self.getByCylinderDifference(self.part.cells, (self.xB-self.lenTol, 0, 0), (self.xCDash+self.lenTol, 0, 0), (self.yC+self.lenTol), (self.partitionRadius+self.lenTol))
-        self.part.setMeshControls(regions=self.cellsOuterInclined, technique=SWEEP, algorithm=ADVANCING_FRONT)
-        self.edgesArcRadial = self.part.edges.getByBoundingCylinder((self.xB-self.lenTol, 0, 0), (self.xB+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
-        self.edgesArc = self.getArcEdge(self.edgesArcRadial)
-        self.part.setSweepPath(region=self.cellsOuterInclined[0], edge=self.edgesArc[0], sense=FORWARD)
-        ## seed ==>> longitudinal edge along ab
-        self.__seedLongEdges(self.xA, self.xB, self.seedSizeLong1)
-        #self.__seedLongEdges(self.xB, self.xCDash, self.seedSizeLong1)
-        self.__seedLongEdges(self.xCDash, self.xD, self.seedSizeLong2)
-        self.__seedLongEdges(self.xD, self.xE, self.seedSizeLong2)
-        self.__seedLongEdges(self.xE, self.xF, self.seedSizeLong3)
-        ## seed ==>> inner radial edges
-        self.edgesInnerCyl = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
-        self.edgesInnerArc = self.getArcEdge(self.edgesInnerCyl)
-        self.edgesInnerRadial = self.getByDifference(self.edgesInnerCyl, self.edgesInnerArc)
-        self.part.seedEdgeBySize(edges=self.edgesInnerRadial, size=self.seedSizeInnerRadial, deviationFactor=0.1, constraint=FINER)
-        ## sweep path ==>> inner cylinder
-        self.__setInnerCylSweepPath(self.xA, self.xB)
-        self.__setInnerCylSweepPath(self.xB, self.xCDash)
-        self.__setInnerCylSweepPath(self.xCDash, self.xD)
-        self.__setInnerCylSweepPath(self.xD, self.xE)
-        self.__setInnerCylSweepPath(self.xE, self.xF)
-        ## mesh ==>> outer cylinder
-        self.cellsOuterCyl = self.getByCylinderDifference(self.part.cells, (self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yF+self.lenTol), (self.partitionRadius+self.lenTol))
-        self.part.generateMesh(regions=self.cellsOuterCyl)
-        ## mesh ==>> inner cylinder
-        self.cellsInnerCyl = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
-        self.part.generateMesh(regions=self.cellsInnerCyl)
-        ## set element types
-        if self.elemTypeHex == 'C3D8HS':
-            elemType1 = mesh.ElemType(elemCode=C3D8HS, elemLibrary=STANDARD)
-        if self.elemTypePenta == 'C3D6':
-            elemType2 = mesh.ElemType(elemCode=C3D6, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
-        if self.elemTypeTetra == 'C3D4':
-            elemType3 = mesh.ElemType(elemCode=C3D4, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
-        self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
     def createMesh2(self):
         ## seed ==>> global
         self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
@@ -374,13 +318,8 @@ class couponMarkBJ(couponGeneric):
         self.__setInnerCylSweepPath(self.xC, self.xD)
         self.__setInnerCylSweepPath(self.xD, self.xE)
         self.__setInnerCylSweepPath(self.xE, self.xF)
-        self.part.generateMesh(regions=self.part.cells)
         ## mesh ==>> outer cylinder
-        #self.cellsOuterCyl = self.getByCylinderDifference(self.part.cells, (self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yF+self.lenTol), (self.partitionRadius+self.lenTol))
-        #self.part.generateMesh(regions=self.cellsOuterCyl)
-        ## mesh ==>> inner cylinder
-        #self.cellsInnerCyl = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
-        #self.part.generateMesh(regions=self.cellsInnerCyl)
+        self.part.generateMesh(regions=self.part.cells)
         ## set element types
         if self.elemTypeHex == 'C3D8HS':
             elemType1 = mesh.ElemType(elemCode=C3D8HS, elemLibrary=STANDARD)
@@ -454,12 +393,4 @@ couponMarkADatabaseUnicode = json.load(fileJson)
 fileJson.close
 couponMarkBJDatabase = ast.literal_eval(json.dumps(couponMarkADatabaseUnicode))
 
-self = couponMarkBJ(couponMarkBJDatabase['CouponMarkBJSpecimen2'])
-
-# p = mdb.models['Coupon_Mark_BJ_Specimen_1_Model'].parts['Coupon_Mark_BJ_Specimen_1_Part']
-# c = p.cells
-# pickedCells = c.getSequenceFromMask(mask=('[#80 ]', ), )
-# e1, d1 = p.edges, p.datums
-# pickedEdges =(e1[46], )
-# p.PartitionCellByExtrudeEdge(line=d1[1], cells=pickedCells, edges=pickedEdges, 
-#     sense=FORWARD)
+self = couponMarkBJ(couponMarkBJDatabase['CouponMarkBJSpecimen3'])
