@@ -1,6 +1,6 @@
 {
     "CouponMarkASpecimen1": {
-        "specimenName" : "Coupon_Mark_A_Specimen_1",
+        "specimenName" : "Specimen_66A",
         "phi1" : 2.82,
         "phi2" : 5.0,
         "phi3" : 8.0,
@@ -25,7 +25,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkASpecimen2": {
-        "specimenName" : "Coupon_Mark_A_Specimen_2",
+        "specimenName" : "Specimen_67A",
         "phi1" : 3.99,
         "phi2" : 7.0,
         "phi3" : 12.0,
@@ -50,7 +50,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkASpecimen3": {
-        "specimenName" : "Coupon_Mark_A_Specimen_3",
+        "specimenName" : "Specimen_68A",
         "phi1" : 5.64,
         "phi2" : 10.0,
         "phi3" : 16.0,
@@ -75,7 +75,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkASpecimen4": {
-        "specimenName" : "Coupon_Mark_A_Specimen_4",
+        "specimenName" : "Specimen_69A",
         "phi1" : 7.98,
         "phi2" : 14.0,
         "phi3" : 22.0,
