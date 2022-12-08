@@ -16,19 +16,21 @@ class createCouponMarkA():
         self.rad2 = float(couponData["rad2"])
         self.len1 = float(couponData["len1"])
         self.len2 = float(couponData["len2"])
-        self.partitionRadiusFraction = float(eval(couponData["partitionRadiusFraction"]))
-        self.partitionRadius = float(self.partitionRadiusFraction*self.phi1/2.0)
-        self.lenTol = float(couponData["lenTol"])
+        self.partitionRadialFraction = float(eval(couponData["partitionRadialFraction"]))
+        self.partitionRadius = float(self.partitionRadialFraction*self.phi1/2.0)
+        self.lenTol = abs(float(couponData["lenTol"]))
         self.seedSizeGlobal = float(couponData["seedSizeGlobal"])
-        self.seedSizeArc = float(couponData["seedSizeArc"])
-        self.seedSizeRadial = float(couponData["seedSizeRadial"])
-        self.seedSizeLong = float(couponData["seedSizeLong"])
+        self.seedSizeOuterArc = float(couponData["seedSizeOuterArc"])
+        self.seedSizeOuterRadial = float(couponData["seedSizeOuterRadial"])
+        self.seedSizeLong1 = float(couponData["seedSizeLong1"])
+        self.seedSizeLong2 = float(couponData["seedSizeLong2"])
+        self.seedSizeLong3 = float(couponData["seedSizeLong3"])
         # create coupon specimen
         self.__createModel()
         self.__createProfileSketch()
         self.__createSolid()
         self.__createPartition()
-        self.__createMesh()
+        self.__createMeshScheme2()
         self.__createAssembly()
     def __createModel(self):
         # define model
@@ -113,66 +115,103 @@ class createCouponMarkA():
         self.partitionSketch.CoincidentConstraint(entity1=self.vertexPoint2, entity2=self.projectionLine2, addUndoState=False)
         self.partitionSketch.unsetPrimaryObject()
         self.part.PartitionFaceBySketch(sketchUpEdge=self.sketchEdge[0], faces=self.sketchFace[0], sketch=self.partitionSketch)
-        self.partitionEdges = self.part.edges.getByBoundingCylinder((self.xO, 0, 0), (self.xB/2, 0, 0), (self.partitionRadius+self.yA)/2)
-        self.pickedEdgesPartition = []
-        for eachEdge in self.partitionEdges:
-            if abs(eachEdge.getSize(0)-self.partitionRadius) >= self.lenTol:
-                self.pickedEdgesPartition.append(eachEdge)
-        self.sweepEdges = self.part.edges.getByBoundingCylinder((self.xO, 0, 0), (self.xE, 0, 0), self.partitionRadius/2)
-        self.part.PartitionCellBySweepEdge(sweepPath=self.sweepEdges[0], cells=self.part.cells, edges=self.pickedEdgesPartition)
+        edgesTemp = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        self.edgesArcForPartition = self.__getArcEdge(edgesTemp)
+        self.sweepEdges = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), self.lenTol)
+        self.part.PartitionCellBySweepEdge(sweepPath=self.sweepEdges[0], cells=self.part.cells, edges=self.edgesArcForPartition)
         #p.PartitionCellByExtrudeEdge(line=p.datums[1], cells=p.cells, edges=pickedEdges, sense=FORWARD)
         # partition-2
-        self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=(self.xB+self.xC)/2).id
+        self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xB).id
         self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)
         # partition-3
-        self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=(self.xC+self.xD)/2).id
+        self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xC).id
         self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)
-    def __createMesh(self):
-        # global seed
+    def __createMeshScheme2(self):
+        ## mesh-1 ==>> outer cylinder
+        self.cellsOuterCyl = self.__getByCylinderDifference(self.part.cells, (self.xA-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol), (self.partitionRadius+self.lenTol))
+        self.edgesOuterCyl = self.__getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
+        ## global seed
         self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
-        # mesh-1 ==>> cylinder
-        self.seedEdges = self.part.edges.getByBoundingCylinder((self.xO, 0, 0), (self.xE, 0, 0), (self.partitionRadius+self.yA)/2)
-        self.pickedEdgesArc, self.pickedEdgesRadial, self.pickedEdgesLong = [], [], []
-        for eachEdge in self.seedEdges:
-            try:
-                eachEdge.getRadius()
-                self.pickedEdgesArc.append(eachEdge)
-            except:
-                if abs(eachEdge.getSize(0)-self.partitionRadius) <= self.lenTol:
-                    self.pickedEdgesRadial.append(eachEdge)
-                else:
-                    self.pickedEdgesLong.append(eachEdge)
-        self.part.seedEdgeBySize(edges=self.pickedEdgesArc, size=self.seedSizeArc, deviationFactor=0.1, constraint=FINER)
-        self.part.seedEdgeBySize(edges=self.pickedEdgesRadial, size=self.seedSizeRadial, deviationFactor=0.1, constraint=FINER)
-        self.part.seedEdgeBySize(edges=self.pickedEdgesLong, size=self.seedSizeLong, deviationFactor=0.1, constraint=FINER)
-        self.pickedCellsCyl = self.part.cells.getByBoundingCylinder((self.xO, 0, 0), (self.xE, 0, 0), (self.partitionRadius+self.yA)/2)
-        self.part.generateMesh(regions=self.pickedCellsCyl)
-        # mesh-2 ==>> sweep
-        self.pickedCellsSweep = self.__getByBoundingHollowCylinder(self.part.cells, (self.xO, 0, 0), (self.xE, 0, 0), (self.partitionRadius+self.yA)/2, (self.yD+self.lenTol))
-        self.part.setMeshControls(regions=self.pickedCellsSweep, elemShape=HEX_DOMINATED, technique=SWEEP, algorithm=ADVANCING_FRONT)
-        #p.setSweepPath(region=pickedCellsSweep, edge=pickedEdgesArc[0], sense=FORWARD)
-        self.part.generateMesh(regions=self.pickedCellsSweep)
+        ## seed outer arc
+        self.edgesOuterArc = self.__getArcEdge(self.edgesOuterCyl)
+        self.part.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FIXED)
+        ## seed outer radius
+        self.edgesOuterRadial = self.__getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
+        self.part.seedEdgeBySize(edges=self.edgesOuterRadial, size=self.seedSizeOuterRadial, deviationFactor=0.1, constraint=FIXED)
+        # for thisEdge in self.edgesOuterRadial:
+        #     edgesRadialVertexPair = self.edgesOuterRadial[thisEdge].getVertices()
+        #     for thisVertex in edgesRadialVertexPair:
+        #         vertexCoord = self.part.vertices[thisVertex].pointOn
+        #         if thisVertex == 0 and abs(vertexCoord[1]-self.partitionRadius) < self.lenTol:
+        #             self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=pickedEdges1, minSize=0.05, maxSize=self.seedSizeRadial)
+        #         elif eachVertex == 0 and abs(vertexCoord[1]-self.partitionRadius) <= self.lenTol:
+        #             self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=pickedEdges1, minSize=0.05, maxSize=self.seedSizeRadial)
+        ## seed longitudinal-1
+        self.edgesLongPart1 = self.__edgesForLongSeed(self.xA, self.xB)
+        self.part.seedEdgeBySize(edges=self.edgesLongPart1, size=self.seedSizeLong1, deviationFactor=0.1, constraint=FIXED)
+        self.edgesLongPart2 = self.__edgesForLongSeed(self.xB, self.xC)
+        self.part.seedEdgeBySize(edges=self.edgesLongPart2, size=self.seedSizeLong2, deviationFactor=0.1, constraint=FIXED)
+        self.edgesLongPart3 = self.__edgesForLongSeed(self.xC, self.xD)
+        self.part.seedEdgeBySize(edges=self.edgesLongPart3, size=self.seedSizeLong3, deviationFactor=0.1, constraint=FIXED)
+        self.part.generateMesh(regions=self.cellsOuterCyl)
+        # # mesh-2 ==>> inner cylinder
+        self.cellsInnerCyl = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        self.__setSweepMesh(self.xA, self.xB)
+        self.__setSweepMesh(self.xB, self.xC)
+        self.__setSweepMesh(self.xC, self.xD)
+        self.part.generateMesh(regions=self.cellsInnerCyl)
+        
     def __createAssembly(self):
-        # assembly
+        ## assembly
         self.assembly = self.model.rootAssembly
         self.assembly.DatumCsysByDefault(CARTESIAN)
         self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
-    def __getByBoundingHollowCylinder(self, feature, center1, center2, innerRadius, outerRadius):
-        pickedFeaturesInner = feature.getByBoundingCylinder(center1, center2, innerRadius)
-        pickedFeaturesOuter = feature.getByBoundingCylinder(center1, center2, outerRadius)
-        pickedFeatures = []
-        for eachFeature in pickedFeaturesOuter:
-            if eachFeature not in pickedFeaturesInner:
-                pickedFeatures.append(eachFeature)
+    def __getByCylinderDifference(self, feature, center1, center2, outerRadius, innerRadius):
+        featureOuter = feature.getByBoundingCylinder(center1, center2, outerRadius)
+        featureInner = feature.getByBoundingCylinder(center1, center2, innerRadius)
+        pickedFeatures = self.__getByDifference(featureOuter, featureInner)
         return pickedFeatures
+    def __getByDifference(self, listA, listB):
+        differenceList = []
+        for thisItem in listA:
+            if thisItem not in listB:
+                differenceList.append(thisItem)
+        return differenceList
+    def __getArcEdge(self, edgeList):
+        arcEdge = []
+        for thisEdge in edgeList:
+            try:
+                thisEdge.getRadius()
+                arcEdge.append(thisEdge)
+            except:
+                pass
+        return arcEdge
+    def __getEdgeByLength(self, edgeList, length):
+        pickedEdges = []
+        for thisEdge in edgeList:
+            if abs(thisEdge.getSize(0)-length) < self.lenTol:
+                pickedEdges.append(thisEdge)
+        return pickedEdges
+    def __edgesForLongSeed(self, xLeft, xRight):
+        edgesInnerArcLong = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        edgesInnerArc = self.__getArcEdge(edgesInnerArcLong)
+        edgesStraight = self.__getByDifference(edgesInnerArcLong, edgesInnerArc)
+        edgesInnerRadial = self.__getEdgeByLength(edgesStraight, self.partitionRadius)
+        edgesLong = self.__getByDifference(edgesStraight, edgesInnerRadial)
+        return edgesLong
+    def __setSweepMesh(self, xLeft, xRight):
+        cellsInnerCyl = self.part.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        edgesSweepPath = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
+        self.part.setMeshControls(regions=cellsInnerCyl, technique=SWEEP, algorithm=ADVANCING_FRONT)
+        self.part.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
 
-couponMarkA_Database = {
-    "couponMarkA_Specimen1": {
-        "modelName" : "couponMarkA_Specimen1",
-        "partName" : "couponMarkA_Specimen1_Part",
-        "sketchName" : "couponMarkA_Specimen1_Sketch1",
-        "partitionSketchName" : "couponMarkA_Specimen1_Sketch2",
-        "instanceName" : "couponMarkA_Specimen1_Sketch1_Instance",
+couponMarkADatabase = {
+    "CouponMarkASpecimen1": {
+        "modelName" : "Coupon_Mark_A_Specimen1_Model",
+        "partName" : "Coupon_Mark_A_Specimen1_Part",
+        "sketchName" : "Coupon_Mark_A_Specimen1_Sketch1",
+        "partitionSketchName" : "Coupon_Mark_A_Specimen1_Sketch2",
+        "instanceName" : "Coupon_Mark_A_Specimen1_Instance",
         "phi1" : 2.82,
         "phi2" : 5.0,
         "phi3" : 8.0,
@@ -180,18 +219,18 @@ couponMarkA_Database = {
         "rad2" : 10.0,
         "len1" : 24.0,
         "len2" : 40.0,
-        "partitionRadiusFraction" : "2.0/3.0",
+        "partitionRadialFraction" : "1.0/3.0",
         "lenTol" : 1.0e-6,
         "seedSizeGlobal" : 0.1,
-        "seedSizeArc" : 0.1,
-        "seedSizeRadial" : 0.1,
-        "seedSizeLong" : 0.1,
+        "seedSizeOuterArc" : 0.1,
+        "seedSizeOuterRadial" : 0.1,
+        "seedSizeLong1" : 0.1,
+        "seedSizeLong2" : 0.2,
+        "seedSizeLong3" : 0.3,
     },
 }
 
-p = createCouponMarkA(couponMarkA_Database["couponMarkA_Specimen1"])
-couponList = []
-couponList.append(p)
+couponInstance = createCouponMarkA(couponMarkADatabase["CouponMarkASpecimen1"])
 
 ############################################################################################################
 # sets
