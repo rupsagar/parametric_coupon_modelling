@@ -7,13 +7,12 @@ sketchName = "Sketch-1"
 partitionSketchName = 'Sketch-2'
 InstanceName = 'Instance-1'
 phi1 = 2.82
-phi2 = 6.0
+phi2 = 5.0
 phi3 = 8.0
-rad1 = 2.0
+rad1 = 20.0
 rad2 = 10.0
 len1 = 24.0
 len2 = 40.0
-theta = 30.0
 partitionRadius = phi1/4.0
 lenTol = 1.0e-6
 seedSizeGlobal = 0.1
@@ -24,7 +23,7 @@ seedNumArc = 7.0
 seedNumRadial = 5.0
 seedNumLong = 20.0
 
-#def couponModel(modelName, partName, sketchName, partitionSketchName, InstanceName, phi1, phi2, phi3, rad1, rad2, len1, len2, theta,
+#def couponModel(modelName, partName, sketchName, partitionSketchName, InstanceName, phi1, phi2, phi3, rad1, rad2, len1, len2, 
 #partitionRadius, lenTol, seedSizeGlobal, seedSizeArc, seedSizeRadial, seedSizeLong, seedNumArc, seedNumRadial, seedNumLong):
 # dimenional inputs converted to float to avoid truncation while division
 phi1 = float(phi1)
@@ -34,7 +33,6 @@ rad1 = float(rad1)
 rad2 = float(rad2)
 len1 = float(len1)
 len2 = float(len2)
-theta = float(theta)
 partitionRadius = float(partitionRadius)
 lenTol = float(lenTol)
 seedSizeGlobal = float(seedSizeGlobal)
@@ -58,6 +56,7 @@ coordCenterad2 = (xC2, yC2) = ((xB+xC)/2,(yB+yC)/2) # arbitrary center 2 ==>> tr
 ############################################################################################################
 # model
 model = mdb.Model(name=modelName)
+session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
 ############################################################################################################
 # 2D sketch
 s = model.ConstrainedSketch(name=sketchName, sheetSize=200.0)
@@ -201,16 +200,8 @@ a.Instance(name=InstanceName, part=p, dependent=ON)
 # sets
 #side1Faces = p.faces.findAt(((xB, yB/2, 0),))
 #p.Surface(side1Faces=side1Faces, name='Surf-1')
-# nodes = p.nodes.getSequenceFromMask(mask=(
-#     '[#bae #0:2 #ffc00000 #ffffffff:5 #3f003fff #0 #fffff000', 
-#     ' #ffffffff #3ffffff #7ff800 #fffffffe #ffffffff #3f #0', 
-#     ' #fffc0000 #ffffffff #7fffff #0:48 #ffffff00 #ffffffff:15 #3fffffff', 
-#     ' #0:21 #e0000000 #ffffffff:7 #7f #0:23 #fffffe00 #ffffffff:12', 
-#     ' #7f #0:328 #ffff0000 #ffffffff:82 #ffff #0:28 #c0000000', 
-#     ' #ffffffff:3 #1f #0:3 #fffffff8 #ffffffff:2 #7 #0:2', 
-#     ' #fffffe00 #ffffffff:2 #e33f #0:41 #ffc00000 #ffffffff:38 #3fffff', 
-#     ' #0:67 #ffffffe0 #ffffffff:34 #3fff ]', ), )
+# nodes = p.nodes.getSequenceFromMask(mask=)
 # p.Set(nodes=nodes, name='Set-1')
 
-#couponModel(modelName, partName, sketchName, partitionSketchName, InstanceName, phi1, phi2, phi3, rad1, rad2, len1, len2, theta, 
+#couponModel(modelName, partName, sketchName, partitionSketchName, InstanceName, phi1, phi2, phi3, rad1, rad2, len1, len2, 
 #   partitionRadius, lenTol, seedSizeGlobal, seedSizeArc, seedSizeRadial, seedSizeLong, seedNumArc, seedNumRadial, seedNumLong)
