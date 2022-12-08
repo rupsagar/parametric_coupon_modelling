@@ -1,5 +1,5 @@
-## provide path for the json database and the file name for coupon models
-couponDatabasePath = r'Z:\Rupsagar\04_COUPON_MODELLING\01_WIP\Coupon_Mark_A\Scripts'
+## provide path and file name for the json database of the coupon models
+couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\Coupon_Mark_A'
 couponDatabaseJsonFileName = r'Coupon_Mark_A_Database.json'
 
 import os
@@ -13,49 +13,47 @@ from caeModules import *
 class createCouponMarkA():
     def __init__(self, couponData):
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
-        self.specimenName = couponData["specimenName"]
-        self.phi1 = float(couponData["phi1"])
-        self.phi2 = float(couponData["phi2"])
-        self.phi3 = float(couponData["phi3"])
-        self.rad1 = float(couponData["rad1"])
-        self.rad2 = float(couponData["rad2"])
-        self.len1 = float(couponData["len1"])
-        self.len2 = float(couponData["len2"])
-        self.partitionRadialFraction = float(eval(couponData["partitionRadialFraction"]))
+        self.specimenName = couponData['specimenName']
+        self.phi1 = float(couponData['phi1'])
+        self.phi2 = float(couponData['phi2'])
+        self.phi3 = float(couponData['phi3'])
+        self.rad1 = float(couponData['rad1'])
+        self.rad2 = float(couponData['rad2'])
+        self.len1 = float(couponData['len1'])
+        self.len2 = float(couponData['len2'])
+        self.partitionRadialFraction = float(eval(couponData['partitionRadialFraction']))
         self.partitionRadius = float(self.partitionRadialFraction*self.phi1/2.0)
-        self.lenTol = abs(float(couponData["lenTol"]))
-        self.seedSizeGlobal = float(couponData["seedSizeGlobal"])
-        self.seedSizeOuterArc = float(couponData["seedSizeOuterArc"])
-        self.seedSizeLong1 = float(couponData["seedSizeLong1"])
-        self.seedSizeLong2 = float(couponData["seedSizeLong2"])
-        self.seedSizeLong3 = float(couponData["seedSizeLong3"])
-        self.elemTypeHex = couponData["elemTypeHex"]
-        self.elemTypePenta = couponData["elemTypePenta"]
-        self.elemTypeTetra = couponData["elemTypeTetra"]
-        self.materialName = couponData["materialName"]
-        self.density = float(couponData["density"])
-        self.youngsModulus = float(couponData["youngsModulus"])
-        self.poissonsRatio = float(couponData["poissonsRatio"])
+        self.lenTol = abs(float(couponData['lenTol']))
+        self.seedSizeGlobal = float(couponData['seedSizeGlobal'])
+        self.seedSizeOuterArc = float(couponData['seedSizeOuterArc'])
+        self.seedSizeLong1 = float(couponData['seedSizeLong1'])
+        self.seedSizeLong2 = float(couponData['seedSizeLong2'])
+        self.seedSizeLong3 = float(couponData['seedSizeLong3'])
+        self.elemTypeHex = couponData['elemTypeHex']
+        self.elemTypePenta = couponData['elemTypePenta']
+        self.elemTypeTetra = couponData['elemTypeTetra']
+        self.materialName = couponData['materialName']
+        self.density = float(couponData['density'])
+        self.youngsModulus = float(couponData['youngsModulus'])
+        self.poissonsRatio = float(couponData['poissonsRatio'])
         ## derived quantities
         self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
         self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
-        self.modelName = self.specimenName+"_Model"
-        self.partName = self.specimenName+"_Part"
-        self.sketchName = self.specimenName+"_Profile_Sketch"
-        self.partitionSketchName = self.specimenName+"_Partition_Sketch"
-        self.sectionName = self.specimenName+"_Section"
-        self.instanceName = self.specimenName+"_Instance"
-        self.jobName = self.specimenName+"_Job"
+        self.modelName = self.specimenName+'_Model'
+        self.partName = self.specimenName+'_Part'
+        self.sketchName = self.specimenName+'_Profile_Sketch'
+        self.partitionSketchName = self.specimenName+'_Partition_Sketch'
+        self.sectionName = self.specimenName+'_Section'
+        self.instanceName = self.specimenName+'_Instance'
+        self.jobName = self.specimenName+'_Job'
         ## create coupon specimen
         self.__createModel()
         self.__createProfileSketch()
         self.__createSolid()
         self.__createPartition()
         self.__createMesh()
-        self.__createElement()
         self.__createMaterial()
         self.__createSection()
-        self.__createNsets()
         self.__createAssembly()
         self.__createStep()
         self.__createJob()
@@ -193,60 +191,58 @@ class createCouponMarkA():
         ## mesh ==>> inner cylinder
         self.cellsInnerCyl = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
         self.part.generateMesh(regions=self.cellsInnerCyl)
-    def __createElement(self):
         ## set element types
-        if self.elemTypeHex == "C3D8HS":
+        if self.elemTypeHex == 'C3D8HS':
             elemType1 = mesh.ElemType(elemCode=C3D8HS, elemLibrary=STANDARD)
-        if self.elemTypePenta == "C3D6":
+        if self.elemTypePenta == 'C3D6':
             elemType2 = mesh.ElemType(elemCode=C3D6, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
-        if self.elemTypeTetra == "C3D4":
+        if self.elemTypeTetra == 'C3D4':
             elemType3 = mesh.ElemType(elemCode=C3D4, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
         self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
     def __createMaterial(self):
         ## material definition
-        mdb.models[self.modelName].Material(name=self.materialName)
-        mdb.models[self.modelName].materials[self.materialName].Density(table=((self.density, ), ))
-        mdb.models[self.modelName].materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
+        self.model.Material(name=self.materialName)
+        self.model.materials[self.materialName].Density(table=((self.density, ), ))
+        self.model.materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
     def __createSection(self):
         ## section definition
-        self.elementsAll = self.part.elements.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol))
-        pickedRegion = self.part.Set(elements=self.elementsAll, name='Elements_All')
-        #pickedRegion = regionToolset.Region(cells=self.part.cells)
-        mdb.models[self.modelName].HomogeneousSolidSection(name=self.sectionName, material=self.materialName, thickness=None)
+        self.model.HomogeneousSolidSection(name=self.sectionName, material=self.materialName, thickness=None)
+        ## assign section property to elements
+        pickedRegion = self.part.Set(elements=self.part.elements, name='Elements_All')
+        #pickedRegion = regionToolset.Region(cells=self.part.cells)   
         self.part.SectionAssignment(region=pickedRegion, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
-    def __createNsets(self):
-        ## create node sets for appling boundary condition and load
-        nodesPosX = self.part.nodes.getByBoundingCylinder((self.xE-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol))
-        self.nsetNamePosX = 'nsetPosX'
-        self.part.Set(nodes=nodesPosX, name=self.nsetNamePosX)
-        ## this set not used for applying the 
-        nodesNegX = self.part.nodes.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xO+self.lenTol, 0, 0), (self.yA+self.lenTol))
-        self.nsetNameNegX = 'nsetNegX'
-        self.part.Set(nodes=nodesNegX , name=self.nsetNameNegX)
-        nodesPosZ = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xE+self.lenTol, yMax = self.yD+self.lenTol, zMax = self.lenTol)
-        self.nsetNamePosZ = 'nsetPosZ'
-        self.part.Set(nodes=nodesPosZ, name=self.nsetNamePosZ)
-        nodesNegY = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yD-self.lenTol, xMax = self.xE+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
-        self.nsetNameNegY = 'nsetNegY'
-        self.part.Set(nodes=nodesNegY, name=self.nsetNameNegY)
     def __createAssembly(self):
         ## create assembly
         self.assembly = self.model.rootAssembly
         self.assembly.DatumCsysByDefault(CARTESIAN)
         self.instance = self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
     def __createStep(self):
-        ## create load and boundary condition
+        ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=OFF, initialInc=0.1, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        ## create BC
-        region = self.instance.sets[self.nsetNameNegY]
+        ## create BC at negY face
+        nodesNegY = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yD-self.lenTol, xMax = self.xE+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
+        nsetNameNegY = 'Nset_NegY'
+        self.part.Set(nodes=nodesNegY, name=nsetNameNegY)
+        region = self.instance.sets[nsetNameNegY]
         self.model.DisplacementBC(name='BC_NegY', createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-        region = self.instance.sets[self.nsetNamePosZ]
+        ## create BC at posZ face
+        nodesPosZ = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xE+self.lenTol, yMax = self.yD+self.lenTol, zMax = self.lenTol)
+        nsetNamePosZ = 'Nset_PosZ'
+        self.part.Set(nodes=nodesPosZ, name=nsetNamePosZ)
+        region = self.instance.sets[nsetNamePosZ]
         self.model.DisplacementBC(name='BC_PosZ', createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-        region = self.instance.sets[self.nsetNameNegX]
+        ## create BC at negX face
+        nodesNegX = self.part.nodes.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xO+self.lenTol, 0, 0), (self.yA+self.lenTol))
+        nsetNameNegX = 'Nset_NegX'
+        self.part.Set(nodes=nodesNegX , name=nsetNameNegX)
+        region = self.instance.sets[nsetNameNegX]
         self.model.DisplacementBC(name='BC_NegX', createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
-        ## create load by displacement control method
-        region = self.instance.sets[self.nsetNamePosX]
-        self.model.DisplacementBC(name='BC_PosX', createStepName='Load', region=region, u1=1.0, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+        ## create pressure load on posX face
+        endCellFaceArr = self.part.faces.getByBoundingCylinder((self.xE-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol))
+        surfNamePosX = 'Surf_PosX'
+        self.__getElemSurfFromCellFace(endCellFaceArr, surfNamePosX)
+        region = self.instance.surfaces[surfNamePosX]
+        self.model.Pressure(name='Load_PosX', createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=-28.0, amplitude=UNSET)
     def __createJob(self):
         ## create job
         self.job = mdb.Job(name=self.jobName, model=self.modelName, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, 
@@ -283,6 +279,22 @@ class createCouponMarkA():
             if abs(thisEdge.getSize(0)-length) < self.lenTol:
                 pickedEdges.append(thisEdge)
         return pickedEdges
+    def __getElemSurfFromCellFace(self, cellFaceArr, surfName):
+        ## method to create element based surface from cell face
+        elemWithFace = [[], [], [], [], [], []]
+        for thisCellFace in cellFaceArr:
+            elemFaceArr = thisCellFace.getElementFaces()   
+            for thisElem in elemFaceArr:
+                for thisfaceID in range(6):
+                    if thisElem.face == SymbolicConstant('FACE'+str(thisfaceID+1)):
+                        elemWithFace[thisfaceID].append(thisElem)
+                        break
+        surfDict = {'name':surfName}
+        for thisfaceID in range(6):
+            if len(elemWithFace[thisfaceID]) > 0:
+                elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
+                surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
+        self.part.Surface(**surfDict)
     def __seedOuterRadial(self, pointOnRadius, **kwargs):
         ## method to seed the outer radial edge at sections through A and B
         edgesOuterRadial = self.part.edges.findAt((pointOnRadius, ))  
@@ -291,14 +303,14 @@ class createCouponMarkA():
             vertexCoord = self.part.vertices[thisVertexID].pointOn
             if abs(abs(vertexCoord[0][1])-self.partitionRadius) < self.lenTol or abs(abs(vertexCoord[0][2])-self.partitionRadius) < self.lenTol or abs(abs(vertexCoord[0][2])-self.partitionRadius) < self.lenTol:
                 if edgesRadialVertexIDPair.index(thisVertexID) == 0:
-                    if "minSize" in kwargs.keys():
+                    if 'minSize' in kwargs.keys():
                         self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=edgesOuterRadial, minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FIXED)
-                    elif "ratio" in kwargs.keys():
+                    elif 'ratio' in kwargs.keys():
                         self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=edgesOuterRadial, ratio=kwargs['ratio'], number=kwargs['number'], constraint=FIXED)
                 elif edgesRadialVertexIDPair.index(thisVertexID) == 1:
-                    if "minSize" in kwargs.keys():
+                    if 'minSize' in kwargs.keys():
                         self.part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=edgesOuterRadial, minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FIXED)
-                    elif "ratio" in kwargs.keys():
+                    elif 'ratio' in kwargs.keys():
                         self.part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=edgesOuterRadial, ratio=kwargs['ratio'], number=kwargs['number'], constraint=FIXED)
     def __seedLongEdges(self, xLeft, xRight, seedSize):
         ## method to seed the longitudinal edges
@@ -323,7 +335,8 @@ fileJson.close
 couponMarkADatabase = ast.literal_eval(json.dumps(couponMarkADatabaseUnicode))
 
 ## create instance of the coupon
-couponModelList = []
-for thisCoupon in couponMarkADatabase:
-    couponModelList.append(createCouponMarkA(couponMarkADatabase[thisCoupon]))
+# couponModelList = []
+# for thisCoupon in couponMarkADatabase:
+#     couponModelList.append(createCouponMarkA(couponMarkADatabase[thisCoupon]))
 
+self = createCouponMarkA(couponMarkADatabase['CouponMarkASpecimen1'])
