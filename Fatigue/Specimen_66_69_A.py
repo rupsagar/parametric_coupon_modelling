@@ -70,8 +70,8 @@ class createCouponMarkA():
         self.coordC = (self.xC, self.yC) = (self.len1/2, self.phi3/2)
         self.coordD = (self.xD, self.yD) = (self.len2/2, self.phi3/2)
         self.coordE = (self.xE, self.yE) = (self.len2/2, 0)
-        self.coordCenter1 = (self.xC1, self.yC1) = (0, self.yA+self.rad1) # center 1
-        self.coordCenter2 = (self.xC2, self.yC2) = ((self.xB+self.xC)/2,(self.yB+self.yC)/2) # arbitrary center 2 ==>> true value given by dimension
+        self.coordC1 = (self.xC1, self.yC1) = (0, self.yA+self.rad1) # center 1
+        self.coordC2 = (self.xC2, self.yC2) = ((self.xB+self.xC)/2,(self.yB+self.yC)/2) # arbitrary center 2 ==>> true value given by dimension
         ## define sketch
         self.profileSketch = self.model.ConstrainedSketch(name=self.sketchName, sheetSize=200.0)
         self.profileGeometry, self.profileVertices = self.profileSketch.geometry, self.profileSketch.vertices
@@ -94,13 +94,13 @@ class createCouponMarkA():
         self.profileSketch.ObliqueDimension(vertex1=self.profileVertices[0], vertex2=self.profileVertices[1], textPoint=(-3, 4), value=self.phi1/2)
         (self.xO, self.yO), (self.xA, self.yA) = self.profileVertices[0].coords, self.profileVertices[1].coords
         ## arc AB: self.profileGeometry[5]; vertices ==>> self.profileVertices[1], self.profileVertices[2]; center: self.profileVertices[3]; dimension: d[1], d[2]
-        self.profileSketch.ArcByCenterEnds(center=self.coordCenter1, point1=self.coordA, point2=self.coordB, direction=COUNTERCLOCKWISE)
+        self.profileSketch.ArcByCenterEnds(center=self.coordC1, point1=self.coordA, point2=self.coordB, direction=COUNTERCLOCKWISE)
         self.profileSketch.CoincidentConstraint(entity1=self.profileVertices[3], entity2=self.profileGeometry[3], addUndoState=False)
         self.profileSketch.RadialDimension(curve=self.profileGeometry[5], textPoint=(0, 25), radius=self.rad1)
         self.profileSketch.DistanceDimension(entity1=self.profileVertices[2], entity2=self.profileGeometry[2], textPoint=(10, 1), value=self.phi2/2)
         (self.xB, self.yB), (self.xC1, self.yC1) = self.profileVertices[2].coords, self.profileVertices[3].coords
         ## arc BC: self.profileGeometry[6]; vertices ==>> self.profileVertices[2], self.profileVertices[4]; center: self.profileVertices[5]; dimension: d[3], d[4], d[5]
-        self.profileSketch.ArcByCenterEnds(center=self.coordCenter2, point1=self.coordB, point2=self.coordC, direction=COUNTERCLOCKWISE)
+        self.profileSketch.ArcByCenterEnds(center=self.coordC2, point1=self.coordB, point2=self.coordC, direction=COUNTERCLOCKWISE)
         self.profileSketch.RadialDimension(curve=self.profileGeometry[6], textPoint=(14, 10), radius=self.rad2)
         self.profileSketch.DistanceDimension(entity1=self.profileVertices[4], entity2=self.profileGeometry[2], textPoint=(25, 1), value=self.phi3/2)
         self.profileSketch.HorizontalDimension(vertex1=self.profileVertices[0], vertex2=self.profileVertices[4], textPoint=(13, 9), value=self.len1/2)
