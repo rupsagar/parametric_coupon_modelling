@@ -4,12 +4,15 @@ from abaqusConstants import *
 modelName = "coupon"
 partName = "specimen"
 d1 = 2.82
-r1 = 2.0
+r1 = 20.0
 d2 = 5.0
 r2 = 10.0
-d3 = 12.0
+d3 = 8.0
 l1 = 24.0
-l2 = 40.0
+l2 = 1.0
+l3 = 40.0
+theta = 30.0
+
 #model = mdb.Model(name=modelName)
 
 #def createCoupon(modelName, partName, d1, r1, d2, r2, d3, l):
@@ -53,17 +56,30 @@ s.HorizontalConstraint(entity=g[7], addUndoState=False)
 s.CoincidentConstraint(entity1=v[4], entity2=v[6], addUndoState=False)
 ############################################################################################################
 # line DE: g[8]; vertices: v[8], v[9]
-s.Line(point1=(22.88, 18.2707752155851), point2=(22.88, 0.0))
-s.VerticalConstraint(entity=g[8], addUndoState=False)
-s.PerpendicularConstraint(entity1=g[7], entity2=g[8], addUndoState=False)
-s.CoincidentConstraint(entity1=v[9], entity2=g[2], addUndoState=False)
+s.Line(point1=(22.88, 18.2707752155851), point2=(25.0, 15.0))
 s.CoincidentConstraint(entity1=v[7], entity2=v[8], addUndoState=False)
 ############################################################################################################
-# line EO: g[9]; dimension: d[6]
-s.Line(point1=(22.88, 0.0), point2=(0.0, 0.0))
+# line EF: g[9]; vertices: v[10], v[11]; dimension: d[6]
+s.Line(point1=(25.0, 15.0), point2=(27.0926570892334, 15.0))
 s.HorizontalConstraint(entity=g[9], addUndoState=False)
-s.PerpendicularConstraint(entity1=g[8], entity2=g[9], addUndoState=False)
-s.ObliqueDimension(vertex1=v[9], vertex2=v[0], textPoint=(6.52166271209717, 12.40220642089844), value=22.88)
+s.CoincidentConstraint(entity1=v[9], entity2=v[10], addUndoState=False)
+s.HorizontalDimension(vertex1=v[9], vertex2=v[11], textPoint=(26.26096534729, 21.753303527832), value=2.0926570892334)
+############################################################################################################
+# line FG: g[10]; vertices: v[12], v[13]; dimension: d[7], d[8]
+s.Line(point1=(27.0926570892334, 15.0), point2=(27.0926570892334, 0.0))
+s.VerticalConstraint(entity=g[10], addUndoState=False)
+s.PerpendicularConstraint(entity1=g[9], entity2=g[10], addUndoState=False)
+s.CoincidentConstraint(entity1=v[11], entity2=v[12], addUndoState=False)
+s.CoincidentConstraint(entity1=v[13], entity2=g[2], addUndoState=False)
+s.AngularDimension(line1=g[8], line2=g[10], textPoint=(28.1420307159424, 4.75175142288208), value=32.9498701354191)
+s.ObliqueDimension(vertex1=v[12], vertex2=v[13], textPoint=(37.2293167114258, 7.5186595916748), value=15.0)
+############################################################################################################
+# line GO: g[11]; vertices: v[14]; dimension: d[9]
+s.Line(point1=(27.0926570892334, 0.0), point2=(0.0, 0.0))
+s.CoincidentConstraint(entity1=v[13], entity2=v[14], addUndoState=False)
+s.HorizontalConstraint(entity=g[11], addUndoState=False)
+s.PerpendicularConstraint(entity1=g[10], entity2=g[11], addUndoState=False)
+s.HorizontalDimension(vertex1=v[14], vertex2=v[0], textPoint=(6.52166271209717, 12.40220642089844), value=26.7993727529289)
 ############################################################################################################
 s.sketchOptions.setValues(constructionGeometry=ON)
 s.assignCenterline(line=g[2])
@@ -73,8 +89,12 @@ d[1].setValues(value=r1, ) # r1
 d[2].setValues(value=d2/2, ) # d2/2
 d[3].setValues(value=r2, ) # r2
 d[4].setValues(value=d3/2, ) # d3/2
-d[5].setValues(value=l1/2, ) # l2/2
-d[6].setValues(value=l2/2, ) # l2/2
+d[5].setValues(value=l1/2, ) # l1/2
+d[6].setValues(value=l2, ) # l2
+d[7].setValues(value=theta, ) # theta
+d[8].setValues(value=(d3-3.0)/2.0, ) # theta
+d[9].setValues(value=l3/2, ) # l3/2
+
 ############################################################################################################
 p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=THREE_D, type=DEFORMABLE_BODY)
 p = mdb.models['Model-1'].parts['Part-1']
