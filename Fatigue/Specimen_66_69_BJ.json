@@ -1,6 +1,6 @@
 {
     "CouponMarkBJSpecimen1": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_1",
+        "specimenName" : "Specimen_66C",
         "phi1" : 2.82,
         "phi2" : 5.0,
         "phi3" : 8.0,
@@ -8,7 +8,7 @@
         "rad2" : 10.0,
         "len1" : 24.0,
         "len2" : 40.0,
-        "thetaDeg" : 30,
+        "thetaDeg" : 30.0,
         "partitionRadialFraction" : "2.0/3.0",
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
@@ -26,7 +26,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen2": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_2",
+        "specimenName" : "Specimen_66E",
         "phi1" : 2.82,
         "phi2" : 5.0,
         "phi3" : 8.0,
@@ -34,7 +34,7 @@
         "rad2" : 10.0,
         "len1" : 24.0,
         "len2" : 40.0,
-        "thetaDeg" : 30,
+        "thetaDeg" : 30.0,
         "partitionRadialFraction" : "2.0/3.0",
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
@@ -52,7 +52,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen3": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_3",
+        "specimenName" : "Specimen_67C",
         "phi1" : 3.99,
         "phi2" : 7.0,
         "phi3" : 12.0,
@@ -60,12 +60,12 @@
         "rad2" : 13.0,
         "len1" : 34.0,
         "len2" : 60.0,
-        "thetaDeg" : 30,
+        "thetaDeg" : 30.0,
         "partitionRadialFraction" : "2.0/3.0",
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
-        "seedSizeLong1" : 0.1,
+        "seedSizeLong1" : 0.05,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
         "elemTypeHex" : "C3D8HS",
@@ -78,7 +78,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen4": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_4",
+        "specimenName" : "Specimen_67E",
         "phi1" : 3.99,
         "phi2" : 7.0,
         "phi3" : 12.0,
@@ -86,12 +86,12 @@
         "rad2" : 13.0,
         "len1" : 34.0,
         "len2" : 60.0,
-        "thetaDeg" : 30,
+        "thetaDeg" : 30.0,
         "partitionRadialFraction" : "2.0/3.0",
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
-        "seedSizeOuterArc" : 0.1,
-        "seedSizeLong1" : 0.1,
+        "seedSizeOuterArc" : 0.05,
+        "seedSizeLong1" : 0.025,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
         "elemTypeHex" : "C3D8HS",
@@ -104,7 +104,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen5": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_5",
+        "specimenName" : "Specimen_68C",
         "phi1" : 5.64,
         "phi2" : 10.0,
         "phi3" : 16.0,
@@ -117,7 +117,7 @@
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
-        "seedSizeLong1" : 0.1,
+        "seedSizeLong1" : 0.05,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
         "elemTypeHex" : "C3D8HS",
@@ -130,7 +130,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen6": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_6",
+        "specimenName" : "Specimen_68E",
         "phi1" : 5.64,
         "phi2" : 10.0,
         "phi3" : 16.0,
@@ -142,8 +142,8 @@
         "partitionRadialFraction" : "2.0/3.0",
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
-        "seedSizeOuterArc" : 0.1,
-        "seedSizeLong1" : 0.1,
+        "seedSizeOuterArc" : 0.05,
+        "seedSizeLong1" : 0.025,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
         "elemTypeHex" : "C3D8HS",
@@ -156,7 +156,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen7": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_7",
+        "specimenName" : "Specimen_69C",
         "phi1" : 7.98,
         "phi2" : 14.0,
         "phi3" : 22.0,
@@ -169,7 +169,7 @@
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
-        "seedSizeLong1" : 0.1,
+        "seedSizeLong1" : 0.05,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
         "elemTypeHex" : "C3D8HS",
@@ -182,7 +182,7 @@
 		"nominalStress" : 250.0
     },
     "CouponMarkBJSpecimen8": {
-        "specimenName" : "Coupon_Mark_BJ_Specimen_8",
+        "specimenName" : "Specimen_69E",
         "phi1" : 7.98,
         "phi2" : 14.0,
         "phi3" : 22.0,
@@ -195,7 +195,7 @@
         "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
-        "seedSizeLong1" : 0.1,
+        "seedSizeLong1" : 0.05,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
         "elemTypeHex" : "C3D8HS",
