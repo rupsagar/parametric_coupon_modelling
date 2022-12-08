@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\Coupon_Mark_A'
+couponDatabasePath = r'Z:\Rupsagar\04_COUPON_MODELLING\01_WIP\Script_Files\Coupon_Mark_A'
 couponDatabaseJsonFileName = r'Coupon_Mark_A_Database.json'
 
 import os
@@ -37,8 +37,6 @@ class createCouponMarkA():
         self.youngsModulus = float(couponData['youngsModulus'])
         self.poissonsRatio = float(couponData['poissonsRatio'])
         ## derived quantities
-        self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
-        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
         self.modelName = self.specimenName+'_Model'
         self.partName = self.specimenName+'_Part'
         self.sketchName = self.specimenName+'_Profile_Sketch'
@@ -46,6 +44,8 @@ class createCouponMarkA():
         self.sectionName = self.specimenName+'_Section'
         self.instanceName = self.specimenName+'_Instance'
         self.jobName = self.specimenName+'_Job'
+        self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
+        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
         ## create coupon specimen
         self.__createModel()
         self.__createProfileSketch()
@@ -59,11 +59,11 @@ class createCouponMarkA():
         self.__createJob()
     def __createModel(self):
         ## define model
-        self.model = mdb.Model(name=self.modelName)
         #session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
+        self.model = mdb.Model(name=self.modelName)
     def __createProfileSketch(self):
         ## method to draw sketch of coupon profile
-        ## method to calculate vertex coordinates
+        ## calculate vertex coordinates
         self.coordO = (self.xO, self.yO) = (0, 0)
         self.coordA = (self.xA, self.yA) = (0, self.phi1/2)
         self.coordB = (self.xB, self.yB) = (self.rad1*(1-((self.rad1+self.phi1/2-self.phi2/2)/self.rad1)**2)**0.5, self.phi2/2)
@@ -71,7 +71,7 @@ class createCouponMarkA():
         self.coordD = (self.xD, self.yD) = (self.len2/2, self.phi3/2)
         self.coordE = (self.xE, self.yE) = (self.len2/2, 0)
         self.coordC1 = (self.xC1, self.yC1) = (0, self.yA+self.rad1) # center 1
-        self.coordC2 = (self.xC2, self.yC2) = ((self.xB+self.xC)/2,(self.yB+self.yC)/2) # arbitrary center 2 ==>> true value given by dimension
+        self.coordC2 = (self.xC2, self.yC2) = ((self.xB+self.xC)/2,(self.yB+self.yC)/2) # arbitrary center 2 ==>> true value set by dimension method on arc
         ## define sketch
         self.profileSketch = self.model.ConstrainedSketch(name=self.sketchName, sheetSize=200.0)
         self.profileGeometry, self.profileVertices = self.profileSketch.geometry, self.profileSketch.vertices
@@ -126,10 +126,10 @@ class createCouponMarkA():
         session.viewports['Viewport: 1'].setValues(displayedObject=self.part)
     def __createPartition(self):
         ## partition ==>> inner cylinder
-        self.sketchFace = self.part.faces.getByBoundingBox(xMin=-self.xB/2,yMin=-self.phi1, zMin=-self.phi1, xMax=self.xB/2,yMax=self.phi1,zMax=self.phi1)
+        self.sketchFace = self.part.faces.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol))
         self.sketchEdge = self.part.edges.findAt(((0, self.partitionRadius, 0),))
-        self.t = self.part.MakeSketchTransform(sketchPlane=self.sketchFace[0], sketchUpEdge=self.sketchEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
-        self.partitionSketch = self.model.ConstrainedSketch(name=self.partitionSketchName, sheetSize=4, transform=self.t)
+        self.transform = self.part.MakeSketchTransform(sketchPlane=self.sketchFace[0], sketchUpEdge=self.sketchEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
+        self.partitionSketch = self.model.ConstrainedSketch(name=self.partitionSketchName, sheetSize=4, transform=self.transform)
         self.partitionSketchGeometry, self.partitionSketchVertices = self.partitionSketch.geometry, self.partitionSketch.vertices
         self.partitionSketch.setPrimaryObject(option=SUPERIMPOSE)
         self.part.projectReferencesOntoSketch(sketch=self.partitionSketch, filter=COPLANAR_EDGES)
@@ -142,7 +142,7 @@ class createCouponMarkA():
         self.partitionSketch.CoincidentConstraint(entity1=self.vertexPoint2, entity2=self.projectionLine2, addUndoState=False)
         self.partitionSketch.unsetPrimaryObject()
         self.part.PartitionFaceBySketch(sketchUpEdge=self.sketchEdge[0], faces=self.sketchFace[0], sketch=self.partitionSketch)
-        edgesTemp = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        edgesTemp = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
         self.edgesArcForPartition = self.__getArcEdge(edgesTemp)
         self.sweepEdges = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.partitionRadius-self.lenTol))
         self.part.PartitionCellBySweepEdge(sweepPath=self.sweepEdges[0], cells=self.part.cells, edges=self.edgesArcForPartition)
@@ -156,20 +156,19 @@ class createCouponMarkA():
         ## seed ==>> global
         self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
         ## seed ==>> outer arc edge AA'
-        self.edgesOuterCyl = self.__getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
+        self.edgesOuterCyl = self.__getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
         self.edgesOuterArc = self.__getArcEdge(self.edgesOuterCyl)
         self.part.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FIXED)
         ## seed ==>> outer radial edges
         self.edgesOuterRadial = self.__getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
         self.__seedOuterRadial((0.0, self.partitionRadius+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
         self.__seedOuterRadial((0.0, 0.0, -(self.partitionRadius+self.lenTol)), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
-        ## seed ==>> outer arc BB'
+        ## seed ==>> edge Bb ==>> not applied; seeding with increase the element size at the surface by small amount
         self.edgesOuterCylAtB = self.__getByCylinderDifference(self.part.edges, (self.xB-self.lenTol, 0, 0), (self.xB+self.lenTol, 0, 0), (self.yB+self.lenTol), (self.partitionRadius+self.lenTol))
         self.edgesOuterArcAtB = self.__getArcEdge(self.edgesOuterCylAtB)
         self.edgesOuterRadialAtB = self.__getByDifference(self.edgesOuterCylAtB, self.edgesOuterArcAtB)
         ratioBias = self.part.getEdgeSeeds(self.edgesOuterRadial[0], attribute=BIAS_RATIO)
         elemNum = self.part.getEdgeSeeds(self.edgesOuterRadial[0], attribute=NUMBER)
-        ## not seeded; seeding with increase the element size at the surface by small amount
         #self.__seedOuterRadial((self.xB, self.partitionRadius+self.lenTol, 0.0), ratio=ratioBias, number=elemNum)
         #self.__seedOuterRadial((self.xB, 0.0, -(self.partitionRadius+self.lenTol)), ratio=ratioBias, number=elemNum)
         ## seed ==>> longitudinal edges
@@ -181,10 +180,10 @@ class createCouponMarkA():
         self.edgesInnerArc = self.__getArcEdge(self.edgesInnerCyl)
         self.edgesInnerRadial = self.__getByDifference(self.edgesInnerCyl, self.edgesInnerArc)
         self.part.seedEdgeBySize(edges=self.edgesInnerRadial, size=self.seedSizeInnerRadial, deviationFactor=0.1, constraint=FINER)
-        ## seed ==>> sweep path for inner cylinder
-        self.__setSweepPath(self.xA, self.xB)
-        self.__setSweepPath(self.xB, self.xC)
-        self.__setSweepPath(self.xC, self.xD)
+        ## sweep path ==>> inner cylinder
+        self.__setInnerCylSweepPath(self.xA, self.xB)
+        self.__setInnerCylSweepPath(self.xB, self.xC)
+        self.__setInnerCylSweepPath(self.xC, self.xD)
         ## mesh ==>> outer cylinder
         self.cellsOuterCyl = self.__getByCylinderDifference(self.part.cells, (self.xA-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol), (self.partitionRadius+self.lenTol))
         self.part.generateMesh(regions=self.cellsOuterCyl)
@@ -320,7 +319,7 @@ class createCouponMarkA():
         edgesInnerRadial = self.__getEdgeByLength(edgesStraight, self.partitionRadius)
         edgesLong = self.__getByDifference(edgesStraight, edgesInnerRadial)
         self.part.seedEdgeBySize(edges=edgesLong, size=seedSize, deviationFactor=0.1, constraint=FIXED)
-    def __setSweepPath(self, xLeft, xRight):
+    def __setInnerCylSweepPath(self, xLeft, xRight):
         ## method to set the sweep path for the inner cylindrical mesh
         cellsInnerCyl = self.part.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
         edgesSweepPath = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
@@ -339,4 +338,4 @@ couponMarkADatabase = ast.literal_eval(json.dumps(couponMarkADatabaseUnicode))
 # for thisCoupon in couponMarkADatabase:
 #     couponModelList.append(createCouponMarkA(couponMarkADatabase[thisCoupon]))
 
-self = createCouponMarkA(couponMarkADatabase['CouponMarkASpecimen1'])
+self = createCouponMarkA(couponMarkADatabase['CouponMarkASpecimen2'])
