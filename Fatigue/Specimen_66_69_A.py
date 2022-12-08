@@ -1,15 +1,11 @@
 from abaqus import *
 from abaqusConstants import *
-from math import *
+from caeModules import *
 
 class createCouponMarkA():
     def __init__(self, couponData):
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
-        self.modelName = couponData["modelName"]
-        self.partName = couponData["partName"]
-        self.sketchName = couponData["sketchName"]
-        self.partitionSketchName = couponData["partitionSketchName"]
-        self.instanceName = couponData["instanceName"]
+        self.specimenName = couponData["specimenName"]
         self.phi1 = float(couponData["phi1"])
         self.phi2 = float(couponData["phi2"])
         self.phi3 = float(couponData["phi3"])
@@ -25,21 +21,40 @@ class createCouponMarkA():
         self.seedSizeLong1 = float(couponData["seedSizeLong1"])
         self.seedSizeLong2 = float(couponData["seedSizeLong2"])
         self.seedSizeLong3 = float(couponData["seedSizeLong3"])
+        self.materialName = couponData["materialName"]
+        self.density = float(couponData["density"])
+        self.youngsModulus = float(couponData["youngsModulus"])
+        self.poissonsRatio = float(couponData["poissonsRatio"])
         ## derived quantities
         self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
-        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal 
+        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
+        self.modelName = self.specimenName+"_Model"
+        self.partName = self.specimenName+"_Part"
+        self.sketchName = self.specimenName+"_Profile_Sketch"
+        self.partitionSketchName = self.specimenName+"_Partition_Sketch"
+        self.sectionName = self.specimenName+"_Section"
+        self.instanceName = self.specimenName+"_Instance"
+        self.jobName = self.specimenName+"_Job"
         ## create coupon specimen
         self.__createModel()
         self.__createProfileSketch()
         self.__createSolid()
         self.__createPartition()
-        self.__createMeshScheme2()
+        self.__createMesh()
+        self.__createElement()
+        self.__createMaterial()
+        self.__createSection()
+        self.__createNsets()
         self.__createAssembly()
+        self.__createBoundaryCondition()
+        self.__createLoad()
+        self.__createJob()
     def __createModel(self):
         ## define model
         self.model = mdb.Model(name=self.modelName)
         session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
     def __createProfileSketch(self):
+        ## draw sketch of coupon profile
         ## method to calculate vertex coordinates
         self.coordO = (self.xO, self.yO) = (0, 0)
         self.coordA = (self.xA, self.yA) = (0, self.phi1/2)
@@ -97,6 +112,7 @@ class createCouponMarkA():
         self.profileSketch.HorizontalConstraint(entity=self.profileGeometry[9], addUndoState=False)
         self.profileSketch.unsetPrimaryObject()
     def __createSolid(self):
+        ## create solid
         self.part = self.model.Part(name=self.partName, dimensionality=THREE_D, type=DEFORMABLE_BODY)
         self.part.BaseSolidRevolve(sketch=self.profileSketch, angle=90, flipRevolveDirection=ON)
         session.viewports['Viewport: 1'].setValues(displayedObject=self.part)
@@ -128,7 +144,7 @@ class createCouponMarkA():
         ## partition ==>> at section C
         self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xC).id
         self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)
-    def __createMeshScheme2(self):
+    def __createMesh(self):
         ## seed ==>> global
         self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
         ## seed ==>> outer arc edge AA'
@@ -166,11 +182,60 @@ class createCouponMarkA():
         ## mesh ==>> inner cylinder
         self.cellsInnerCyl = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
         self.part.generateMesh(regions=self.cellsInnerCyl)
+    def __createElement(self):
+        ## set element types
+        elemType1 = mesh.ElemType(elemCode=C3D8HS, elemLibrary=STANDARD)
+        elemType2 = mesh.ElemType(elemCode=C3D6, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
+        elemType3 = mesh.ElemType(elemCode=C3D4, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
+        self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
+    def __createMaterial(self):
+        ## material definition
+        mdb.models[self.modelName].Material(name=self.materialName)
+        mdb.models[self.modelName].materials[self.materialName].Density(table=((self.density, ), ))
+        mdb.models[self.modelName].materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
+    def __createSection(self):
+        ## section definition
+        self.elementsAll = self.part.elements.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol))
+        pickedRegion = self.part.Set(elements=self.elementsAll, name='Elements_All')
+        #pickedRegion = regionToolset.Region(elements=pickedRegion)
+        #pickedRegion = regionToolset.Region(cells=self.part.cells)
+        mdb.models[self.modelName].HomogeneousSolidSection(name=self.sectionName, material=self.materialName, thickness=None)
+        self.part.SectionAssignment(region=pickedRegion, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+    def __createNsets(self):
+        ## create node sets for appling boundary condition and load
+        nodesPosX = self.part.nodes.getByBoundingCylinder((self.xE-self.seedSizeLong3+self.lenTol, 0, 0), (self.xE+self.seedSizeLong3-self.lenTol, 0, 0), (self.yD+self.lenTol))
+        self.nsetNamePosX = 'nsetPosX'
+        self.part.Set(nodes=nodesPosX, name=self.nsetNamePosX)
+        nodesNegX = self.part.nodes.getByBoundingCylinder((self.xO-self.seedSizeLong1+self.lenTol, 0, 0), (self.xO+self.seedSizeLong1-self.lenTol, 0, 0), (self.yA+self.lenTol))
+        self.nsetNameNegX = 'nsetNegX'
+        self.part.Set(nodes=nodesNegX , name=self.nsetNameNegX)
+        nodesPosZ = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xE+self.lenTol, yMax = self.yD+self.lenTol, zMax = self.lenTol)
+        self.nsetNamePosZ = 'nsetPosZ'
+        self.part.Set(nodes=nodesPosZ, name=self.nsetNamePosZ)
+        nodesNegY = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yD-self.lenTol, xMax = self.xE+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
+        self.nsetNameNegY = 'nsetNegY'
+        self.part.Set(nodes=nodesNegY, name=self.nsetNameNegY)
     def __createAssembly(self):
-        ## assembly
+        ## create assembly
         self.assembly = self.model.rootAssembly
         self.assembly.DatumCsysByDefault(CARTESIAN)
-        self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
+        self.instance = self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
+    def __createBoundaryCondition(self):
+        region = self.instance.sets[self.nsetNameNegY]
+        self.model.DisplacementBC(name='BC_NegY', createStepName='Initial', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+        region = self.instance.sets[self.nsetNamePosZ]
+        self.model.DisplacementBC(name='BC_PosZ', createStepName='Initial', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+    def __createLoad(self):
+        self.model.StaticStep(name='Load', previous='Initial', nlgeom=ON, initialInc=0.1, timePeriod=1.0, minInc=1e-5, maxInc=1)
+        region = self.instance.sets[self.nsetNameNegX]
+        self.model.DisplacementBC(name='BC_NegX', createStepName='Load', region=region, u1=-1.0, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+        region = self.instance.sets[self.nsetNamePosX]
+        self.model.DisplacementBC(name='BC_PosX', createStepName='Load', region=region, u1=1.0, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+    def __createJob(self):
+        self.job = mdb.Job(name=self.jobName, model=self.modelName, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, 
+        memory=90, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+        modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
+        self.job.writeInput(consistencyChecking=OFF)
     def __getByDifference(self, listA, listB):
         ## method to return list with elements of difference of two lists
         differenceList = []
@@ -233,13 +298,10 @@ class createCouponMarkA():
         self.part.setMeshControls(regions=cellsInnerCyl, technique=SWEEP, algorithm=ADVANCING_FRONT)
         self.part.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
 
+
 couponMarkADatabase = {
     "CouponMarkASpecimen1": {
-        "modelName" : "Coupon_Mark_A_Specimen1_Model",
-        "partName" : "Coupon_Mark_A_Specimen1_Part",
-        "sketchName" : "Coupon_Mark_A_Specimen1_Sketch1",
-        "partitionSketchName" : "Coupon_Mark_A_Specimen1_Sketch2",
-        "instanceName" : "Coupon_Mark_A_Specimen1_Instance",
+        "specimenName" : "Coupon_Mark_A_Specimen_1",
         "phi1" : 2.82,
         "phi2" : 5.0,
         "phi3" : 8.0,
@@ -248,19 +310,19 @@ couponMarkADatabase = {
         "len1" : 24.0,
         "len2" : 40.0,
         "partitionRadialFraction" : "2.0/3.0",
-        "lenTol" : 1.0e-6,
+        "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
         "seedSizeLong1" : 0.1,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
+        "materialName" : "Aluminum",
+        "density" : 4.8e-3,
+        "youngsModulus" : 70e3,
+        "poissonsRatio" : 0.3,
     },
     "CouponMarkASpecimen2": {
-        "modelName" : "Coupon_Mark_A_Specimen2_Model",
-        "partName" : "Coupon_Mark_A_Specimen2_Part",
-        "sketchName" : "Coupon_Mark_A_Specimen2_Sketch1",
-        "partitionSketchName" : "Coupon_Mark_A_Specimen2_Sketch2",
-        "instanceName" : "Coupon_Mark_A_Specimen2_Instance",
+        "specimenName" : "Coupon_Mark_A_Specimen_2",
         "phi1" : 3.99,
         "phi2" : 7.0,
         "phi3" : 12.0,
@@ -269,19 +331,19 @@ couponMarkADatabase = {
         "len1" : 34.0,
         "len2" : 60.0,
         "partitionRadialFraction" : "2.0/3.0",
-        "lenTol" : 1.0e-6,
+        "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
         "seedSizeLong1" : 0.1,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
+        "materialName" : "Aluminum",
+        "density" : 4.8e-3,
+        "youngsModulus" : 70e3,
+        "poissonsRatio" : 0.3,
     },
     "CouponMarkASpecimen3": {
-        "modelName" : "Coupon_Mark_A_Specimen3_Model",
-        "partName" : "Coupon_Mark_A_Specimen3_Part",
-        "sketchName" : "Coupon_Mark_A_Specimen3_Sketch1",
-        "partitionSketchName" : "Coupon_Mark_A_Specimen3_Sketch2",
-        "instanceName" : "Coupon_Mark_A_Specimen3_Instance",
+        "specimenName" : "Coupon_Mark_A_Specimen_3",
         "phi1" : 5.64,
         "phi2" : 10.0,
         "phi3" : 16.0,
@@ -290,19 +352,19 @@ couponMarkADatabase = {
         "len1" : 48.0,
         "len2" : 80.0,
         "partitionRadialFraction" : "2.0/3.0",
-        "lenTol" : 1.0e-6,
+        "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
         "seedSizeLong1" : 0.1,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
+        "materialName" : "Aluminum",
+        "density" : 4.8e-3,
+        "youngsModulus" : 70e3,
+        "poissonsRatio" : 0.3,
     },
     "CouponMarkASpecimen4": {
-        "modelName" : "Coupon_Mark_A_Specimen4_Model",
-        "partName" : "Coupon_Mark_A_Specimen4_Part",
-        "sketchName" : "Coupon_Mark_A_Specimen4_Sketch1",
-        "partitionSketchName" : "Coupon_Mark_A_Specimen4_Sketch2",
-        "instanceName" : "Coupon_Mark_A_Specimen4_Instance",
+        "specimenName" : "Coupon_Mark_A_Specimen_4",
         "phi1" : 7.98,
         "phi2" : 14.0,
         "phi3" : 22.0,
@@ -311,20 +373,17 @@ couponMarkADatabase = {
         "len1" : 75.0,
         "len2" : 110.0,
         "partitionRadialFraction" : "2.0/3.0",
-        "lenTol" : 1.0e-6,
+        "lenTol" : 1.0e-5,
         "seedSizeGlobal" : 0.1,
         "seedSizeOuterArc" : 0.1,
         "seedSizeLong1" : 0.1,
         "seedSizeLong2" : 0.2,
         "seedSizeLong3" : 0.3,
+        "materialName" : "Aluminum",
+        "density" : 4.8e-3,
+        "youngsModulus" : 70e3,
+        "poissonsRatio" : 0.3,
     },
 }
 
-s = createCouponMarkA(couponMarkADatabase["CouponMarkASpecimen4"])
-
-# sets
-#side1Faces = p.faces.findAt(((xB, yB/2, 0),))
-#p.Surface(side1Faces=side1Faces, name='Surf-1')
-# nodes = p.nodes.getSequenceFromMask(mask=(
-#     '[#bae #0:2 #ffc00000 #ffffffff:5]', ), )
-# p.Set(nodes=nodes, name='Set-1')
+s = createCouponMarkA(couponMarkADatabase["CouponMarkASpecimen1"])
