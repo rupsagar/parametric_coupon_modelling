@@ -1,17 +1,29 @@
 from abaqus import *
 from abaqusConstants import *
+from caeModules import *
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
 
 modelName = "Model-1"
 partName = "Part-1"
-sketchName = "sketch"
+sketchName = "Sketch-1"
+partitionSketchName = 'Sketch-2'
 phi1 = 2.82
-phi2 = 5.0
+phi2 = 6.0
 phi3 = 8.0
 rad1 = 20.0
 rad2 = 10.0
 len1 = 24.0
 len2 = 40.0
 theta = 30.0
+partitionRadius = phi1/4.0
+edgeLengthTol = 1.0e-6
+seedSizeArc = 0.1
+seedSizeRadial = 0.1
+seedSizeLong = 0.1
+seedNumArc = 7.0
+seedNumRadial = 5.0
+seedNumLong = 20.0
 
 #def createCoupon(modelName, partName, sketchName, phi1, phi2, phi3, rad1, rad2, len1, len2, theta):
 # all inputs converted to float to avoid truncation while division
@@ -23,6 +35,14 @@ rad2 = float(rad2)
 len1 = float(len1)
 len2 = float(len2)
 theta = float(theta)
+partitionRadius = float(partitionRadius)
+edgeLengthTol = float(edgeLengthTol)
+seedSizeArc = float(seedSizeArc)
+seedSizeRadial = float(seedSizeRadial)
+seedSizeLong = float(seedSizeLong)
+seedNumArc = int(seedNumArc)
+seedNumRadial = int(seedNumRadial)
+seedNumLong = int(seedNumLong)
 ############################################################################################################
 # vertex coordinate calculation
 coordO = (0.0, 0.0)
@@ -65,6 +85,8 @@ s.ArcByCenterEnds(center=coordCenterad1, point1=coordA, point2=coordB, direction
 s.CoincidentConstraint(entity1=v[3], entity2=g[3], addUndoState=False)
 s.RadialDimension(curve=g[5], textPoint=(0.0, 25.0), radius=rad1)
 s.DistanceDimension(entity1=v[2], entity2=g[2], textPoint=(10.0, 1.0), value=phi2/2.0)
+# x-coordinate of point B ==>> to be used during partitioning
+xB = v[2].coords[0] 
 ############################################################################################################
 # arc BC: g[6]; vertices: v[2], v[4]; center: v[5]; dimension: d[3], d[4], d[5]
 s.ArcByCenterEnds(center=coordCenterad2, point1=coordB, point2=coordC, direction=COUNTERCLOCKWISE)
@@ -96,26 +118,85 @@ p.BaseSolidRevolve(sketch=s, angle=90.0, flipRevolveDirection=ON)
 session.viewports['Viewport: 1'].setValues(displayedObject=p)
 #del mdb.models[modelName].sketches[sketchName]
 ############################################################################################################
-# partitioning
-f, e, dt = p.faces, p.edges, p.datums
-face = f.findAt(((0, phi1/4.0, -phi1/4.0),))
-face2 = f.getByBoundingBox(xMin=-len1/4.0,yMin=-phi1, zMin=-phi1, xMax=len1/4.0,yMax=phi1,zMax=phi1)
-t = p.MakeSketchTransform(sketchPlane=face2[0], sketchUpEdge=e[13], sketchPlaneSide=SIDE1, origin=(0.0, 0.0, 0.0))
-s1 = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', sheetSize=4.0, gridSpacing=0.1, transform=t)
-g1, v1, d1, c1 = s1.geometry, s1.vertices, s1.dimensions, s1.constraints
+# create partition-1
+sketchFace = p.faces.getByBoundingBox(xMin=-xB/2.0,yMin=-phi1, zMin=-phi1, xMax=xB/2.0,yMax=phi1,zMax=phi1)
+sketchEdge = p.edges.findAt(((0,partitionRadius,0),))
+t = p.MakeSketchTransform(sketchPlane=sketchFace[0], sketchUpEdge=sketchEdge[0], sketchPlaneSide=SIDE1, origin=(0.0, 0.0, 0.0))
+s1 = mdb.models[modelName].ConstrainedSketch(name=partitionSketchName, sheetSize=4.0, gridSpacing=0.1, transform=t)
+g1, v1 = s1.geometry, s1.vertices
 s1.setPrimaryObject(option=SUPERIMPOSE)
 p.projectReferencesOntoSketch(sketch=s1, filter=COPLANAR_EDGES)
-s1.ArcByCenterEnds(center=(0.0, 0.0), point1=(phi1/4.0, 0.0), point2=(0.0, -phi1/4.0), direction=COUNTERCLOCKWISE)
-s1.CoincidentConstraint(entity1=v1[3], entity2=g1[3], addUndoState=False)
-s1.CoincidentConstraint(entity1=v1[4], entity2=g1[2], addUndoState=False)
-f = p.faces
-pickedFaces = f.getSequenceFromMask(mask=('[#10 ]', ), )
-e, d1 = p.edges, p.datums
-p.PartitionFaceBySketch(sketchUpEdge=e[13], faces=pickedFaces, sketch=s1)
+s1.ArcByCenterEnds(center=(0.0, 0.0), point1=(0.0, partitionRadius), point2=(-partitionRadius, 0.0), direction=COUNTERCLOCKWISE)
+projectionLine1 = g1.findAt((0.0, partitionRadius/2.0),1)
+projectionLine2 = g1.findAt((-partitionRadius/2.0, 0.0),1)
+vertexPoint1 = v1.findAt((0.0, partitionRadius),1)
+vertexPoint2 = v1.findAt((-partitionRadius, 0.0),1)
+s1.CoincidentConstraint(entity1=vertexPoint1, entity2=projectionLine1, addUndoState=False)
+s1.CoincidentConstraint(entity1=vertexPoint2, entity2=projectionLine2, addUndoState=False)
 s1.unsetPrimaryObject()
-del mdb.models['Model-1'].sketches['__profile__']
+#del mdb.models[modelName].sketches[partitionSketchName]
+p.PartitionFaceBySketch(sketchUpEdge=sketchEdge[0], faces=sketchFace[0], sketch=s1)
+partitionEdges = p.edges.getByBoundingCylinder((0.0, 0.0, 0.0),(xB/2.0, 0.0, 0.0),partitionRadius)
+pickedEdges = []
+for eachEdge in partitionEdges:
+    if abs(eachEdge.getSize(0)-partitionRadius) >= edgeLengthTol:
+        pickedEdges.append(eachEdge)
 
+sweepEdge = p.edges.getByBoundingCylinder((0.0, 0.0, 0.0),(len2, 0.0, 0.0),partitionRadius/2.0)
+p.PartitionCellBySweepEdge(sweepPath=sweepEdge[0], cells=p.cells, edges=pickedEdges)
+#p.PartitionCellByExtrudeEdge(line=p.datums[1], cells=p.cells, edges=pickedEdges, sense=FORWARD)
+############################################################################################################
+# create partition-2
+datumPlane1_ID = p.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=xB).id
+p.PartitionCellByDatumPlane(datumPlane=p.datums[datumPlane1_ID], cells=p.cells)
+############################################################################################################
+# create partition-3
+datumPlane1_ID = p.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=len1/2.0).id
+p.PartitionCellByDatumPlane(datumPlane=p.datums[datumPlane1_ID], cells=p.cells)
+############################################################################################################
+# create mesh-1
+seedEdges = p.edges.getByBoundingCylinder((0.0, 0.0, 0.0),(len2/2.0, 0.0, 0.0),partitionRadius)
+pickedEdgesArc = []
+pickedEdgesRadial = []
+pickedEdgesLong = []
+for eachEdge in seedEdges:
+    try:
+        eachEdge.getRadius(0)
+        pickedEdgesArc.append(eachEdge)
+    except:
+        edgeLength = eachEdge.getSize(0)
+        if abs(edgeLength-partitionRadius) <= edgeLengthTol:
+            pickedEdgesRadial.append(eachEdge)
+        else :
+            pickedEdgesLong.append(eachEdge)
 
+p.seedEdgeBySize(edges=pickedEdgesArc, size=seedSizeArc, deviationFactor=0.1, constraint=FINER)
+p.seedEdgeBySize(edges=pickedEdgesRadial, size=seedSizeRadial, deviationFactor=0.1, constraint=FINER)
+p.seedEdgeBySize(edges=pickedEdgesLong, size=seedSizeLong, deviationFactor=0.1, constraint=FINER)
 
+#p.seedEdgeByNumber(edges=pickedEdgesArc, number=seedNumArc, constraint=FINER)
+#p.seedEdgeByNumber(edges=pickedEdgesRadial, number=seedNumRadial, constraint=FINER)
+#p.seedEdgeByNumber(edges=pickedEdgesLong, number=seedNumLong, constraint=FINER)
 
+pickedCells1 = p.cells.getByBoundingCylinder((0.0, 0.0, 0.0),(len2, 0.0, 0.0),(partitionRadius+phi1/2.0)/2.0)
+cellIndex1 = []
+for eachCell in pickedCells1:
+    cellIndex1.append(eachCell.index)
+
+p.generateMesh(regions=pickedCells1)
+############################################################################################################
+# create mesh-2
+pickedCellsAll = p.cells.getByBoundingCylinder((0.0, 0.0, 0.0),(len2, 0.0, 0.0),phi3/2.0)
+cellIndexAll = []
+for eachCell in pickedCellsAll:
+    cellIndexAll.append(eachCell.index)
+
+cellIndexTemp = cellIndex1+cellIndexAll
+cellIndexTemp.sort()
+pickedCells2 = []
+for index in range(1,len(cellIndexTemp)-1):
+    if cellIndexTemp[index-1] != cellIndexTemp[index] and cellIndexTemp[index] != cellIndexTemp[index+1]:
+        pickedCells2.append(pickedCellsAll[cellIndexTemp[index]])
+
+p.generateMesh(regions=pickedCells2)
 #createCoupon(modelName, partName, sketchName, phi1, phi2, phi3, rad1, rad2, len1, len2, theta)
