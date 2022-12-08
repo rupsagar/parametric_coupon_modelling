@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'Z:\Rupsagar\04_COUPON_MODELLING\01_WIP\Script_Files\Coupon_Mark_BJ'
+couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\text'
 couponDatabaseJsonFileName = r'Coupon_Mark_BJ_Database.json'
 
 import os
@@ -136,16 +136,19 @@ class couponMarkBJ(couponGeneric):
         self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
         ## create coupon specimen
         self.createModel()
-        self.__createProfileSketch()
+        self.createProfileSketch()
         self.createPart()
-        # self.__createPartition()
+        self.createPartitionOffset()
+        self.createPartitionCyl()
+        self.createPartitionLong()
         # self.__createMesh()
-        # self.createMaterial()
-        # self.createSection()
-        # self.createAssembly()
-        # self.__createStep()
-        # self.createJob()
-    def __createProfileSketch(self):
+        self.createMesh2()
+        self.createMaterial()
+        self.createSection()
+        self.createAssembly()
+        self.createStep()
+        self.createJob()
+    def createProfileSketch(self):
         ## method to draw sketch of coupon profile
         ## calculate vertex coordinates
         self.coordO = (self.xO, self.yO) = (0.0, 0.0)
@@ -217,9 +220,44 @@ class couponMarkBJ(couponGeneric):
         self.profileSketch.HorizontalConstraint(entity=self.profileGeometry[11], addUndoState=False)
         self.profileSketch.PerpendicularConstraint(entity1=self.profileGeometry[10], entity2=self.profileGeometry[11], addUndoState=False)
         self.profileSketch.unsetPrimaryObject()
-    def __createPartition(self):
+    def createPartitionOffset(self):
+        #f, e, d = p.faces, p.edges, p.datums
+        sketchPlane = self.part.faces.findAt(((self.len1/2, self.partitionRadius, 0),))
+        sketchUpEdge = self.part.edges.findAt(((self.len2/2, self.partitionRadius, 0),))
+        transform = self.part.MakeSketchTransform(sketchPlane=sketchPlane[0], sketchUpEdge=sketchUpEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
+        self.partitionSketch = self.model.ConstrainedSketch(name='sketch2', sheetSize=50.0, gridSpacing=1.0, transform=transform)
+        g, v = self.partitionSketch.geometry, self.partitionSketch.vertices
+        self.partitionSketch.setPrimaryObject(option=SUPERIMPOSE)
+        self.part.projectReferencesOntoSketch(sketch=self.partitionSketch, filter=COPLANAR_EDGES)
+        self.yOffset = (self.phi1/2-self.partitionRadius)/2
+        ## arc
+        self.partitionSketch.ArcByCenterEnds(center=(self.xC1, self.yC1), point1=(self.xA, self.yA-self.yOffset), point2=(self.xB, self.yB-self.yOffset), direction=COUNTERCLOCKWISE)
+        self.partitionSketch.CoincidentConstraint(entity1=g[8], entity2=v[10])
+        self.partitionSketch.HorizontalDimension(vertex1=v[10], vertex2=v[11], textPoint=(0.5, 0.5), value=self.xB)
+        self.partitionSketch.ObliqueDimension(vertex1=v[10], vertex2=v[9], textPoint=(2.5, 0.0), value=self.yA-self.yOffset)
+        ## line
+        self.partitionSketch.Line(point1=v[11].coords, point2=(self.xC, self.yC-self.yOffset))
+        self.partitionSketch.TangentConstraint(entity1=g[11], entity2=g[12], addUndoState=False)
+        self.partitionSketch.HorizontalDimension(vertex1=v[11], vertex2=v[12], textPoint=(0.5, 0.5), value=self.xC-self.xB)
+        ## line
+        self.partitionSketch.Line(point1=v[12].coords, point2=(self.xD, self.yD-self.yOffset))
+        self.partitionSketch.ParallelConstraint(entity1=g[5], entity2=g[13])
+        self.partitionSketch.HorizontalDimension(vertex1=v[12], vertex2=v[13], textPoint=(4.0, 0.5), value=self.xD-self.xC)
+        ## arc
+        self.partitionSketch.ArcByCenterEnds(center=(self.xC2, self.yC2), point1=v[13].coords, point2=(self.xE, self.yE-self.yOffset), direction=COUNTERCLOCKWISE)
+        self.partitionSketch.HorizontalDimension(vertex1=v[13], vertex2=v[14], textPoint=(6.0, 0.5), value=self.xE-self.xD)
+        ## line
+        self.partitionSketch.Line(point1=v[14].coords, point2=(self.xF, self.yF-self.yOffset))
+        self.partitionSketch.ParallelConstraint(entity1=g[3], entity2=g[15])
+        self.partitionSketch.CoincidentConstraint(entity1=v[15], entity2=g[2])
+        self.partitionSketch.unsetPrimaryObject()
+        self.part.PartitionFaceBySketch(sketchUpEdge=sketchUpEdge[0], faces=sketchPlane[0], sketch=self.partitionSketch)
+        e = self.part.edges
+        pickedEdges =(e[0], e[1], e[2], e[3], e[4])
+        self.part.PartitionCellBySweepEdge(sweepPath=e[24], cells=self.part.cells, edges=pickedEdges)
+    def createPartitionCyl(self):
         ## partition ==>> inner cylinder
-        self.sketchFace = self.part.faces.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol))
+        self.sketchFace = self.part.faces.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA-self.yOffset+self.lenTol))
         self.sketchEdge = self.part.edges.findAt(((0, self.partitionRadius, 0),))
         self.transform = self.part.MakeSketchTransform(sketchPlane=self.sketchFace[0], sketchUpEdge=self.sketchEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
         self.partitionSketch = self.model.ConstrainedSketch(name=self.partitionSketchName, sheetSize=4, transform=self.transform)
@@ -239,12 +277,12 @@ class couponMarkBJ(couponGeneric):
         self.edgesArcForPartition = self.getArcEdge(edgesTemp)
         self.sweepEdges = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.partitionRadius-self.lenTol))
         self.part.PartitionCellBySweepEdge(sweepPath=self.sweepEdges[0], cells=self.part.cells, edges=self.edgesArcForPartition)
+    def createPartitionLong(self):
         ## partition ==>> at section B
         self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xB).id
         self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)
         ## partition ==>> at section C
-        self.xCDash = self.xC+0.5*(self.xC-self.xB)
-        self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xCDash).id
+        self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xC).id
         self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)
         ## partition ==>> at section D
         self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=self.xD).id
@@ -308,7 +346,50 @@ class couponMarkBJ(couponGeneric):
         if self.elemTypeTetra == 'C3D4':
             elemType3 = mesh.ElemType(elemCode=C3D4, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
         self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
-    def __createStep(self):
+    def createMesh2(self):
+        ## seed ==>> global
+        self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
+        ## seed ==>> outer arc edge AA'
+        self.edgesOuterCyl = self.getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.yOffset+self.lenTol))
+        self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
+        self.part.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FIXED)
+        ## seed ==>> outer radial edges
+        # self.edgesOuterRadial = self.getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
+        # self.__seedOuterRadial((0.0, self.partitionRadius+self.yOffset+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
+        # self.__seedOuterRadial((0.0, 0.0, -(self.partitionRadius+self.yOffset+self.lenTol)), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
+        ## seed ==>> longitudinal edge along ab
+        self.__seedLongEdges(self.xA, self.xB, self.seedSizeLong1)
+        self.__seedLongEdges(self.xB, self.xC, self.seedSizeLong1)
+        self.__seedLongEdges(self.xC, self.xD, self.seedSizeLong2)
+        self.__seedLongEdges(self.xD, self.xE, self.seedSizeLong2)
+        self.__seedLongEdges(self.xE, self.xF, self.seedSizeLong3)
+        ## seed ==>> inner radial edges
+        self.edgesInnerCyl = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        self.edgesInnerArc = self.getArcEdge(self.edgesInnerCyl)
+        self.edgesInnerRadial = self.getByDifference(self.edgesInnerCyl, self.edgesInnerArc)
+        self.part.seedEdgeBySize(edges=self.edgesInnerRadial, size=self.seedSizeInnerRadial, deviationFactor=0.1, constraint=FINER)
+        ## sweep path ==>> inner cylinder
+        self.__setInnerCylSweepPath(self.xA, self.xB)
+        self.__setInnerCylSweepPath(self.xB, self.xC)
+        self.__setInnerCylSweepPath(self.xC, self.xD)
+        self.__setInnerCylSweepPath(self.xD, self.xE)
+        self.__setInnerCylSweepPath(self.xE, self.xF)
+        self.part.generateMesh(regions=self.part.cells)
+        ## mesh ==>> outer cylinder
+        #self.cellsOuterCyl = self.getByCylinderDifference(self.part.cells, (self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yF+self.lenTol), (self.partitionRadius+self.lenTol))
+        #self.part.generateMesh(regions=self.cellsOuterCyl)
+        ## mesh ==>> inner cylinder
+        #self.cellsInnerCyl = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+        #self.part.generateMesh(regions=self.cellsInnerCyl)
+        ## set element types
+        if self.elemTypeHex == 'C3D8HS':
+            elemType1 = mesh.ElemType(elemCode=C3D8HS, elemLibrary=STANDARD)
+        if self.elemTypePenta == 'C3D6':
+            elemType2 = mesh.ElemType(elemCode=C3D6, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
+        if self.elemTypeTetra == 'C3D4':
+            elemType3 = mesh.ElemType(elemCode=C3D4, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
+        self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
+    def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=OFF, initialInc=0.1, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         ## create BC at negY face
@@ -373,7 +454,7 @@ couponMarkADatabaseUnicode = json.load(fileJson)
 fileJson.close
 couponMarkBJDatabase = ast.literal_eval(json.dumps(couponMarkADatabaseUnicode))
 
-self = couponMarkBJ(couponMarkBJDatabase['CouponMarkBJSpecimen1'])
+self = couponMarkBJ(couponMarkBJDatabase['CouponMarkBJSpecimen2'])
 
 # p = mdb.models['Coupon_Mark_BJ_Specimen_1_Model'].parts['Coupon_Mark_BJ_Specimen_1_Part']
 # c = p.cells
