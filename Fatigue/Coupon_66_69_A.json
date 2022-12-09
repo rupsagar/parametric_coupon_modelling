@@ -22,7 +22,7 @@
         "density" : 2.85e-6,
         "youngsModulus" : 72000.0,
         "poissonsRatio" : 0.3309,
-		"nominalStress" : 250.0
+	"nominalStress" : 250.0
     },
     "coupon67A": {
         "couponName" : "Coupon_67A",
@@ -47,7 +47,7 @@
         "density" : 2.85e-6,
         "youngsModulus" : 72000.0,
         "poissonsRatio" : 0.3309,
-		"nominalStress" : 250.0
+	"nominalStress" : 250.0
     },
     "coupon68A": {
         "couponName" : "Coupon_68A",
@@ -72,7 +72,7 @@
         "density" : 2.85e-6,
         "youngsModulus" : 72000.0,
         "poissonsRatio" : 0.3309,
-		"nominalStress" : 250.0
+	"nominalStress" : 250.0
     },
     "coupon69A": {
         "couponName" : "Coupon_69A",
@@ -97,6 +97,6 @@
         "density" : 2.85e-6,
         "youngsModulus" : 72000.0,
         "poissonsRatio" : 0.3309,
-		"nominalStress" : 250.0
+	"nominalStress" : 250.0
     }
 }
