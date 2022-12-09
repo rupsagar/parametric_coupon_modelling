@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\Coupon_66_69_A'
+couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\Coupon_Parametric_Modelling\Fatigue\Coupon_66_69_A'
 couponDatabaseJsonFileName = r'Coupon_66_69_A.json'
 
 import os
@@ -12,7 +12,7 @@ from caeModules import *
 
 class couponGeneric(object):
     def __init__(self, couponData):
-        self.specimenName = couponData['specimenName']
+        self.couponName = couponData['couponName']
         self.materialName = couponData['materialName']
         self.density = float(couponData['density'])
         self.youngsModulus = float(couponData['youngsModulus'])
@@ -22,13 +22,13 @@ class couponGeneric(object):
         self.elemTypePenta = couponData['elemTypePenta']
         self.elemTypeTetra = couponData['elemTypeTetra']
         ## derived quantities
-        self.modelName = self.specimenName+'_Model'
-        self.partName = self.specimenName+'_Part'
-        self.sketchName = self.specimenName+'_Profile_Sketch'
-        self.partitionSketchName = self.specimenName+'_Partition_Sketch'
-        self.sectionName = self.specimenName+'_Section'
-        self.instanceName = self.specimenName+'_Instance'
-        self.jobName = self.specimenName+'_Job'
+        self.modelName = self.couponName+'_Model'
+        self.partName = self.couponName+'_Part'
+        self.sketchName = self.couponName+'_Profile_Sketch'
+        self.partitionSketchName = self.couponName+'_Partition_Sketch'
+        self.sectionName = self.couponName+'_Section'
+        self.instanceName = self.couponName+'_Instance'
+        self.jobName = self.couponName+'_Job'
     def createModel(self):
         ## define model
         #session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
@@ -132,7 +132,7 @@ class coupon66_69A(couponGeneric):
         self.endStress = -self.nominalStress*(self.phi1/self.phi3)**2
         self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
         self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
-        ## create coupon specimen
+        ## create coupon
         self.createModel()
         self.createProfileSketch()
         self.createPart()
@@ -345,9 +345,9 @@ couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
 
 
 ## create instances of the coupon
-couponList = []
-for thisCoupon in couponDatabase:
-    couponList.append(coupon66_69A(couponDatabase[thisCoupon]))
+# couponList = []
+# for thisCoupon in couponDatabase:
+#     couponList.append(coupon66_69A(couponDatabase[thisCoupon]))
 
 
-#self = coupon66_69A(couponDatabase['coupon66A'])
+self = coupon66_69A(couponDatabase['coupon66A'])
