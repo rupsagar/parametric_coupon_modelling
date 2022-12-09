@@ -13,7 +13,7 @@ from caeModules import *
 
 class couponGeneric(object):
     def __init__(self, couponData):
-        self.specimenName = couponData['specimenName']
+        self.couponName = couponData['couponName']
         self.materialName = couponData['materialName']
         self.density = float(couponData['density'])
         self.youngsModulus = float(couponData['youngsModulus'])
@@ -23,13 +23,13 @@ class couponGeneric(object):
         self.elemTypePenta = couponData['elemTypePenta']
         self.elemTypeTetra = couponData['elemTypeTetra']
         ## derived quantities
-        self.modelName = self.specimenName+'_Model'
-        self.partName = self.specimenName+'_Part'
-        self.sketchName = self.specimenName+'_Profile_Sketch'
-        self.partitionSketchName = self.specimenName+'_Partition_Sketch'
-        self.sectionName = self.specimenName+'_Section'
-        self.instanceName = self.specimenName+'_Instance'
-        self.jobName = self.specimenName+'_Job'
+        self.modelName = self.couponName+'_Model'
+        self.partName = self.couponName+'_Part'
+        self.sketchName = self.couponName+'_Profile_Sketch'
+        self.partitionSketchName = self.couponName+'_Partition_Sketch'
+        self.sectionName = self.couponName+'_Section'
+        self.instanceName = self.couponName+'_Instance'
+        self.jobName = self.couponName+'_Job'
     def createModel(self):
         ## define model
         #session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
@@ -135,7 +135,7 @@ class coupon66_69BJ(couponGeneric):
         self.endStress = -self.nominalStress*(self.phi1/self.phi3)**2
         self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
         self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
-        ## create coupon specimen
+        ## create coupon
         self.createModel()
         self.createProfileSketch()
         self.createPart()
@@ -390,9 +390,9 @@ couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
 
 
 ## create instances of the coupon
-couponList = []
-for thisCoupon in couponDatabase:
-        couponList.append(coupon66_69BJ(couponDatabase[thisCoupon]))
+# couponList = []
+# for thisCoupon in couponDatabase:
+#         couponList.append(coupon66_69BJ(couponDatabase[thisCoupon]))
 
 
-#self = coupon66_69BJ(couponDatabase['coupon66C'])
+self = coupon66_69BJ(couponDatabase['coupon66C'])
