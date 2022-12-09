@@ -344,9 +344,10 @@ fileJson.close
 couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
 
 
-## create instance of the coupon
-couponModelList = []
+## create instances of the coupon
+couponList = []
 for thisCoupon in couponDatabase:
-    couponModelList.append(coupon66_69A(couponDatabase[thisCoupon]))
+    couponList.append(coupon66_69A(couponDatabase[thisCoupon]))
 
-self = coupon66_69A(couponDatabase['coupon66A'])
+
+#self = coupon66_69A(couponDatabase['coupon66A'])
