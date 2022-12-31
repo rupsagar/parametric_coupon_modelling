@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\Coupon_Parametric_Modelling\Fatigue\Coupon_66_69_BJ'
+couponDatabasePath = r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Fatigue\Coupon_66_69_BJ\Scripts'
 couponDatabaseJsonFileName = r'Coupon_66_69_BJ.json'
 
 import os
@@ -11,109 +11,10 @@ from abaqus import *
 from abaqusConstants import *
 from caeModules import *
 
-class couponGeneric(object):
-    def __init__(self, couponData):
-        self.couponName = couponData['couponName']
-        self.materialName = couponData['materialName']
-        self.density = float(couponData['density'])
-        self.youngsModulus = float(couponData['youngsModulus'])
-        self.poissonsRatio = float(couponData['poissonsRatio'])
-        self.lenTol = abs(float(couponData['lenTol']))
-        self.elemTypeHex = couponData['elemTypeHex']
-        self.elemTypePenta = couponData['elemTypePenta']
-        self.elemTypeTetra = couponData['elemTypeTetra']
-        ## derived quantities
-        self.modelName = self.couponName+'_Model'
-        self.partName = self.couponName+'_Part'
-        self.sketchName = self.couponName+'_Profile_Sketch'
-        self.partitionSketchName = self.couponName+'_Partition_Sketch'
-        self.sectionName = self.couponName+'_Section'
-        self.instanceName = self.couponName+'_Instance'
-        self.jobName = self.couponName+'_Job'
-    def createModel(self):
-        ## define model
-        #session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
-        self.model = mdb.Model(name=self.modelName)
-    def createPart(self):
-        ## create solid
-        self.part = self.model.Part(name=self.partName, dimensionality=THREE_D, type=DEFORMABLE_BODY)
-        self.part.BaseSolidRevolve(sketch=self.profileSketch, angle=90, flipRevolveDirection=ON)
-        session.viewports['Viewport: 1'].setValues(displayedObject=self.part)
-    def createMaterial(self):
-        ## material definition
-        self.model.Material(name=self.materialName)
-        self.model.materials[self.materialName].Density(table=((self.density, ), ))
-        self.model.materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
-    def createSection(self):
-        ## section definition
-        self.model.HomogeneousSolidSection(name=self.sectionName, material=self.materialName, thickness=None)
-        ## assign section property to elements
-        pickedRegion = self.part.Set(elements=self.part.elements, name='Elements_All')
-        #pickedRegion = regionToolset.Region(cells=self.part.cells)   
-        self.part.SectionAssignment(region=pickedRegion, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
-    def createAssembly(self):
-        ## create assembly
-        self.assembly = self.model.rootAssembly
-        self.assembly.DatumCsysByDefault(CARTESIAN)
-        self.instance = self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
-    def createJob(self):
-        ## create job
-        self.job = mdb.Job(name=self.jobName, model=self.modelName, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, 
-        memory=90, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
-        modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
-        self.job.writeInput(consistencyChecking=OFF)
-    def getByDifference(self, listA, listB):
-        ## method to return list with elements of difference of two lists
-        differenceList = []
-        for thisItem in listA:
-            if thisItem not in listB:
-                differenceList.append(thisItem)
-        return differenceList
-    def getByCylinderDifference(self, feature, center1, center2, outerRadius, innerRadius):
-        ## method to return list with geometric features by subtraction of two bounding cylinders
-        featureOuter = feature.getByBoundingCylinder(center1, center2, outerRadius)
-        featureInner = feature.getByBoundingCylinder(center1, center2, innerRadius)
-        pickedFeatures = self.getByDifference(featureOuter, featureInner)
-        return pickedFeatures
-    def getArcEdge(self, edgeList):
-        ## method to return edge list containing only arc edges from a given edge list
-        arcEdge = []
-        for thisEdge in edgeList:
-            try:
-                thisEdge.getRadius()
-                arcEdge.append(thisEdge)
-            except:
-                pass
-        return arcEdge
-    def getEdgeByLength(self, edgeList, length):
-        ## method to return edge list of a desired length from a given edge list
-        pickedEdges = []
-        for thisEdge in edgeList:
-            if abs(thisEdge.getSize(0)-length) < self.lenTol:
-                pickedEdges.append(thisEdge)
-        return pickedEdges
-    def getElemSurfFromCellFace(self, cellFaceArr, surfName):
-        ## method to create element based surface from cell face
-        elemWithFace = [[], [], [], [], [], []]
-        for thisCellFace in cellFaceArr:
-            elemFaceArr = thisCellFace.getElementFaces()   
-            for thisElem in elemFaceArr:
-                for thisfaceID in range(6):
-                    if thisElem.face == SymbolicConstant('FACE'+str(thisfaceID+1)):
-                        elemWithFace[thisfaceID].append(thisElem)
-                        break
-        surfDict = {'name':surfName}
-        for thisfaceID in range(6):
-            if len(elemWithFace[thisfaceID]) > 0:
-                elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
-                surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
-        self.part.Surface(**surfDict)
-
-
-class coupon66_69BJ(couponGeneric):
+class coupon66_69BJ():
     def __init__(self, couponData):
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
-        super(coupon66_69BJ, self).__init__(couponData)
+        self.couponName = couponData['couponName']
         self.phi1 = float(couponData['phi1'])
         self.phi2 = float(couponData['phi2'])
         self.phi3 = float(couponData['phi3'])
@@ -123,18 +24,32 @@ class coupon66_69BJ(couponGeneric):
         self.len2 = float(couponData['len2'])
         self.thetaDeg = float(couponData['thetaDeg'])
         self.partitionRadialFraction = float(eval(couponData['partitionRadialFraction']))
+        self.lenTol = abs(float(couponData['lenTol']))
         self.seedSizeGlobal = float(couponData['seedSizeGlobal'])
         self.seedSizeOuterArc = float(couponData['seedSizeOuterArc'])
         self.seedSizeLong1 = float(couponData['seedSizeLong1'])
         self.seedSizeLong2 = float(couponData['seedSizeLong2'])
         self.seedSizeLong3 = float(couponData['seedSizeLong3'])
+        self.elemTypeHex = SymbolicConstant(couponData['elemTypeHex'])
+        self.NLGEOM = SymbolicConstant(couponData['NLGEOM'])
+        self.materialName = couponData['materialName']
+        self.density = float(couponData['density'])
+        self.youngsModulus = float(couponData['youngsModulus'])
+        self.poissonsRatio = float(couponData['poissonsRatio'])
         self.nominalStress = float(couponData['nominalStress'])
         ## derived quantities
+        self.modelName = self.couponName+'_Model'
+        self.partName = self.couponName+'_Part'
+        self.sketchName = self.couponName+'_Profile_Sketch'
+        self.partitionSketchName = self.couponName+'_Partition_Sketch'
+        self.sectionName = self.couponName+'_Section'
+        self.instanceName = self.couponName+'_Instance'
+        self.jobName = self.couponName+'_Job'
         self.alphaRad = math.pi/180*(90-self.thetaDeg)
         self.partitionRadius = self.partitionRadialFraction*self.phi1/2
         self.endStress = -self.nominalStress*(self.phi1/self.phi3)**2
         self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
-        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction #self.seedSizeGlobal
+        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction
         ## create coupon
         self.createModel()
         self.createProfileSketch()
@@ -146,6 +61,10 @@ class coupon66_69BJ(couponGeneric):
         self.createAssembly()
         self.createStep()
         self.createJob()
+    def createModel(self):
+        ## define model
+        session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
+        self.model = mdb.Model(name=self.modelName)
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
         ## calculate vertex coordinates
@@ -218,6 +137,11 @@ class coupon66_69BJ(couponGeneric):
         self.profileSketch.HorizontalConstraint(entity=self.profileGeometry[11], addUndoState=False)
         self.profileSketch.PerpendicularConstraint(entity1=self.profileGeometry[10], entity2=self.profileGeometry[11], addUndoState=False)
         self.profileSketch.unsetPrimaryObject()
+    def createPart(self):
+        ## create solid
+        self.part = self.model.Part(name=self.partName, dimensionality=THREE_D, type=DEFORMABLE_BODY)
+        self.part.BaseSolidRevolve(sketch=self.profileSketch, angle=90.0, flipRevolveDirection=ON)
+        session.viewports['Viewport: 1'].setValues(displayedObject=self.part)
     def createPartition(self):
         def createPartitionOffset():
             sketchPlane = self.part.faces.findAt(((self.len1/2, self.partitionRadius, 0),))
@@ -283,26 +207,10 @@ class coupon66_69BJ(couponGeneric):
         createPartitionCyl()
         createPartitionLong(self.xB)
         createPartitionLong(self.xC)
+        #createPartitionLong((self.xC+self.xD)/2)
         createPartitionLong(self.xD)
         createPartitionLong(self.xE)
     def createMesh(self):
-        def seedOuterRadial(pointOnRadius, **kwargs):
-            ## method to seed the outer radial edge at sections through A and B
-            edgesOuterRadial = self.part.edges.findAt((pointOnRadius, ))  
-            edgesRadialVertexIDPair = edgesOuterRadial[0].getVertices()
-            for thisVertexID in edgesRadialVertexIDPair:
-                vertexCoord = self.part.vertices[thisVertexID].pointOn
-                if abs(abs(vertexCoord[0][1])-self.partitionRadius) < self.lenTol or abs(abs(vertexCoord[0][2])-self.partitionRadius) < self.lenTol or abs(abs(vertexCoord[0][2])-self.partitionRadius) < self.lenTol:
-                    if edgesRadialVertexIDPair.index(thisVertexID) == 0:
-                        if 'minSize' in kwargs.keys():
-                            self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=edgesOuterRadial, minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FIXED)
-                        elif 'ratio' in kwargs.keys():
-                            self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=edgesOuterRadial, ratio=kwargs['ratio'], number=kwargs['number'], constraint=FIXED)
-                    elif edgesRadialVertexIDPair.index(thisVertexID) == 1:
-                        if 'minSize' in kwargs.keys():
-                            self.part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=edgesOuterRadial, minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FIXED)
-                        elif 'ratio' in kwargs.keys():
-                            self.part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=edgesOuterRadial, ratio=kwargs['ratio'], number=kwargs['number'], constraint=FIXED)
         def seedLongEdges(xLeft, xRight, seedSize):
             ## method to seed the longitudinal edges
             edgesInnerArcLong = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
@@ -323,13 +231,11 @@ class coupon66_69BJ(couponGeneric):
         self.edgesOuterCyl = self.getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.yOffset+self.lenTol))
         self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
         self.part.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FIXED)
-        ## seed ==>> outer radial edges
-        # self.edgesOuterRadial = self.getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
-        # seedOuterRadial((0.0, self.partitionRadius+self.yOffset+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
-        # seedOuterRadial((0.0, 0.0, -(self.partitionRadius+self.yOffset+self.lenTol)), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
         ## seed ==>> longitudinal edge along ab
         seedLongEdges(self.xA, self.xB, self.seedSizeLong1)
         seedLongEdges(self.xB, self.xC, self.seedSizeLong1)
+        #seedLongEdges(self.xC, (self.xC+self.xD)/2, self.seedSizeLong2)
+        #seedLongEdges((self.xC+self.xD)/2, self.xD, self.seedSizeLong3)
         seedLongEdges(self.xC, self.xD, self.seedSizeLong2)
         seedLongEdges(self.xD, self.xE, self.seedSizeLong2)
         seedLongEdges(self.xE, self.xF, self.seedSizeLong3)
@@ -347,16 +253,28 @@ class coupon66_69BJ(couponGeneric):
         ## mesh ==>> outer cylinder
         self.part.generateMesh(regions=self.part.cells)
         ## set element types
-        if self.elemTypeHex == 'C3D8HS':
-            elemType1 = mesh.ElemType(elemCode=C3D8HS, elemLibrary=STANDARD)
-        if self.elemTypePenta == 'C3D6':
-            elemType2 = mesh.ElemType(elemCode=C3D6, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
-        if self.elemTypeTetra == 'C3D4':
-            elemType3 = mesh.ElemType(elemCode=C3D4, elemLibrary=STANDARD, secondOrderAccuracy=OFF, distortionControl=DEFAULT)
-        self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
+        elemType1 = mesh.ElemType(elemCode=self.elemTypeHex, elemLibrary=STANDARD)
+        self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, ))
+    def createMaterial(self):
+        ## material definition
+        self.model.Material(name=self.materialName)
+        self.model.materials[self.materialName].Density(table=((self.density, ), ))
+        self.model.materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
+    def createSection(self):
+        ## section definition
+        self.model.HomogeneousSolidSection(name=self.sectionName, material=self.materialName, thickness=None)
+        ## assign section property to elements
+        pickedRegion = self.part.Set(elements=self.part.elements, name='Elements_All')
+        #pickedRegion = regionToolset.Region(cells=self.part.cells)   
+        self.part.SectionAssignment(region=pickedRegion, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+    def createAssembly(self):
+        ## create assembly
+        self.assembly = self.model.rootAssembly
+        self.assembly.DatumCsysByDefault(CARTESIAN)
+        self.instance = self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
     def createStep(self):
         ## create step for load and boundary conditions
-        self.model.StaticStep(name='Load', previous='Initial', nlgeom=OFF, initialInc=0.1, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
+        self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.NLGEOM, initialInc=0.1, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         ## create BC at negY face
         nodesNegY = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yF-self.lenTol, xMax = self.xG+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
         nsetNameNegY = 'Nset_NegY'
@@ -381,6 +299,58 @@ class coupon66_69BJ(couponGeneric):
         self.getElemSurfFromCellFace(endCellFaceArr, surfNamePosX)
         region = self.instance.surfaces[surfNamePosX]
         self.model.Pressure(name='Load_PosX', createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+    def createJob(self):
+        ## create job
+        self.job = mdb.Job(name=self.jobName, model=self.modelName, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, 
+        memory=90, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+        modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
+        self.job.writeInput(consistencyChecking=OFF)
+    def getByDifference(self, listA, listB):
+        ## method to return list with elements of difference of two lists
+        differenceList = []
+        for thisItem in listA:
+            if thisItem not in listB:
+                differenceList.append(thisItem)
+        return differenceList
+    def getByCylinderDifference(self, feature, center1, center2, outerRadius, innerRadius):
+        ## method to return list with geometric features by subtraction of two bounding cylinders
+        featureOuter = feature.getByBoundingCylinder(center1, center2, outerRadius)
+        featureInner = feature.getByBoundingCylinder(center1, center2, innerRadius)
+        pickedFeatures = self.getByDifference(featureOuter, featureInner)
+        return pickedFeatures
+    def getArcEdge(self, edgeList):
+        ## method to return edge list containing only arc edges from a given edge list
+        arcEdge = []
+        for thisEdge in edgeList:
+            try:
+                thisEdge.getRadius()
+                arcEdge.append(thisEdge)
+            except:
+                pass
+        return arcEdge
+    def getEdgeByLength(self, edgeList, length):
+        ## method to return edge list of a desired length from a given edge list
+        pickedEdges = []
+        for thisEdge in edgeList:
+            if abs(thisEdge.getSize(0)-length) < self.lenTol:
+                pickedEdges.append(thisEdge)
+        return pickedEdges
+    def getElemSurfFromCellFace(self, cellFaceArr, surfName):
+        ## method to create element based surface from cell face
+        elemWithFace = [[], [], [], [], [], []]
+        for thisCellFace in cellFaceArr:
+            elemFaceArr = thisCellFace.getElementFaces()   
+            for thisElem in elemFaceArr:
+                for thisfaceID in range(6):
+                    if thisElem.face == SymbolicConstant('FACE'+str(thisfaceID+1)):
+                        elemWithFace[thisfaceID].append(thisElem)
+                        break
+        surfDict = {'name':surfName}
+        for thisfaceID in range(6):
+            if len(elemWithFace[thisfaceID]) > 0:
+                elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
+                surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
+        self.part.Surface(**surfDict)
 
 
 fileJson = open(os.path.join(couponDatabasePath, couponDatabaseJsonFileName), 'r')
@@ -395,4 +365,4 @@ couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
 #         couponList.append(coupon66_69BJ(couponDatabase[thisCoupon]))
 
 
-self = coupon66_69BJ(couponDatabase['coupon66C'])
+self = coupon66_69BJ(couponDatabase['coupon66E'])
