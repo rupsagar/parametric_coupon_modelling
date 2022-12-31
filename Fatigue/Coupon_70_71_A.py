@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'D:\Academic_To_be_uploaded\Programming\git\abaqus_scripts\Coupon_Parametric_Modelling\Fatigue\Coupon_70_71_A'
+couponDatabasePath = r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Fatigue\Coupon_70_71_A'
 couponDatabaseJsonFileName = r'Coupon_70_71_A.json'
 
 import os
@@ -36,7 +36,8 @@ class couponGeneric(object):
     def createPart(self):
         ## create solid
         self.part = self.model.Part(name=self.partName, dimensionality=THREE_D, type=DEFORMABLE_BODY)
-        self.part.BaseSolidRevolve(sketch=self.profileSketch, angle=90, flipRevolveDirection=ON)
+        #self.part.BaseSolidRevolve(sketch=self.profileSketch, angle=90, flipRevolveDirection=ON)
+        self.part.BaseSolidExtrude(sketch=self.profileSketch, depth=2.0)
         session.viewports['Viewport: 1'].setValues(displayedObject=self.part)
     def createMaterial(self):
         ## material definition
