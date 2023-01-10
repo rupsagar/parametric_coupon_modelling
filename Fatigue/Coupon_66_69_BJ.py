@@ -122,6 +122,18 @@ class coupon66_69BJ():
         self.profileSketch.Line(point1=self.coordC, point2=self.coordD)
         self.profileSketch.HorizontalConstraint(entity=self.profileGeometry[7], addUndoState=False)
         (self.xD, self.yD) = self.profileVertices[5].coords
+        
+
+
+        ## horizontal fixed construction line
+        self.profileSketch.ConstructionLine(point1=(-50.0, 0.0), angle=0.0)
+        self.profileSketch.HorizontalConstraint(entity=self.profileGeometry[2], addUndoState=False)
+        self.profileSketch.FixedConstraint(entity=self.profileGeometry[2])
+        self.profileSketch.assignCenterline(line=self.profileGeometry[2])
+        ## vertical fixed construction line
+        self.profileSketch.ConstructionLine(point1=(0.0, -25.0), angle=90.0)
+        self.profileSketch.VerticalConstraint(entity=self.profileGeometry[3], addUndoState=False)
+        self.profileSketch.FixedConstraint(entity=self.profileGeometry[3])
         ## arc DE
         self.profileSketch.ArcByCenterEnds(center=self.coordC2, point1=self.coordD, point2=self.coordE, direction=COUNTERCLOCKWISE)
         self.profileSketch.TangentConstraint(entity1=self.profileGeometry[7], entity2=self.profileGeometry[8], addUndoState=False)
