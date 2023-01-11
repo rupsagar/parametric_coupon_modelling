@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Fatigue\Coupon_66_69_BJ\Scripts'
+couponDatabasePath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Fatigue\Coupon_66_69_BJ'
 couponDatabaseJsonFileName = r'Coupon_66_69_BJ.json'
 
 import os
@@ -68,8 +68,8 @@ class coupon66_69BJ():
         self.createSection()
         self.createAssembly()
         self.createTie()
-        # self.createStep()
-        # self.createJob()
+        self.createStep()
+        self.createJob()
     def createModel(self):
         ## define model
         session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
@@ -323,7 +323,7 @@ class coupon66_69BJ():
                 self.part2.setMeshControls(regions=cellsRight, elemShape=TET, technique=FREE, allowMapped=False, sizeGrowthRate=1.05)
                 edges = self.part2.edges.getByBoundingCylinder((self.xE-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yE+self.lenTol))
                 arcEdges = self.getArcEdge(edges)
-                self.part2.seedEdgeBySize(edges=arcEdges, size=self.seedSizeGlobal, deviationFactor=0.1, constraint=FINER)
+                #self.part2.seedEdgeBySize(edges=arcEdges, size=self.seedSizeGlobal, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> global
         self.part1.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
         self.part2.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
@@ -352,6 +352,9 @@ class coupon66_69BJ():
         setMidOuterCyl(self.xC, self.xD, self.yD, 'OuterCyl')
         ## set mesh ==>>  remaining outer partition
         setCylRight(self.xD, self.xF, self.yF)
+        edgesPicked = self.part2.edges.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yF+self.lenTol))
+        arcEdges = self.getArcEdge(edgesPicked)
+        self.part2.seedEdgeBySize(edges=arcEdges, size=self.seedSizeGlobal/self.phi3*self.phi2, deviationFactor=0.1, constraint=FINER)
         ## set element types
         elemType1 = mesh.ElemType(elemCode=self.elemTypeHex, elemLibrary=STANDARD)
         elemType2 = mesh.ElemType(elemCode=self.elemTypePenta, elemLibrary=STANDARD)
@@ -401,24 +404,34 @@ class coupon66_69BJ():
         nsetNameNegY1 = 'Nset_NegY_1'
         self.part1.Set(nodes=nodesNegY1, name=nsetNameNegY1)
         region = self.instance1.sets[nsetNameNegY1]
-        self.model.DisplacementBC(name='BC_NegY', createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+        self.model.DisplacementBC(name='BC_NegY_1', createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+        nodesNegY2 = self.part2.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yF-self.lenTol, xMax = self.xG+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
+        nsetNameNegY2 = 'Nset_NegY_2'
+        self.part2.Set(nodes=nodesNegY2, name=nsetNameNegY2)
+        region = self.instance2.sets[nsetNameNegY2]
+        self.model.DisplacementBC(name='BC_NegY_2', createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create BC at posZ face
-        nodesPosZ = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xG+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.lenTol)
-        nsetNamePosZ = 'Nset_PosZ'
-        self.part.Set(nodes=nodesPosZ, name=nsetNamePosZ)
-        region = self.instance.sets[nsetNamePosZ]
-        self.model.DisplacementBC(name='BC_PosZ', createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+        nodesPosZ1 = self.part1.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xG+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.lenTol)
+        nsetNamePosZ1 = 'Nset_PosZ_1'
+        self.part1.Set(nodes=nodesPosZ1, name=nsetNamePosZ1)
+        region = self.instance1.sets[nsetNamePosZ1]
+        self.model.DisplacementBC(name='BC_PosZ_1', createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+        nodesPosZ2 = self.part2.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xG+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.lenTol)
+        nsetNamePosZ2 = 'Nset_PosZ_2'
+        self.part2.Set(nodes=nodesPosZ2, name=nsetNamePosZ2)
+        region = self.instance2.sets[nsetNamePosZ2]
+        self.model.DisplacementBC(name='BC_PosZ_2', createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create BC at negX face
-        nodesNegX = self.part.nodes.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xO+self.lenTol, 0, 0), (self.yA+self.lenTol))
+        nodesNegX = self.part1.nodes.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xO+self.lenTol, 0, 0), (self.yA+self.lenTol))
         nsetNameNegX = 'Nset_NegX'
-        self.part.Set(nodes=nodesNegX , name=nsetNameNegX)
-        region = self.instance.sets[nsetNameNegX]
+        self.part1.Set(nodes=nodesNegX , name=nsetNameNegX)
+        region = self.instance1.sets[nsetNameNegX]
         self.model.DisplacementBC(name='BC_NegX', createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create pressure load on posX face
-        endCellFaceArr = self.part.faces.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yF+self.lenTol))
+        endCellFaceArr = self.part2.faces.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yF+self.lenTol))
         surfNamePosX = 'Surf_PosX'
-        self.getElemSurfFromCellFace(endCellFaceArr, surfNamePosX)
-        region = self.instance.surfaces[surfNamePosX]
+        self.getElemSurfFromCellFace(self.part2, endCellFaceArr, surfNamePosX)
+        region = self.instance2.surfaces[surfNamePosX]
         self.model.Pressure(name='Load_PosX', createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
     def createJob(self):
