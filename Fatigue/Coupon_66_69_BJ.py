@@ -1,5 +1,5 @@
 ## provide path and file name for the json database of the coupon models
-couponDatabasePath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Fatigue\Coupon_66_69_BJ'
+couponDatabasePath = r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Fatigue\Coupon_66_69_BJ\Scripts'
 couponDatabaseJsonFileName = r'Coupon_66_69_BJ.json'
 
 import os
@@ -61,12 +61,13 @@ class coupon66_69BJ():
         ## create coupon
         self.createModel()
         self.createProfileSketch()
-        # self.createPart()
-        # self.createPartition()
-        # self.createMesh()
-        # self.createMaterial()
-        # self.createSection()
-        # self.createAssembly()
+        self.createPart()
+        self.createPartition()
+        self.createMesh()
+        self.createMaterial()
+        self.createSection()
+        self.createAssembly()
+        self.createTie()
         # self.createStep()
         # self.createJob()
     def createModel(self):
@@ -136,57 +137,60 @@ class coupon66_69BJ():
         ## define sketch ==>> part 2 ==>> away from the area of interest for tet meshing
         self.profileSketch2 = self.model.ConstrainedSketch(name=self.sketchName+'_2', sheetSize=200.0)
         self.profileGeometry2, self.profileVertices2 = self.profileSketch2.geometry, self.profileSketch2.vertices
-        self.profileSketch1.setPrimaryObject(option=STANDALONE)        
+        self.profileSketch2.setPrimaryObject(option=STANDALONE)        
         ## horizontal fixed construction line
         self.profileSketch2.ConstructionLine(point1=(-50.0, 0.0), angle=0.0)
-        self.profileSketch2.HorizontalConstraint(entity=self.profileGeometry2[2], addUndoState=False)
         self.profileSketch2.FixedConstraint(entity=self.profileGeometry2[2])
         self.profileSketch2.assignCenterline(line=self.profileGeometry2[2])
         ## vertical fixed construction line
-        self.profileSketch2.ConstructionLine(point1=(0.0, -25.0), angle=90.0)
-        self.profileSketch2.VerticalConstraint(entity=self.profileGeometry2[3], addUndoState=False)
+        self.profileSketch2.ConstructionLine(point1=(self.xH, 0.0), angle=90.0)
         self.profileSketch2.FixedConstraint(entity=self.profileGeometry2[3])
         ## line HD
         self.profileSketch2.Line(point1=self.coordH, point2=self.coordD)
-        self.profileSketch2.DistanceDimension(entity1=self.profileVertices1[O], entity2=self.profileGeometry1[2], textPoint=(-5.0, 8.0), value=self.phi2/2.0)
+        self.profileSketch2.VerticalConstraint(entity=self.profileGeometry2[4], addUndoState=False)
+        self.profileSketch2.CoincidentConstraint(entity1=self.profileVertices2[0], entity2=self.profileGeometry2[2], addUndoState=False)
+        self.profileSketch2.CoincidentConstraint(entity1=self.profileVertices2[1], entity2=self.profileGeometry2[3], addUndoState=False)
+        self.profileSketch2.ObliqueDimension(vertex1=self.profileVertices2[1], vertex2=self.profileVertices2[0], textPoint=(3.0, 0.0), value=self.phi2/2.0)
         ## arc DE
         self.profileSketch2.ArcByCenterEnds(center=self.coordC2, point1=self.coordD, point2=self.coordE, direction=COUNTERCLOCKWISE)
-        #self.profileSketch2.TangentConstraint(entity1=self.profileGeometry1[7], entity2=self.profileGeometry1[8], addUndoState=False)
-        self.profileSketch2.RadialDimension(curve=self.profileGeometry1[8], textPoint=(12.0, 12.0), radius=self.rad2)
-        # self.profileSketch1.HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[6], textPoint=(10.0, -3.0), value=self.len1/2.0)
-        # self.profileSketch1.DistanceDimension(entity1=self.profileVertices1[6], entity2=self.profileGeometry1[2], textPoint=(8.0, 25.0), value=self.phi3/2.0)
-        # (self.xE, self.yE), (self.xC2, self.yC2) = self.profileVertices1[6].coords, self.profileVertices1[7].coords
-        # ## line EF
-        # self.profileSketch1.Line(point1=self.coordE, point2=self.coordF)
-        # self.profileSketch1.HorizontalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
-        # self.profileSketch1.HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[8], textPoint=(6.0, 5.0), value=self.len2/2.0)
-        # (self.xF, self.yF) = self.profileVertices1[8].coords
-        # ## line FG
-        # self.profileSketch1.Line(point1=self.coordF, point2=self.coordG)
-        # self.profileSketch1.VerticalConstraint(entity=self.profileGeometry1[10], addUndoState=False)
-        # self.profileSketch1.PerpendicularConstraint(entity1=self.profileGeometry1[9], entity2=self.profileGeometry1[10], addUndoState=False)
-        # self.profileSketch1.CoincidentConstraint(entity1=self.profileVertices1[9], entity2=self.profileGeometry1[2], addUndoState=False)
-        # (self.xG, self.yG) = self.profileVertices1[9].coords
-        # ## line GO
-        # self.profileSketch1.Line(point1=self.coordG, point2=self.coordO)
-        # self.profileSketch1.HorizontalConstraint(entity=self.profileGeometry1[11], addUndoState=False)
-        # self.profileSketch1.PerpendicularConstraint(entity1=self.profileGeometry1[10], entity2=self.profileGeometry1[11], addUndoState=False)
-        # self.profileSketch1.unsetPrimaryObject()
+        self.profileSketch2.PerpendicularConstraint(entity1=self.profileGeometry2[5], entity2=self.profileGeometry2[4], addUndoState=False)
+        self.profileSketch2.RadialDimension(curve=self.profileGeometry2[5], textPoint=(12.0, 12.0), radius=self.rad2)
+        #self.profileSketch2.HorizontalDimension(vertex1=self.profileVertices2[0], vertex2=self.profileVertices2[2], textPoint=(10.0, -3.0), value=(self.len1/2.0-self.xD))
+        self.profileSketch2.VerticalDimension(vertex1=self.profileVertices2[0], vertex2=self.profileVertices2[2], textPoint=(10.0, 25.0), value=self.phi3/2.0)
+        (self.xE, self.yE), (self.xC2, self.yC2) = self.profileVertices2[2].coords, self.profileVertices2[3].coords
+        ## line EF
+        self.profileSketch2.Line(point1=self.coordE, point2=self.coordF)
+        self.profileSketch2.HorizontalConstraint(entity=self.profileGeometry2[6], addUndoState=False)
+        self.profileSketch2.HorizontalDimension(vertex1=self.profileVertices2[1], vertex2=self.profileVertices2[4], textPoint=(6.0, 5.0), value=(self.len2/2.0-self.xD))
+        (self.xF, self.yF) = self.profileVertices2[4].coords
+        ## line FG
+        self.profileSketch2.Line(point1=self.coordF, point2=self.coordG)
+        self.profileSketch2.VerticalConstraint(entity=self.profileGeometry2[7], addUndoState=False)
+        self.profileSketch2.PerpendicularConstraint(entity1=self.profileGeometry2[7], entity2=self.profileGeometry2[6], addUndoState=False)
+        self.profileSketch2.CoincidentConstraint(entity1=self.profileVertices2[5], entity2=self.profileGeometry2[2], addUndoState=False)
+        (self.xG, self.yG) = self.profileVertices2[5].coords
+        ## line GO
+        self.profileSketch2.Line(point1=self.coordG, point2=self.coordH)
+        self.profileSketch2.HorizontalConstraint(entity=self.profileGeometry2[8], addUndoState=False)
+        self.profileSketch2.PerpendicularConstraint(entity1=self.profileGeometry2[8], entity2=self.profileGeometry2[7], addUndoState=False)
+        self.profileSketch2.unsetPrimaryObject()
     def createPart(self):
         ## create solid
-        self.part = self.model.Part(name=self.partName, dimensionality=THREE_D, type=DEFORMABLE_BODY)
-        self.part.BaseSolidRevolve(sketch=self.profileSketch1, angle=90.0, flipRevolveDirection=ON)
-        session.viewports[session.currentViewportName].setValues(displayedObject=self.part)
+        self.part1 = self.model.Part(name=self.partName+'_1', dimensionality=THREE_D, type=DEFORMABLE_BODY)
+        self.part1.BaseSolidRevolve(sketch=self.profileSketch1, angle=90.0, flipRevolveDirection=ON)
+        self.part2 = self.model.Part(name=self.partName+'_2', dimensionality=THREE_D, type=DEFORMABLE_BODY)
+        self.part2.BaseSolidRevolve(sketch=self.profileSketch2, angle=90.0, flipRevolveDirection=ON)
+        session.viewports[session.currentViewportName].setValues(displayedObject=self.part1)
     def createPartition(self):
         def createPartitionOffset(xRight, yRight):
             ## partition face ==>> outer cylinder
-            sketchPlane = self.part.faces.findAt((((self.xA+xRight)/2, self.partitionRadius, 0),))
-            sketchUpEdge = self.part.edges.findAt(((xRight, self.partitionRadius, 0),))
-            transform = self.part.MakeSketchTransform(sketchPlane=sketchPlane[0], sketchUpEdge=sketchUpEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
+            sketchPlane = self.part1.faces.findAt((((self.xA+xRight)/2, self.partitionRadius, 0),))
+            sketchUpEdge = self.part1.edges.findAt(((xRight, self.partitionRadius, 0),))
+            transform = self.part1.MakeSketchTransform(sketchPlane=sketchPlane[0], sketchUpEdge=sketchUpEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
             self.partitionSketch1 = self.model.ConstrainedSketch(name=self.partitionSketchName+'_1', sheetSize=50.0, gridSpacing=1.0, transform=transform)
             g, v = self.partitionSketch1.geometry, self.partitionSketch1.vertices
             self.partitionSketch1.setPrimaryObject(option=SUPERIMPOSE)
-            self.part.projectReferencesOntoSketch(sketch=self.partitionSketch1, filter=COPLANAR_EDGES)
+            self.part1.projectReferencesOntoSketch(sketch=self.partitionSketch1, filter=COPLANAR_EDGES)
             newGeometryID = len(g)+2
             newVertexID = len(v)
             ## arc
@@ -210,23 +214,23 @@ class coupon66_69BJ():
             # self.partitionSketch.ParallelConstraint(entity1=g[3], entity2=g[15])
             # self.partitionSketch.CoincidentConstraint(entity1=v[15], entity2=g[2])
             self.partitionSketch1.unsetPrimaryObject()
-            self.part.PartitionFaceBySketch(sketchUpEdge=sketchUpEdge[0], faces=sketchPlane[0], sketch=self.partitionSketch1)
+            self.part1.PartitionFaceBySketch(sketchUpEdge=sketchUpEdge[0], faces=sketchPlane[0], sketch=self.partitionSketch1)
             ## partition solid ==>> sweep
-            edges = self.getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.yA-self.lenTol))
+            edges = self.getByCylinderDifference(self.part1.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.yA-self.lenTol))
             sweepPath1 = self.getArcEdge(edges)
-            pickedCells = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight+self.lenTol))
-            e = self.part.edges
+            pickedCells = self.part1.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight+self.lenTol))
+            e = self.part1.edges
             pickedEdges =(e[0], e[1], e[2]) ## hard-coded ==>> directly taken from macro
-            self.part.PartitionCellBySweepEdge(sweepPath=sweepPath1[0], cells=pickedCells, edges=pickedEdges)
+            self.part1.PartitionCellBySweepEdge(sweepPath=sweepPath1[0], cells=pickedCells, edges=pickedEdges)
         def createPartitionCyl(xRight, yRight):
             ## partition face ==>> inner cylinder
-            self.sketchFace = self.part.faces.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA-self.yOffset+self.lenTol))
-            self.sketchEdge = self.part.edges.findAt(((0, self.partitionRadius, 0),))
-            self.transform = self.part.MakeSketchTransform(sketchPlane=self.sketchFace[0], sketchUpEdge=self.sketchEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
+            self.sketchFace = self.part1.faces.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA-self.yOffset+self.lenTol))
+            self.sketchEdge = self.part1.edges.findAt(((0, self.partitionRadius, 0),))
+            self.transform = self.part1.MakeSketchTransform(sketchPlane=self.sketchFace[0], sketchUpEdge=self.sketchEdge[0], sketchPlaneSide=SIDE1, origin=(0, 0, 0))
             self.partitionSketch2 = self.model.ConstrainedSketch(name=self.partitionSketchName+'_2', sheetSize=4, transform=self.transform)
             g, v = self.partitionSketch2.geometry, self.partitionSketch2.vertices
             self.partitionSketch2.setPrimaryObject(option=SUPERIMPOSE)
-            self.part.projectReferencesOntoSketch(sketch=self.partitionSketch2, filter=COPLANAR_EDGES)
+            self.part1.projectReferencesOntoSketch(sketch=self.partitionSketch2, filter=COPLANAR_EDGES)
             self.partitionSketch2.ArcByCenterEnds(center=(0, 0), point1=(0, self.partitionRadius), point2=(-self.partitionRadius, 0), direction=COUNTERCLOCKWISE)
             self.projectionLine1 = g.findAt((0, self.partitionRadius/2), 1)
             self.projectionLine2 = g.findAt((-self.partitionRadius/2, 0), 1)
@@ -235,18 +239,18 @@ class coupon66_69BJ():
             self.partitionSketch2.CoincidentConstraint(entity1=self.vertexPoint1, entity2=self.projectionLine1, addUndoState=False)
             self.partitionSketch2.CoincidentConstraint(entity1=self.vertexPoint2, entity2=self.projectionLine2, addUndoState=False)
             self.partitionSketch2.unsetPrimaryObject()
-            self.part.PartitionFaceBySketch(sketchUpEdge=self.sketchEdge[0], faces=self.sketchFace[0], sketch=self.partitionSketch2)
+            self.part1.PartitionFaceBySketch(sketchUpEdge=self.sketchEdge[0], faces=self.sketchFace[0], sketch=self.partitionSketch2)
             ## partition solid ==>> sweep
-            sweepPath2 = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius-self.lenTol))
-            pickedCells = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight-self.yOffset+self.lenTol))
-            edgesTemp = self.part.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+            sweepPath2 = self.part1.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius-self.lenTol))
+            pickedCells = self.part1.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight-self.yOffset+self.lenTol))
+            edgesTemp = self.part1.edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
             edgesArcForPartition = self.getArcEdge(edgesTemp)
-            self.part.PartitionCellBySweepEdge(sweepPath=sweepPath2[0], cells=pickedCells, edges=edgesArcForPartition)
+            self.part1.PartitionCellBySweepEdge(sweepPath=sweepPath2[0], cells=pickedCells, edges=edgesArcForPartition)
         def createPartitionLong(offsetDistance):
             ## partition by YZ plane
-            self.datumPlane1_ID = self.part.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=offsetDistance).id
-            self.part.PartitionCellByDatumPlane(datumPlane=self.part.datums[self.datumPlane1_ID], cells=self.part.cells)     
-        createPartitionLong(self.xD)
+            self.datumPlane1_ID = self.part1.DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=offsetDistance).id
+            self.part1.PartitionCellByDatumPlane(datumPlane=self.part1.datums[self.datumPlane1_ID], cells=self.part1.cells)     
+        #createPartitionLong(self.xD)
         self.yOffset = (self.phi1/2-self.partitionRadius)/2
         createPartitionOffset(self.xD, self.yD)
         createPartitionCyl(self.xD, self.yD)
@@ -254,78 +258,79 @@ class coupon66_69BJ():
         createPartitionLong(self.xC)
     def createMesh(self):
         def seedRadial(radiusOuter, radiusInner, seedSize):
-            edgesOuterCyl = self.getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), radiusOuter, radiusInner)
+            edgesOuterCyl = self.getByCylinderDifference(self.part1.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), radiusOuter, radiusInner)
             edgesOuterArc = self.getArcEdge(edgesOuterCyl)
             edgesOuterRadial = self.getByDifference(edgesOuterCyl, edgesOuterArc)
-            self.part.seedEdgeBySize(edges=edgesOuterRadial, size=seedSize, deviationFactor=0.1, constraint=FINER)
+            self.part1.seedEdgeBySize(edges=edgesOuterRadial, size=seedSize, deviationFactor=0.1, constraint=FINER)
         def seedLong(xLeft, xRight, seedSize):
             ## method to seed the longitudinal edges
-            edgesInnerArcLong = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+            edgesInnerArcLong = self.part1.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
             edgesInnerArc = self.getArcEdge(edgesInnerArcLong)
             edgesStraight = self.getByDifference(edgesInnerArcLong, edgesInnerArc)
             edgesInnerRadial = self.getEdgeByLength(edgesStraight, self.partitionRadius, 'EQUAL')
             edgesLong = self.getByDifference(edgesStraight, edgesInnerRadial)
-            self.part.seedEdgeBySize(edges=edgesLong, size=seedSize, deviationFactor=0.1, constraint=FINER)
+            self.part1.seedEdgeBySize(edges=edgesLong, size=seedSize, deviationFactor=0.1, constraint=FINER)
         def seedLongBias(xLeft, xRight, condition, **kwargs):
             ## method to seed the outer radial edge at sections through A and B
-            pickedEdges = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.yF+self.lenTol))
+            pickedEdges = self.part1.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.yF+self.lenTol))
             edgesLong = self.getEdgeByLength(pickedEdges, abs(xRight-xLeft), condition)
             for thisEdge in edgesLong:
                 edgeVertices = thisEdge.getVertices()
                 for thisVertexID in edgeVertices:
-                    vertexCoord = self.part.vertices[thisVertexID].pointOn
+                    vertexCoord = self.part1.vertices[thisVertexID].pointOn
                     if abs(abs(vertexCoord[0][0])-xLeft) < self.lenTol or abs(abs(vertexCoord[0][1])-xLeft) < self.lenTol or abs(abs(vertexCoord[0][2])-xLeft) < self.lenTol:
                         if edgeVertices.index(thisVertexID) == 0:
                             if 'minSize' in kwargs.keys():
-                                self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FINER)
+                                self.part1.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FINER)
                             elif 'ratio' in kwargs.keys():
-                                self.part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), ratio=kwargs['ratio'], number=kwargs['number'], constraint=FINER)
+                                self.part1.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), ratio=kwargs['ratio'], number=kwargs['number'], constraint=FINER)
                         elif edgeVertices.index(thisVertexID) == 1:
                             if 'minSize' in kwargs.keys():
-                                self.part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FINER)
+                                self.part1.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FINER)
                             elif 'ratio' in kwargs.keys():
-                                self.part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), ratio=kwargs['ratio'], number=kwargs['number'], constraint=FINER)
+                                self.part1.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), ratio=kwargs['ratio'], number=kwargs['number'], constraint=FINER)
         def setInnerCyl(xLeft, xRight):
             ## set element shape for the inner cylindrical mesh
-            cellsInnerCyl = self.part.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+            cellsInnerCyl = self.part1.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
             if self.elemShape['InnerCyl'] == 'HEX':
-                self.part.setMeshControls(regions=cellsInnerCyl, technique=SWEEP, algorithm=ADVANCING_FRONT)
-                edgesSweepPath = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
-                self.part.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
+                self.part1.setMeshControls(regions=cellsInnerCyl, technique=SWEEP, algorithm=ADVANCING_FRONT)
+                edgesSweepPath = self.part1.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
+                self.part1.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
             elif self.elemShape['InnerCyl'] == 'WEDGE':
-                self.part.setMeshControls(regions=cellsInnerCyl, elemShape=WEDGE, technique=SWEEP, algorithm=ADVANCING_FRONT)
-                edgesSweepPath = self.part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
-                self.part.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
+                self.part1.setMeshControls(regions=cellsInnerCyl, elemShape=WEDGE, technique=SWEEP, algorithm=ADVANCING_FRONT)
+                edgesSweepPath = self.part1.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
+                self.part1.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
             elif self.elemShape['InnerCyl'] == 'TET':
-                self.part.setMeshControls(regions=cellsInnerCyl, elemShape=TET, technique=FREE)
+                self.part1.setMeshControls(regions=cellsInnerCyl, elemShape=TET, technique=FREE)
         def setMidOuterCyl(xLeft, xRight, yRight, string):
             if string == 'MidCyl':
-                cellsMidCyl = self.getByCylinderDifference(self.part.cells, (xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight-self.yOffset+self.lenTol), (self.partitionRadius+self.lenTol))
+                cellsMidCyl = self.getByCylinderDifference(self.part1.cells, (xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight-self.yOffset+self.lenTol), (self.partitionRadius+self.lenTol))
             elif string == 'OuterCyl':
-                cellsMidCyl = self.getByCylinderDifference(self.part.cells, (xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight+self.lenTol), (yRight-self.yOffset+self.lenTol))
+                cellsMidCyl = self.getByCylinderDifference(self.part1.cells, (xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight+self.lenTol), (yRight-self.yOffset+self.lenTol))
             if self.elemShape[string] == 'HEX':
                 pass
             elif self.elemShape[string] == 'WEDGE':
-                self.part.setMeshControls(regions=cellsMidCyl, elemShape=WEDGE)
+                self.part1.setMeshControls(regions=cellsMidCyl, elemShape=WEDGE)
             elif self.elemShape[string] == 'TET':
-                self.part.setMeshControls(regions=cellsMidCyl, elemShape=TET, technique=FREE)
+                self.part1.setMeshControls(regions=cellsMidCyl, elemShape=TET, technique=FREE)
         def setCylRight(xLeft, xRight, yRight):
-            cellsRight = self.part.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight+self.lenTol))
+            cellsRight = self.part2.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yRight+self.lenTol))
             if self.elemShape['CylRight'] == 'HEX':
-                self.part.setMeshControls(regions=cellsRight, elemShape=HEX)
+                self.part2.setMeshControls(regions=cellsRight, elemShape=HEX)
             elif self.elemShape['CylRight'] == 'WEDGE':
-                self.part.setMeshControls(regions=cellsRight, elemShape=WEDGE)
+                self.part2.setMeshControls(regions=cellsRight, elemShape=WEDGE)
             elif self.elemShape['CylRight'] == 'TET':
-                self.part.setMeshControls(regions=cellsRight, elemShape=TET, technique=FREE, allowMapped=False, sizeGrowthRate=1.05)
-                edges = self.part.edges.getByBoundingCylinder((self.xE-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yE+self.lenTol))
+                self.part2.setMeshControls(regions=cellsRight, elemShape=TET, technique=FREE, allowMapped=False, sizeGrowthRate=1.05)
+                edges = self.part2.edges.getByBoundingCylinder((self.xE-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yE+self.lenTol))
                 arcEdges = self.getArcEdge(edges)
-                self.part.seedEdgeBySize(edges=arcEdges, size=self.seedSizeGlobal, deviationFactor=0.1, constraint=FINER)
+                self.part2.seedEdgeBySize(edges=arcEdges, size=self.seedSizeGlobal, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> global
-        self.part.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
+        self.part1.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
+        self.part2.seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
         ## seed ==>> outer arc edge AA'
-        self.edgesOuterCyl = self.getByCylinderDifference(self.part.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.yOffset+self.lenTol))
+        self.edgesOuterCyl = self.getByCylinderDifference(self.part1.edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.yOffset+self.lenTol))
         self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
-        self.part.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FINER)
+        self.part1.seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FINER)
         ## seed radial edges
         seedRadial((self.yA+self.lenTol), (self.yA-self.yOffset+self.lenTol), self.seedSizeOuterArc) ## outer radial edge
         seedRadial((self.yA-self.lenTol), (self.partitionRadius+self.lenTol), self.seedMidRadial) ## mid radial edge
@@ -351,12 +356,13 @@ class coupon66_69BJ():
         elemType1 = mesh.ElemType(elemCode=self.elemTypeHex, elemLibrary=STANDARD)
         elemType2 = mesh.ElemType(elemCode=self.elemTypePenta, elemLibrary=STANDARD)
         elemType3 = mesh.ElemType(elemCode=self.elemTypeTet, elemLibrary=STANDARD)
-        self.part.setElementType(regions=(self.part.cells,), elemTypes=(elemType1, elemType2, elemType3))
+        self.part1.setElementType(regions=(self.part1.cells,), elemTypes=(elemType1, elemType2, elemType3))
+        self.part2.setElementType(regions=(self.part2.cells,), elemTypes=(elemType1, elemType2, elemType3))
         ## generate mesh
-        cellLeft = self.part.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
-        self.part.generateMesh(regions=cellLeft)
-        cellRight = self.part.cells.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yF+self.lenTol))
-        self.part.generateMesh(regions=cellRight, boundaryMeshOverride=ON)
+        cellLeft = self.part1.cells.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
+        self.part1.generateMesh(regions=cellLeft)
+        cellRight = self.part2.cells.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), (self.yF+self.lenTol))
+        self.part2.generateMesh(regions=cellRight, boundaryMeshOverride=ON)
         #self.part.generateMesh(regions=self.part.cells)
     def createMaterial(self):
         ## material definition
@@ -367,22 +373,34 @@ class coupon66_69BJ():
         ## section definition
         self.model.HomogeneousSolidSection(name=self.sectionName, material=self.materialName, thickness=None)
         ## assign section property to elements
-        pickedRegion = self.part.Set(elements=self.part.elements, name='Elements_All')
-        #pickedRegion = regionToolset.Region(cells=self.part.cells)   
-        self.part.SectionAssignment(region=pickedRegion, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+        pickedRegion1 = self.part1.Set(elements=self.part1.elements, name='Elements_Part1')  
+        self.part1.SectionAssignment(region=pickedRegion1, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+        pickedRegion2 = self.part2.Set(elements=self.part2.elements, name='Elements_Part2')  
+        self.part2.SectionAssignment(region=pickedRegion2, sectionName=self.sectionName, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
     def createAssembly(self):
         ## create assembly
         self.assembly = self.model.rootAssembly
         self.assembly.DatumCsysByDefault(CARTESIAN)
-        self.instance = self.assembly.Instance(name=self.instanceName, part=self.part, dependent=ON)
+        self.instance1 = self.assembly.Instance(name=self.instanceName+'_1', part=self.part1, dependent=ON)
+        self.instance2 = self.assembly.Instance(name=self.instanceName+'_2', part=self.part2, dependent=ON)
+    def createTie(self):
+        surfPart1 = self.part1.faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
+        surfNamePart1 = 'Surf_Part1'
+        self.getElemSurfFromCellFace(self.part1, surfPart1, surfNamePart1)
+        region1 = self.instance1.surfaces[surfNamePart1]
+        surfPart2 = self.part2.faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
+        surfNamePart2 = 'Surf_Part2'
+        self.getElemSurfFromCellFace(self.part2, surfPart2, surfNamePart2)
+        region2 = self.instance2.surfaces[surfNamePart2]
+        self.model.Tie(name='Constraint-1', master=region2, slave=region1, positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=ON)
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.NLGEOM, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         ## create BC at negY face
-        nodesNegY = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yF-self.lenTol, xMax = self.xG+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
-        nsetNameNegY = 'Nset_NegY'
-        self.part.Set(nodes=nodesNegY, name=nsetNameNegY)
-        region = self.instance.sets[nsetNameNegY]
+        nodesNegY1 = self.part1.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.yF-self.lenTol, xMax = self.xG+self.lenTol, yMax = self.lenTol, zMax = self.lenTol)
+        nsetNameNegY1 = 'Nset_NegY_1'
+        self.part1.Set(nodes=nodesNegY1, name=nsetNameNegY1)
+        region = self.instance1.sets[nsetNameNegY1]
         self.model.DisplacementBC(name='BC_NegY', createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create BC at posZ face
         nodesPosZ = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xG+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.lenTol)
@@ -452,7 +470,7 @@ class coupon66_69BJ():
                 if abs(thisEdge.getSize(0)) <= length:
                     pickedEdges.append(thisEdge)
         return pickedEdges
-    def getElemSurfFromCellFace(self, cellFaceArr, surfName):
+    def getElemSurfFromCellFace(self, part, cellFaceArr, surfName):
         ## method to create element based surface from cell face
         elemWithFace = [[], [], [], [], [], []]
         for thisCellFace in cellFaceArr:
@@ -467,7 +485,7 @@ class coupon66_69BJ():
             if len(elemWithFace[thisfaceID]) > 0:
                 elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
                 surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
-        self.part.Surface(**surfDict)
+        part.Surface(**surfDict)
 
 
 fileJson = open(os.path.join(couponDatabasePath, couponDatabaseJsonFileName), 'r')
