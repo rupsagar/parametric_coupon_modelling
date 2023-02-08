@@ -18,15 +18,15 @@ class coupon_74_75():
         self.isChamfer = couponData['isChamfer']
         self.givenKt = float(eval(couponData['givenKt']))
         self.lenTol = float(eval(couponData['lenTol']))
-        self.seedSizeGlobal = float(eval(couponData['elemSize']['global']))
-        self.seedSizeThickness = float(eval(couponData['elemSize']['thickness']))
+        self.seedSizeThickness1 = float(eval(couponData['elemSize']['thickness1']))
+        self.seedSizeThickness2 = float(eval(couponData['elemSize']['thickness2']))
         self.seedSizeArc = float(eval(couponData['elemSize']['arc']))
         self.seedSizeLong1 = float(eval(couponData['elemSize']['long1']))
         self.seedSizeLong2 = float(eval(couponData['elemSize']['long2']))
         self.seedSizeLong3 = float(eval(couponData['elemSize']['long3']))
-        # self.seedSizeLong4 = float(eval(couponData['elemSize']['long4']))
+        self.seedSizeLong4 = float(eval(couponData['elemSize']['long4']))
         self.elemTypeHexPart1 = SymbolicConstant(couponData['elemType']['hexPart1'])
-        # self.elemTypeHexPart2 = SymbolicConstant(couponData['elemType']['hexPart2'])
+        self.elemTypeHexPart2 = SymbolicConstant(couponData['elemType']['hexPart2'])
         self.materialName = couponData['material']['name']
         self.density = float(eval(couponData['material']['density']))
         self.youngsModulus = float(eval(couponData['material']['youngsModulus']))
@@ -48,13 +48,13 @@ class coupon_74_75():
         self.couponData['geometry']['chamferAngle'] = self.chamferAngle
         self.couponData['givenKt'] = self.givenKt
         self.couponData['lenTol'] = self.lenTol
-        self.couponData['elemSize']['global'] = self.seedSizeGlobal
-        self.couponData['elemSize']['thickness'] = self.seedSizeThickness
+        self.couponData['elemSize']['thickness1'] = self.seedSizeThickness1
+        self.couponData['elemSize']['thickness2'] = self.seedSizeThickness2
         self.couponData['elemSize']['arc'] = self.seedSizeArc
         self.couponData['elemSize']['long1'] = self.seedSizeLong1
         self.couponData['elemSize']['long2'] = self.seedSizeLong2
         self.couponData['elemSize']['long3'] = self.seedSizeLong3
-        # self.couponData['elemSize']['long4'] = self.seedSizeLong4
+        self.couponData['elemSize']['long4'] = self.seedSizeLong4
         self.couponData['material']['density'] = self.density
         self.couponData['material']['youngsModulus'] = self.youngsModulus
         self.couponData['material']['poissonsRatio'] = self.poissonsRatio
@@ -69,7 +69,7 @@ class coupon_74_75():
         self.createMesh()
         self.createMaterial()
         self.createSection()
-        # self.createTie()
+        self.createTie()
         self.createStep()
         self.createJob()
     def createModel(self):
@@ -83,10 +83,12 @@ class coupon_74_75():
         self.coordA = (self.xA, self.yA) = (0.0, self.phi/2.0)
         self.coordB = (self.xB, self.yB) = (self.phi/2.0, 0.0)
         self.coordC = (self.xC, self.yC) = (0.0, self.width/2.0)
-        self.coordD = (self.xD, self.yD) = (self.len/2.0, 0.0)
-        self.coordE = (self.xE, self.yE) = (self.len/2.0, self.width/2.0)
+        self.coordD = (self.xD, self.yD) = (3.0*self.phi, 0.0)
+        self.coordE = (self.xE, self.yE) = (self.xD, self.width/2.0)
+        self.coordF = (self.xF, self.yF) = (self.len/2.0, 0.0)
+        self.coordG = (self.xG, self.yG) = (self.len/2.0, self.width/2.0)
         #################################################################################################################################################
-        self.profileSketch = 1*[None]
+        self.profileSketch = 2*[None]
         ## define sketch ==>> part 1 ==>> area of interest  #############################################################################################
         self.profileSketch[0] = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_1', sheetSize=200.0)
         self.profileGeometry1, self.profileVertices1 = self.profileSketch[0].geometry, self.profileSketch[0].vertices
@@ -109,7 +111,7 @@ class coupon_74_75():
         ## line BD
         self.profileSketch[0].Line(point1=self.coordB, point2=self.coordD)
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[6], addUndoState=False)
-        self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[2], vertex2=self.profileVertices1[4], textPoint=(50.0, -5.0), value=self.len/2.0)
+        self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[2], vertex2=self.profileVertices1[4], textPoint=(50.0, -5.0), value=self.xD)
         ## line CE
         self.profileSketch[0].Line(point1=self.coordC, point2=self.coordE)
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
@@ -119,47 +121,52 @@ class coupon_74_75():
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
         #######################################################################################################################################################
+        ## define sketch ==>> part 2 ==>> away from area of interest  #########################################################################################
+        self.profileSketch[1] = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_2', sheetSize=200.0)
+        self.profileSketch[1].setPrimaryObject(option=STANDALONE)        
+        self.profileSketch[1].rectangle(point1=self.coordD, point2=self.coordG)
+        self.profileSketch[1].unsetPrimaryObject()
         if self.isChamfer=='True':
             ## calculate vertex coordinates for chamfer ###########################################################################################################
             self.coordODash = (self.xODash, self.yODash) = (0.0, 0.0)
             self.coordADash = (self.xADash, self.yADash) = (-self.chamferEdgeLength, self.chamferEdgeLength*math.tan(self.thetaRad))
             self.coordBDash = (self.xBDash, self.yBDash) = (0.0, self.yADash)
             #######################################################################################################################################################
-            self.sketchChamferSweepPath = self.model.ConstrainedSketch(name=self.couponName+'_Sweep_Path_2', sheetSize=200.0)
+            self.sketchChamferSweepPath = self.model.ConstrainedSketch(name=self.couponName+'_Temp_Sweep_Path', sheetSize=200.0)
             self.sketchChamferSweepPath.setPrimaryObject(option=STANDALONE)
             self.sketchChamferSweepPath.ArcByCenterEnds(center=self.coordO, point1=self.coordA, point2=self.coordB, direction=CLOCKWISE)
             self.sketchChamferSweepPath.unsetPrimaryObject()
-            ## define sketch ==>> part 2 ==>> away from the area of interest for tet meshing    ###################################################################
-            self.sketchChamferProfile = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_2', sheetSize=200.0, transform=(0.0, -1.0, 0.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0))
-            self.profileGeometry2, self.profileVertices2 = self.sketchChamferProfile.geometry, self.sketchChamferProfile.vertices
+            ## define sketch ==>> temp part chamfer    ###################################################################
+            self.sketchChamferProfile = self.model.ConstrainedSketch(name=self.couponName+'_Temp_Profile_Sketch', sheetSize=200.0, transform=(0.0, -1.0, 0.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0))
+            self.profileGeometryChamfer, self.profileVerticesChamfer = self.sketchChamferProfile.geometry, self.sketchChamferProfile.vertices
             self.sketchChamferProfile.setPrimaryObject(option=SUPERIMPOSE)
             ## horizontal fixed construction line
             self.sketchChamferProfile.ConstructionLine(point1=(-50.0, 0.0), angle=0.0)
-            self.sketchChamferProfile.FixedConstraint(entity=self.profileGeometry2[2])
+            self.sketchChamferProfile.FixedConstraint(entity=self.profileGeometryChamfer[2])
             ## vertical fixed construction line
             self.sketchChamferProfile.ConstructionLine(point1=(0.0, -25.0), angle=90.0)
-            self.sketchChamferProfile.FixedConstraint(entity=self.profileGeometry2[3])
+            self.sketchChamferProfile.FixedConstraint(entity=self.profileGeometryChamfer[3])
             ## line O'A'
             self.sketchChamferProfile.Line(point1=self.coordODash, point2=self.coordADash)
-            self.sketchChamferProfile.CoincidentConstraint(entity1=self.profileVertices2[0], entity2=self.profileGeometry2[2], addUndoState=False)
+            self.sketchChamferProfile.CoincidentConstraint(entity1=self.profileVerticesChamfer[0], entity2=self.profileGeometryChamfer[2], addUndoState=False)
             ## line A'B'
             self.sketchChamferProfile.Line(point1=self.coordADash, point2=self.coordBDash)
-            self.sketchChamferProfile.HorizontalConstraint(entity=self.profileGeometry2[5], addUndoState=False)
+            self.sketchChamferProfile.HorizontalConstraint(entity=self.profileGeometryChamfer[5], addUndoState=False)
             ## line O'B'
             self.sketchChamferProfile.Line(point1=self.coordODash, point2=self.coordBDash)
-            self.sketchChamferProfile.VerticalConstraint(entity=self.profileGeometry2[6], addUndoState=False)
+            self.sketchChamferProfile.VerticalConstraint(entity=self.profileGeometryChamfer[6], addUndoState=False)
             self.sketchChamferProfile.unsetPrimaryObject()
     def createPart(self):
         ## create solid
         self.part = len(self.profileSketch)*[None]
-        if self.isChamfer=='True':
-            self.tempPart = 2*[None]
-            for i in range(len(self.tempPart)):
-                self.tempPart[i] = self.model.Part(name=self.couponName+'_Part_1_Temp_'+str(i+1), dimensionality=THREE_D, type=DEFORMABLE_BODY)
-            self.tempPart[0].BaseSolidExtrude(sketch=self.profileSketch[0], depth=self.thickness/2.0)
-            self.tempPart[1].BaseSolidSweep(sketch=self.sketchChamferProfile, path=self.sketchChamferSweepPath)
-        elif self.isChamfer=='False':
-            for i in range(len(self.part)):
+        for i in range(len(self.part)):
+            if i==0 and self.isChamfer=='True':
+                self.tempPart = 2*[None]
+                for j in range(len(self.tempPart)):
+                    self.tempPart[j] = self.model.Part(name=self.couponName+'_Part_1_Temp_'+str(j+1), dimensionality=THREE_D, type=DEFORMABLE_BODY)
+                self.tempPart[0].BaseSolidExtrude(sketch=self.profileSketch[0], depth=self.thickness/2.0)
+                self.tempPart[1].BaseSolidSweep(sketch=self.sketchChamferProfile, path=self.sketchChamferSweepPath)
+            elif (i==0 and self.isChamfer=='False') or i==1:
                 self.part[i] = self.model.Part(name=self.couponName+'_Part_'+str(i+1), dimensionality=THREE_D, type=DEFORMABLE_BODY)
                 self.part[i].BaseSolidExtrude(sketch=self.profileSketch[i], depth=self.thickness/2.0)
     def createAssembly(self):
@@ -168,7 +175,7 @@ class coupon_74_75():
         self.assembly.DatumCsysByDefault(CARTESIAN)
         ## create temporary assembly instances for model with chamfer
         if self.isChamfer=='True':
-            self.tempInstance = 2*[None]
+            self.tempInstance = len(self.tempPart)*[None]
             for i in range(len(self.tempInstance)):
                 self.tempInstance[i] = self.assembly.Instance(name=self.couponName+'_Instance_1_Temp_'+str(i+1), part=self.tempPart[i], dependent=ON)
             self.assembly.translate(instanceList=(self.tempInstance[1].name, ), vector=(0.0, 0.0, (self.thickness/2.0-self.chamferEdgeLength*math.tan(self.thetaRad))))
@@ -234,43 +241,51 @@ class coupon_74_75():
                         elif edgeVertices.index(thisVertexID) == 1:
                             part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), constraint=FINER, **kwargs)
         ## seed ==>> global
-        self.part[0].seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
+        for i in range(len(self.part)):
+            self.part[i].seedPart(size=0.1, deviationFactor=0.1, minSizeFactor=0.1)
         if self.isChamfer=='True':
             chamferOffset = self.chamferEdgeLength
         elif self.isChamfer=='False':
             chamferOffset = 0
-        ## seed ==>> thickness direction
-        edgesThickness = self.part[0].edges.findAt(coordinates=((self.phi/2+chamferOffset, 0, self.lenTol), (0, self.phi/2+chamferOffset, self.lenTol)))
-        self.part[0].seedEdgeBySize(edges=edgesThickness, size=self.seedSizeThickness, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> thickness1 direction
+        edgesThickness1 = self.part[0].edges.findAt(coordinates=((self.phi/2+chamferOffset, 0, self.lenTol), (0, self.phi/2+chamferOffset, self.lenTol)))
+        self.part[0].seedEdgeBySize(edges=edgesThickness1, size=self.seedSizeThickness1, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> arc direction
         edgesArc = self.part[0].edges.getByBoundingCylinder((0, 0, 0), (0, 0 , self.lenTol), (self.phi/2+self.lenTol))
         self.part[0].seedEdgeBySize(edges=edgesArc, size=self.seedSizeArc, deviationFactor=0.1, constraint=FINER)
-        ## seed ==>> long edges along AB
+        ## seed ==>> long edges along BB'
         if self.isChamfer=='True':
-            edgesLongAB = self.part[0].edges.findAt(coordinates=((self.phi/2+self.lenTol, 0, 0), (0, self.phi/2+self.lenTol, 0)))
-            self.part[0].seedEdgeBySize(edges=edgesLongAB, size=self.seedSizeLong1, deviationFactor=0.1, constraint=FINER)
-        ## seed ==>> long edges along BC
+            edgesLong1 = self.part[0].edges.findAt(coordinates=((self.phi/2+self.lenTol, 0, 0), (0, self.phi/2+self.lenTol, 0)))
+            self.part[0].seedEdgeBySize(edges=edgesLong1, size=self.seedSizeLong1, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> long edges along B'B''
         pickedEdges1 = self.part[0].edges.getByBoundingCylinder((0, 0, -self.lenTol), (0, 0, self.thickness/2+self.lenTol), ((self.phi+self.width)/4.0+self.lenTol))
         pickedEdgesArc = self.getArcEdge(pickedEdges1)
         pickedEdgesStraight = self.getByDifference(pickedEdges1, pickedEdgesArc)
-        edgesLongBC = self.getEdgeByLength(pickedEdgesStraight, abs((self.width-self.phi)/4-chamferOffset))
-        seedLong(self.part[0], 0, (self.phi/2+chamferOffset), edgesLongBC, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
-        seedLong(self.part[0], 1, (self.phi/2+chamferOffset), edgesLongBC, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
-        seedLong(self.part[0], 0, (self.phi/2+chamferOffset)*math.cos(math.pi/4), edgesLongBC, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
-        ## seed ==>> long edge along DE
-        pickedEdges2 = self.part[0].edges.getByBoundingBox(xMin=self.width/2-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.yE+self.lenTol, zMax=self.thickness/2+self.lenTol)
-        edgesLongDE =self.getEdgeByLength(pickedEdges2, abs(self.xE-self.width/2))
-        seedLong(self.part[0], 0, self.width/2, edgesLongDE, minSize=self.seedSizeGlobal, maxSize=self.seedSizeLong3)
-        # ## seed ==>> long edges along EF
-        # edgesLong3 = self.getEdgeByLength(pickedEdges2, abs(self.xF-self.xE))
-        # seedLong(self.part[1], self.xE, edgesLong3, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
+        edgesLong2 = self.getEdgeByLength(pickedEdgesStraight, abs((self.width-self.phi)/4-chamferOffset))
+        seedLong(self.part[0], 0, (self.phi/2+chamferOffset), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        seedLong(self.part[0], 1, (self.phi/2+chamferOffset), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        seedLong(self.part[0], 0, (self.phi/2+chamferOffset)*math.cos(math.pi/4), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        ## seed ==>> long edges B''C'
+        pickedEdges2 = self.part[0].edges.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.width/2+self.lenTol, yMax=self.width/2+self.lenTol, zMax=self.thickness/2+self.lenTol)
+        edgesLong3 = self.getByDifference(pickedEdges2, pickedEdges1)
+        self.part[0].seedEdgeBySize(edges=edgesLong3, size=self.seedSizeLong2, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> long edge along C'D
+        edgesLong4 = self.part[0].edges.findAt(coordinates=((self.width/2+self.lenTol, 0, 0), (self.width/2+self.lenTol, self.width/2, 0), (self.width/2+self.lenTol, 0, self.thickness/2), (self.width/2+self.lenTol, self.width/2, self.thickness/2)))
+        seedLong(self.part[0], 0, self.width/2, edgesLong4, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
+        ## seed ==>> thickness2 direction
+        edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), (self.xD, self.lenTol, 0)))
+        self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FIXED)
+        ## seed ==>> long edge along DF
+        edgesLong5 = self.part[1].edges.findAt(coordinates=((self.xD+self.lenTol, 0, 0), (self.xD+self.lenTol, self.width/2, 0), (self.xD+self.lenTol, 0, self.thickness/2), (self.xD+self.lenTol, self.width/2, self.thickness/2)))
+        seedLong(self.part[1], 0, self.xD, edgesLong5, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
         ## set element types
         elemTypeHex1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemTypeHex1,))
-        # elemTypeHex2 = mesh.ElemType(elemCode=self.elemTypeHexPart2, elemLibrary=STANDARD)
-        # self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
+        elemTypeHex2 = mesh.ElemType(elemCode=self.elemTypeHexPart2, elemLibrary=STANDARD)
+        self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
         ## generate mesh
-        self.part[0].generateMesh(regions=self.part[0].cells)
+        for i in range(len(self.part)):
+            self.part[i].generateMesh(regions=self.part[i].cells)
     def createMaterial(self):
         ## material definition
         self.model.Material(name=self.materialName)
@@ -285,23 +300,23 @@ class coupon_74_75():
     def createTie(self):
         region = len(self.profileSketch)*[None]
         for i in range(2):
-            surf = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xD+self.lenTol, yMax = self.yD+self.yC+self.lenTol, zMax = self.thickness+self.lenTol)
+            surf = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yE+self.yC+self.lenTol, zMax=self.thickness/2+self.lenTol)
             surfName = 'Surf_Tie_Part_'+str(i+1)
             self.getElemSurfFromCellFace(self.part[i], surf, surfName)
             region[i] = self.instance[i].surfaces[surfName]
-        self.model.Tie(name=self.couponName+'_Tie', master=region[1], slave=region[0], positionToleranceMethod=COMPUTED, adjust=OFF, tieRotations=ON, thickness=ON, constraintEnforcement = SURFACE_TO_SURFACE)
+        self.model.Tie(name=self.couponName+'_Tie', master=region[1], slave=region[0], positionToleranceMethod=COMPUTED, adjust=OFF, tieRotations=ON, thickness=ON, constraintEnforcement=SURFACE_TO_SURFACE)
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         for i in range(len(self.instance)):
             ## create BC at negY face
-            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2+self.lenTol)
+            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xG+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2+self.lenTol)
             nsetNameNegY = 'Nset_NegY_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
             region = self.instance[i].sets[nsetNameNegY]
             self.model.DisplacementBC(name='BC_NegY_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             ## create BC at negZ face
-            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.yE+self.lenTol, zMax=self.lenTol)
+            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xG+self.lenTol, yMax=self.yG+self.lenTol, zMax=self.lenTol)
             nsetNamePosZ = 'Nset_NegZ_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
             region = self.instance[i].sets[nsetNamePosZ]
@@ -313,10 +328,10 @@ class coupon_74_75():
         region = self.instance[0].sets[nsetNameNegX]
         self.model.DisplacementBC(name='BC_NegX_Part_1', createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create pressure load on posX face
-        endCellFaceArr = self.part[0].faces.getByBoundingBox(xMin=self.xE-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.yE+self.lenTol, zMax=self.thickness/2+self.lenTol)
+        endCellFaceArr = self.part[1].faces.getByBoundingBox(xMin=self.xG-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xG+self.lenTol, yMax=self.yG+self.lenTol, zMax=self.thickness/2+self.lenTol)
         surfNamePosX = 'Surf_PosX_Part_2'
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr, surfNamePosX)
-        region = self.instance[0].surfaces[surfNamePosX]
+        self.getElemSurfFromCellFace(self.part[1], endCellFaceArr, surfNamePosX)
+        region = self.instance[1].surfaces[surfNamePosX]
         self.model.Pressure(name='Load_PosX', createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
     def createJob(self):
@@ -328,7 +343,7 @@ class coupon_74_75():
         ## save cae file
         mdb.saveAs(pathName=self.couponName+'_Model'+self.version)
         ## write json data of the model
-        self.couponData.update({'elemNum':{'HexPart1':len(self.part[0].elements)}})
+        self.couponData.update({'elemNum':{'HexPart1':len(self.part[0].elements), 'HexPart2':len(self.part[1].elements)}})
         couponString = json.dumps(self.couponData, indent=4, sort_keys=True)
         couponJson = open(self.couponName+'_Data'+self.version+'.json', 'w')
         couponJson.write(couponString)
@@ -381,15 +396,15 @@ class coupon_74_75():
         part.Surface(**surfDict)
 
 
-# couponDatabasePath = r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src\class'
-# couponDatabaseJsonFileName = r'database_coupon_74_75'
+couponDatabasePath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src\class'
+couponDatabaseJsonFileName = r'database_coupon_74_75'
 
-# import json
-# import ast
+import json
+import ast
 
-# fileJson = open(couponDatabasePath+'\\'+couponDatabaseJsonFileName+'.json')
-# couponDatabaseUnicode = json.load(fileJson)
-# fileJson.close()
-# couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
+fileJson = open(couponDatabasePath+'\\'+couponDatabaseJsonFileName+'.json')
+couponDatabaseUnicode = json.load(fileJson)
+fileJson.close()
+couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
 
-# self = coupon_74_75(couponDatabase['Coupon_74'])
+self = coupon_74_75(couponDatabase['Coupon_74'])
