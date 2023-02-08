@@ -7,10 +7,9 @@ import json
 import ast
 
 srcPath = os.getcwd()
-srcPath.replace('\\','/')
 
 ## read coupon json database
-couponJson = open(srcPath+'/database/database_coupon.json')
+couponJson = open(srcPath+'/database/database_coupon.json', 'r')
 couponDictUnicode = json.load(couponJson)
 couponJson.close()
 couponDict = ast.literal_eval(json.dumps(couponDictUnicode))
