@@ -351,12 +351,6 @@ class coupon_70_73_be():
             self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
             region = self.instance[i].sets[nsetNameNegY]
             self.model.DisplacementBC(name='BC_NegY_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-            ## create BC at negZ face
-            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xF+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.lenTol)
-            nsetNamePosZ = 'Nset_NegZ_Part_'+str(i+1)
-            self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
-            region = self.instance[i].sets[nsetNamePosZ]
-            self.model.DisplacementBC(name='BC_NegZ_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             ## create BC at posZ face
             nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin = -self.lenTol, zMin = self.thickness-self.lenTol, xMax = self.xF+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.thickness+self.lenTol)
             nsetNamePosZ = 'Nset_PosZ_Part_'+str(i+1)
@@ -436,5 +430,4 @@ class coupon_70_73_be():
                 elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
                 surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
         part.Surface(**surfDict)
-
 
