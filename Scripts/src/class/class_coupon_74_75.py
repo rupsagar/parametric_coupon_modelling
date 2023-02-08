@@ -395,16 +395,3 @@ class coupon_74_75():
                 surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
         part.Surface(**surfDict)
 
-
-couponDatabasePath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src\class'
-couponDatabaseJsonFileName = r'database_coupon_74_75'
-
-import json
-import ast
-
-fileJson = open(couponDatabasePath+'\\'+couponDatabaseJsonFileName+'.json')
-couponDatabaseUnicode = json.load(fileJson)
-fileJson.close()
-couponDatabase = ast.literal_eval(json.dumps(couponDatabaseUnicode))
-
-self = coupon_74_75(couponDatabase['Coupon_74'])
