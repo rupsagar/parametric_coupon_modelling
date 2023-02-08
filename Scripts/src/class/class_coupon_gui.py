@@ -92,7 +92,10 @@ class coupon_gui():
             couponJson = open(self.pathEntry.get()+'/'+self.dataFileName, 'w')
             couponJson.write(couponString)
             couponJson.close()
-            callAbaqus()
+            try:
+                callAbaqus()
+            except Exception as errMsg:
+                messagebox.showinfo('Status Info', str(errMsg))
         def selectFolder():
             self.path = askdirectory()
             self.pathEntry.config(state='normal')
