@@ -9,19 +9,21 @@
             "chamferEdgeLength" : "0.3",
             "chamferAngle" : "45.0"
         },
-        "isChamfer" : "True",
+        "isChamfer" : "False",
         "givenKt" : "2.3",
         "lenTol" : "1.0e-5",
         "elemSize" : {
-            "global" : "0.5",
-            "thickness" : "0.05",
+            "thickness1" : "0.05",
+            "thickness2" : "0.3",
             "arc" : "0.05",
             "long1" : "0.05",
-            "long2" : "0.2",
-            "long3" : "0.7"
+            "long2" : "0.3",
+            "long3" : "0.4",
+            "long4" : "0.6"
         },
         "elemType" : {
-            "hexPart1" : "C3D20H"
+            "hexPart1" : "C3D20H",
+            "hexPart2" : "C3D8HS"
         },
         "material" : {
             "name" : "Aluminum",
