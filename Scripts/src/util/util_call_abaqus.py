@@ -10,6 +10,7 @@ template = sys.argv[-3]
 tempDataFileName = sys.argv[-4]
 statusFileName = sys.argv[-5]
 
+savePath = savePath.replace(' ', '\\ ')
 os.chdir(savePath)
 
 fileJson = open(savePath+'/'+tempDataFileName)
