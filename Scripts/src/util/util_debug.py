@@ -1,12 +1,13 @@
-srcPath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts Space\src'
-template = 'Coupon_70_73_A'
-coupon = 'Coupon_70A'
+srcPath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src'
+template = 'Coupon_70_73_BE'
+coupon = 'Coupon_70C'
 
 import json
 import ast
 import sys
 import importlib
 import os
+import shutil
 
 try:
     databaseJson = open(srcPath+'/database/database_coupon.json', 'r')
@@ -33,4 +34,7 @@ except Exception as err:
 
 if os.path.exists(srcPath+'/class/class_'+template.lower()+'.pyc'):
     os.remove(srcPath+'/class/class_'+template.lower()+'.pyc')
+
+if os.path.isdir(srcPath+'/class/__pycache__'):
+    shutil.rmtree(srcPath+'/class/__pycache__')
 
