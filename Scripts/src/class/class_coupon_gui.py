@@ -65,7 +65,7 @@ class coupon_gui():
             return dictData
         def callAbaqus():
             statusFileName = 'statusInfo.txt'
-            abqCall = 'abaqus cae noGUI='+self.srcPath+'/util/util_call_abaqus.py -- '+statusFileName+' '+self.dataFileName+' '+templateDropDown.get()+' '+self.pathEntry.get()+' '+self.srcPath
+            abqCall = 'abaqus cae noGUI="'+self.srcPath+'/util/util_call_abaqus.py" -- '+statusFileName+' '+self.dataFileName+' '+templateDropDown.get()+' "'+self.pathEntry.get()+'" "'+self.srcPath+'"'
             sys.path.append(self.abqPath)
             os.system(abqCall)
             statusFile = open(self.pathEntry.get()+'/'+statusFileName, 'r')
