@@ -1,0 +1,39 @@
+{
+    "Coupon_74": {
+        "couponName" : "Coupon_74",
+        "geometry" : {
+            "len" : "150.0",
+            "width" : "30.0",
+            "thickness" : "3.0",
+            "phi" : "10.0",
+            "chamferEdgeLength" : "0.3",
+            "chamferAngle" : "45.0"
+        },
+        "isChamfer" : "True",
+        "givenKt" : "2.3",
+        "lenTol" : "1.0e-5",
+        "elemSize" : {
+            "global" : "0.5",
+            "thickness" : "0.05",
+            "arc" : "0.05",
+            "long1" : "0.05",
+            "long2" : "0.2",
+            "long3" : "0.7"
+        },
+        "elemType" : {
+            "hexPart1" : "C3D20H"
+        },
+        "material" : {
+            "name" : "Aluminum",
+            "density" : "2.85e-6",
+            "youngsModulus" : "72000.0",
+            "poissonsRatio" : "0.3309"
+        },
+        "step" : {
+            "nlGeom" : "OFF",
+            "initIncr" : "1.0",
+            "nominalStress" : "250.0"
+        },
+        "version" : ""
+    }
+}
