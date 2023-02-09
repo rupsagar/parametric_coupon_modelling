@@ -49,10 +49,10 @@ class coupon_gui():
                 if self.yCount>=math.ceil((self.totalNumParam-1)/2.0):
                     self.xCount = self.xCount+1
                     self.yCount = 0
-        def getParam(dictData):
+        def readParam(dictData):
             for key, val in dictData.items():
                 if isinstance(val, dict):
-                    dictData[key] = getParam(val.copy())
+                    dictData[key] = readParam(val.copy())
                     continue
                 if key=='couponName':
                     dictData[key] = self.couponDropDown.get() if self.radioVar.get()==1 else self.couponNameEntry.get()
@@ -60,18 +60,20 @@ class coupon_gui():
                 if key=='version' and self.modelData[self.iRetrieve].get()!='':
                     dictData[key] = '_'+self.modelData[self.iRetrieve].get()
                     continue
-                dictData[key] = self.modelData[self.iRetrieve].get()
+                try:
+                    dictData[key] = float(eval(self.modelData[self.iRetrieve].get()))
+                except:
+                    dictData[key] = self.modelData[self.iRetrieve].get()
                 self.iRetrieve = self.iRetrieve+1
             return dictData
         def callAbaqus():
             statusFileName = 'statusInfo.txt'
-            abqCall = 'abaqus cae noGUI="'+self.srcPath+'/util/util_call_abaqus.py" -- '+statusFileName+' '+self.dataFileName+' '+templateDropDown.get()+' "'+self.pathEntry.get()+'" "'+self.srcPath+'"'
+            abqCall = 'abaqus cae noGUI="'+self.srcPath+'/util/util_call_abaqus.py" -- '+statusFileName+' '+self.jsonFileName+' '+templateDropDown.get()+' "'+self.pathEntry.get()+'" "'+self.srcPath+'"'
             sys.path.append(self.abqPath)
             os.system(abqCall)
             statusFile = open(self.pathEntry.get()+'/'+statusFileName, 'r')
             msgText = statusFile.read()
             statusFile.close()
-            os.remove(self.pathEntry.get()+'/'+self.dataFileName)
             os.remove(self.pathEntry.get()+'/'+statusFileName)
             if os.path.exists(self.srcPath+'/abaqus.rpy'):
                 os.remove(self.srcPath+'/abaqus.rpy')
@@ -84,12 +86,12 @@ class coupon_gui():
                     messagebox.showinfo('Input Check', 'Enter save location and/or coupon name')
                     return
             self.iRetrieve = 0
-            self.couponOutput = getParam(self.couponParams.copy())
+            self.couponOutput = readParam(self.couponParams.copy())
             couponType = 'Built-In' if self.radioVar.get()==1 else 'Custom'
             self.couponOutput.update({'couponTemplate':templateDropDown.get(), 'couponType':couponType,'savePath':self.pathEntry.get()})
             couponString = json.dumps(self.couponOutput, indent=4, sort_keys=True)
-            self.dataFileName = 'tempData.json'
-            couponJson = open(self.pathEntry.get()+'/'+self.dataFileName, 'w')
+            self.jsonFileName = self.couponOutput['couponName']+'_Data'+self.couponOutput['version']+'.json'
+            couponJson = open(self.pathEntry.get()+'/'+self.jsonFileName, 'w')
             couponJson.write(couponString)
             couponJson.close()
             try:
