@@ -10,35 +10,41 @@ class coupon_74_75():
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
         self.couponData = couponData
         self.couponName = couponData['couponName']
-        self.len = float(eval(couponData['geometry']['len']))
-        self.width = float(eval(couponData['geometry']['width']))
-        self.thickness = float(eval(couponData['geometry']['thickness']))
-        self.phi = float(eval(couponData['geometry']['phi']))
-        self.chamferEdgeLength = float(eval(couponData['geometry']['chamferEdgeLength']))
-        self.chamferAngle = float(eval(couponData['geometry']['chamferAngle']))
+        self.len = couponData['geometry']['len']
+        self.width = couponData['geometry']['width']
+        self.thickness = couponData['geometry']['thickness']
+        self.phi = couponData['geometry']['phi']
+        self.chamferEdgeLength = couponData['geometry']['chamferEdgeLength']
+        self.chamferAngle = couponData['geometry']['chamferAngle']
         self.isChamfer = couponData['isChamfer']
-        self.givenKt = float(eval(couponData['givenKt']))
-        self.lenTol = float(eval(couponData['lenTol']))
-        self.seedSizeThickness1 = float(eval(couponData['elemSize']['thickness1']))
-        self.seedSizeThickness2 = float(eval(couponData['elemSize']['thickness2']))
-        self.seedSizeArc = float(eval(couponData['elemSize']['arc']))
-        self.seedSizeLong1 = float(eval(couponData['elemSize']['long1']))
-        self.seedSizeLong2 = float(eval(couponData['elemSize']['long2']))
-        self.seedSizeLong3 = float(eval(couponData['elemSize']['long3']))
-        self.seedSizeLong4 = float(eval(couponData['elemSize']['long4']))
+        self.givenKt = couponData['givenKt']
+        self.lenTol = couponData['lenTol']
+        self.seedSizeThickness1 = couponData['elemSize']['thickness1']
+        self.seedSizeThickness2 = couponData['elemSize']['thickness2']
+        self.seedSizeArc = couponData['elemSize']['arc']
+        self.seedSizeLong1 = couponData['elemSize']['long1']
+        self.seedSizeLong2 = couponData['elemSize']['long2']
+        self.seedSizeLong3 = couponData['elemSize']['long3']
+        self.seedSizeLong4 = couponData['elemSize']['long4']
         self.elemTypeHexPart1 = SymbolicConstant(couponData['elemType']['hexPart1'])
         self.elemTypeHexPart2 = SymbolicConstant(couponData['elemType']['hexPart2'])
         self.materialName = couponData['material']['name']
-        self.density = float(eval(couponData['material']['density']))
-        self.youngsModulus = float(eval(couponData['material']['youngsModulus']))
-        self.poissonsRatio = float(eval(couponData['material']['poissonsRatio']))
+        self.density = couponData['material']['density']
+        self.youngsModulus = couponData['material']['youngsModulus']
+        self.poissonsRatio = couponData['material']['poissonsRatio']
         self.nlGeom = SymbolicConstant(couponData['step']['nlGeom'])
-        self.initIncr = float(eval(couponData['step']['initIncr']))
-        self.nominalStress = float(eval(couponData['step']['nominalStress']))
+        self.initIncr = couponData['step']['initIncr']
+        self.nominalStress = couponData['step']['nominalStress']
         self.version = couponData['version']
         ## derived quantities
         self.thetaRad = math.pi/180*self.chamferAngle
         self.endStress = -self.nominalStress*(self.width-self.phi)/self.width
+        if isinstance(self.isChamfer, float):
+            self.isChamfer = str(self.isChamfer)
+        if self.isChamfer.lower() in ['1.0', 'true', 'yes', 'on']:
+            self.provideChamfer = True
+        elif self.isChamfer.lower() in ['0.0', 'false', 'no', 'off', '']:
+            self.provideChamfer = False
         ## create coupon
         self.createModel()
         self.createProfileSketch()
@@ -50,7 +56,6 @@ class coupon_74_75():
         self.createSection()
         self.createTie()
         self.createStep()
-        self.createJsonOutput()
         self.createJob()
     def createModel(self):
         ## define model
@@ -106,7 +111,7 @@ class coupon_74_75():
         self.profileSketch[1].setPrimaryObject(option=STANDALONE)        
         self.profileSketch[1].rectangle(point1=self.coordD, point2=self.coordG)
         self.profileSketch[1].unsetPrimaryObject()
-        if self.isChamfer=='True':
+        if self.provideChamfer==True:
             ## calculate vertex coordinates for chamfer ###########################################################################################################
             self.coordODash = (self.xODash, self.yODash) = (0.0, 0.0)
             self.coordADash = (self.xADash, self.yADash) = (-self.chamferEdgeLength, self.chamferEdgeLength*math.tan(self.thetaRad))
@@ -140,13 +145,13 @@ class coupon_74_75():
         ## create solid
         self.part = len(self.profileSketch)*[None]
         for i in range(len(self.part)):
-            if i==0 and self.isChamfer=='True':
+            if i==0 and self.provideChamfer==True:
                 self.tempPart = 2*[None]
                 for j in range(len(self.tempPart)):
                     self.tempPart[j] = self.model.Part(name=self.couponName+'_Part_1_Temp_'+str(j+1), dimensionality=THREE_D, type=DEFORMABLE_BODY)
                 self.tempPart[0].BaseSolidExtrude(sketch=self.profileSketch[0], depth=self.thickness/2.0)
                 self.tempPart[1].BaseSolidSweep(sketch=self.sketchChamferProfile, path=self.sketchChamferSweepPath)
-            elif (i==0 and self.isChamfer=='False') or i==1:
+            elif (i==0 and self.provideChamfer==False) or i==1:
                 self.part[i] = self.model.Part(name=self.couponName+'_Part_'+str(i+1), dimensionality=THREE_D, type=DEFORMABLE_BODY)
                 self.part[i].BaseSolidExtrude(sketch=self.profileSketch[i], depth=self.thickness/2.0)
     def createAssembly(self):
@@ -154,7 +159,7 @@ class coupon_74_75():
         self.assembly = self.model.rootAssembly
         self.assembly.DatumCsysByDefault(CARTESIAN)
         ## create temporary assembly instances for model with chamfer
-        if self.isChamfer=='True':
+        if self.provideChamfer==True:
             self.tempInstance = len(self.tempPart)*[None]
             for i in range(len(self.tempInstance)):
                 self.tempInstance[i] = self.assembly.Instance(name=self.couponName+'_Instance_1_Temp_'+str(i+1), part=self.tempPart[i], dependent=ON)
@@ -165,8 +170,8 @@ class coupon_74_75():
             self.part[0] = self.model.parts[newPartName]
         session.viewports[session.currentViewportName].setValues(displayedObject=self.part[0])
         ## create actual assembly instances
-        self.instance = len(self.profileSketch)*[None]
-        for i in range(len(self.instance)):
+        self.instance = len(self.part)*[None]
+        for i in range(len(self.part)):
             self.instance[i] = self.assembly.Instance(name=self.couponName+'_Instance_'+str(i+1), part=self.part[i], dependent=ON)
     def createPartition(self):
         def createFacePartition():
@@ -204,60 +209,49 @@ class coupon_74_75():
         edgesForPartition3 = (self.part[0].edges.findAt(coordinates=(self.phi/2.0+self.lenTol, self.phi/2.0+self.lenTol, 0)), )
         self.part[0].PartitionCellBySweepEdge(sweepPath=sweepPath3, cells=self.part[0].cells, edges=edgesForPartition3)
         ## partition solid ==>> sweep 4
-        if self.isChamfer=='True':
+        if self.provideChamfer==True:
             sweepPath4 = self.part[0].edges.findAt(coordinates=(self.width/2.0, 0, self.lenTol))
             edgesForPartitionTemp4 = self.getByCylinderDifference(self.part[0].edges, (0, 0, self.thickness/2-self.lenTol), (0, 0, self.thickness/2+self.lenTol), (self.phi/2+self.chamferEdgeLength+self.lenTol), (self.phi/2+self.chamferEdgeLength-self.lenTol))
             edgesForPartition4 = self.getArcEdge(edgesForPartitionTemp4)
             self.part[0].PartitionCellBySweepEdge(sweepPath=sweepPath4, cells=self.part[0].cells, edges=edgesForPartition4)
     def createMesh(self):
-        def seedLong(part, index, distance, edges, **kwargs):
-            for thisEdge in edges:
-                edgeVertices = thisEdge.getVertices()
-                for thisVertexID in edgeVertices:
-                    vertexCoord = part.vertices[thisVertexID].pointOn
-                    if abs(abs(vertexCoord[0][index])-distance) < self.lenTol:
-                        if edgeVertices.index(thisVertexID) == 0:
-                            part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), constraint=FINER, **kwargs)
-                        elif edgeVertices.index(thisVertexID) == 1:
-                            part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), constraint=FINER, **kwargs)
-        ## seed ==>> global
-        for i in range(len(self.part)):
-            self.part[i].seedPart(size=0.1, deviationFactor=0.1, minSizeFactor=0.1)
-        if self.isChamfer=='True':
-            chamferOffset = self.chamferEdgeLength
-        elif self.isChamfer=='False':
-            chamferOffset = 0
+        if self.provideChamfer==True:
+            self.chamferOffset = self.chamferEdgeLength
+        elif self.provideChamfer==False:
+            self.chamferOffset = 0
         ## seed ==>> thickness1 direction
-        edgesThickness1 = self.part[0].edges.findAt(coordinates=((self.phi/2+chamferOffset, 0, self.lenTol), (0, self.phi/2+chamferOffset, self.lenTol)))
+        edgesThickness1 = self.part[0].edges.findAt(coordinates=((self.phi/2+self.chamferOffset, 0, self.lenTol), (0, self.phi/2+self.chamferOffset, self.lenTol)))
         self.part[0].seedEdgeBySize(edges=edgesThickness1, size=self.seedSizeThickness1, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> arc direction
         edgesArc = self.part[0].edges.getByBoundingCylinder((0, 0, 0), (0, 0 , self.lenTol), (self.phi/2+self.lenTol))
         self.part[0].seedEdgeBySize(edges=edgesArc, size=self.seedSizeArc, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> long edges along BB'
-        if self.isChamfer=='True':
+        if self.provideChamfer==True:
             edgesLong1 = self.part[0].edges.findAt(coordinates=((self.phi/2+self.lenTol, 0, 0), (0, self.phi/2+self.lenTol, 0)))
             self.part[0].seedEdgeBySize(edges=edgesLong1, size=self.seedSizeLong1, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> long edges along B'B''
         pickedEdges1 = self.part[0].edges.getByBoundingCylinder((0, 0, -self.lenTol), (0, 0, self.thickness/2+self.lenTol), ((self.phi+self.width)/4.0+self.lenTol))
         pickedEdgesArc = self.getArcEdge(pickedEdges1)
         pickedEdgesStraight = self.getByDifference(pickedEdges1, pickedEdgesArc)
-        edgesLong2 = self.getEdgeByLength(pickedEdgesStraight, abs((self.width-self.phi)/4-chamferOffset))
-        seedLong(self.part[0], 0, (self.phi/2+chamferOffset), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
-        seedLong(self.part[0], 1, (self.phi/2+chamferOffset), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
-        seedLong(self.part[0], 0, (self.phi/2+chamferOffset)*math.cos(math.pi/4), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        edgesLong2 = self.getEdgeByLength(pickedEdgesStraight, abs((self.width-self.phi)/4-self.chamferOffset))
+        self.seedEdge(self.part[0], 0, (self.phi/2+self.chamferOffset), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        self.seedEdge(self.part[0], 1, (self.phi/2+self.chamferOffset), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        self.seedEdge(self.part[0], 0, (self.phi/2+self.chamferOffset)*math.cos(math.pi/4), edgesLong2, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
         ## seed ==>> long edges B''C'
         pickedEdges2 = self.part[0].edges.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.width/2+self.lenTol, yMax=self.width/2+self.lenTol, zMax=self.thickness/2+self.lenTol)
-        edgesLong3 = self.getByDifference(pickedEdges2, pickedEdges1)
+        edgesLongTemp1 = self.getByDifference(pickedEdges2, pickedEdges1)
+        edgesLongTemp2 = self.getEdgeByLength(edgesLongTemp1, self.thickness/2)
+        edgesLong3 = self.getByDifference(edgesLongTemp1, edgesLongTemp2)
         self.part[0].seedEdgeBySize(edges=edgesLong3, size=self.seedSizeLong2, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> long edge along C'D
         edgesLong4 = self.part[0].edges.findAt(coordinates=((self.width/2+self.lenTol, 0, 0), (self.width/2+self.lenTol, self.width/2, 0), (self.width/2+self.lenTol, 0, self.thickness/2), (self.width/2+self.lenTol, self.width/2, self.thickness/2)))
-        seedLong(self.part[0], 0, self.width/2, edgesLong4, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
+        self.seedEdge(self.part[0], 0, self.width/2, edgesLong4, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
         ## seed ==>> thickness2 direction
         edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), (self.xD, self.lenTol, 0)))
         self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FIXED)
         ## seed ==>> long edge along DF
         edgesLong5 = self.part[1].edges.findAt(coordinates=((self.xD+self.lenTol, 0, 0), (self.xD+self.lenTol, self.width/2, 0), (self.xD+self.lenTol, 0, self.thickness/2), (self.xD+self.lenTol, self.width/2, self.thickness/2)))
-        seedLong(self.part[1], 0, self.xD, edgesLong5, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
+        self.seedEdge(self.part[1], 0, self.xD, edgesLong5, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
         ## set element types
         elemTypeHex1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemTypeHex1,))
@@ -266,6 +260,7 @@ class coupon_74_75():
         ## generate mesh
         for i in range(len(self.part)):
             self.part[i].generateMesh()
+        self.couponData.update({'elemNum':{'part1':len(self.part[0].elements), 'part2':len(self.part[1].elements)}})
     def createMaterial(self):
         ## material definition
         self.model.Material(name=self.materialName)
@@ -278,8 +273,8 @@ class coupon_74_75():
             pickedRegion = self.part[i].Set(elements=self.part[i].elements, name='All_Elements_Part_'+str(i+1))
             self.part[i].SectionAssignment(region=pickedRegion, sectionName=self.couponName+'_Section', offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
     def createTie(self):
-        region = len(self.profileSketch)*[None]
-        for i in range(2):
+        region = len(self.part)*[None]
+        for i in range(len(self.part)):
             surf = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yE+self.yC+self.lenTol, zMax=self.thickness/2+self.lenTol)
             surfName = 'Surf_Tie_Part_'+str(i+1)
             self.getElemSurfFromCellFace(self.part[i], surf, surfName)
@@ -288,7 +283,7 @@ class coupon_74_75():
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        for i in range(len(self.instance)):
+        for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xG+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2+self.lenTol)
             nsetNameNegY = 'Nset_NegY_Part_'+str(i+1)
@@ -314,29 +309,6 @@ class coupon_74_75():
         region = self.instance[1].surfaces[surfNamePosX]
         self.model.Pressure(name='Load_PosX', createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
-    def createJsonOutput(self):
-        ## output data
-        self.couponData['geometry']['len'] = self.len
-        self.couponData['geometry']['width'] = self.width
-        self.couponData['geometry']['thickness'] = self.thickness
-        self.couponData['geometry']['phi'] = self.phi
-        self.couponData['geometry']['chamferEdgeLength'] = self.chamferEdgeLength
-        self.couponData['geometry']['chamferAngle'] = self.chamferAngle
-        self.couponData['givenKt'] = self.givenKt
-        self.couponData['lenTol'] = self.lenTol
-        self.couponData['elemSize']['thickness1'] = self.seedSizeThickness1
-        self.couponData['elemSize']['thickness2'] = self.seedSizeThickness2
-        self.couponData['elemSize']['arc'] = self.seedSizeArc
-        self.couponData['elemSize']['long1'] = self.seedSizeLong1
-        self.couponData['elemSize']['long2'] = self.seedSizeLong2
-        self.couponData['elemSize']['long3'] = self.seedSizeLong3
-        self.couponData['elemSize']['long4'] = self.seedSizeLong4
-        self.couponData['material']['density'] = self.density
-        self.couponData['material']['youngsModulus'] = self.youngsModulus
-        self.couponData['material']['poissonsRatio'] = self.poissonsRatio
-        self.couponData['step']['initIncr'] = self.initIncr
-        self.couponData['step']['nominalStress'] = self.nominalStress
-        self.couponData.update({'elemNum':{'HexPart1':len(self.part[0].elements), 'HexPart2':len(self.part[1].elements)}})
     def createJob(self):
         ## create job
         self.job = mdb.Job(name=self.couponName+'_Job'+self.version, model=self.model, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, memoryUnits=PERCENTAGE, 
@@ -344,7 +316,7 @@ class coupon_74_75():
             scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
         self.job.writeInput(consistencyChecking=OFF)
         ## save cae file
-        mdb.saveAs(pathName=self.couponName+'_Model'+self.version)
+        mdb.saveAs(pathName=self.model.name+self.version)
         ## write json data of the model
         couponString = json.dumps(self.couponData, indent=4, sort_keys=True)
         couponJson = open(self.couponName+'_Data'+self.version+'.json', 'w')
@@ -380,6 +352,16 @@ class coupon_74_75():
             if abs(thisEdge.getSize(0)-length) < self.lenTol:
                 pickedEdges.append(thisEdge)
         return pickedEdges
+    def seedEdge(self, part, index, distance, edges, **kwargs):
+            for thisEdge in edges:
+                edgeVertices = thisEdge.getVertices()
+                for thisVertexID in edgeVertices:
+                    vertexCoord = part.vertices[thisVertexID].pointOn
+                    if abs(abs(vertexCoord[0][index])-distance) < self.lenTol:
+                        if edgeVertices.index(thisVertexID) == 0:
+                            part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), constraint=FINER, **kwargs)
+                        elif edgeVertices.index(thisVertexID) == 1:
+                            part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), constraint=FINER, **kwargs)
     def getElemSurfFromCellFace(self, part, cellFaceArr, surfName):
         ## method to create element based surface from cell face
         elemWithFace = [[], [], [], [], [], []]
