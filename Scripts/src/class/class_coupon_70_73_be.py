@@ -22,11 +22,12 @@ class coupon_70_73_be():
         self.givenKt = float(eval(couponData['givenKt']))
         self.lenTol = float(eval(couponData['lenTol']))
         self.partitionVerticalFraction = float(eval(couponData['partitionVerticalFraction']))
-        self.seedSizeGlobal = float(eval(couponData['elemSize']['global']))
-        self.seedSizeThickness = float(eval(couponData['elemSize']['thickness']))
+        self.seedSizeThickness1 = float(eval(couponData['elemSize']['thickness1']))
+        self.seedSizeThickness2 = float(eval(couponData['elemSize']['thickness2']))
         self.seedSizeVerticalOuter = float(eval(couponData['elemSize']['verticalOuter']))
         self.seedSizeVerticalMiddle = float(eval(couponData['elemSize']['verticalMiddle']))
         self.seedSizeVerticalInner = float(eval(couponData['elemSize']['verticalInner']))
+        self.seedSizeVertical2 = float(eval(couponData['elemSize']['vertical2']))
         self.seedSizeLong1 = float(eval(couponData['elemSize']['long1']))
         self.seedSizeLong2 = float(eval(couponData['elemSize']['long2']))
         self.seedSizeLong3 = float(eval(couponData['elemSize']['long3']))
@@ -241,22 +242,8 @@ class coupon_70_73_be():
         createPartitionLong(self.part[0], self.xC)
         createPartitionLong(self.part[1], self.xE)
     def createMesh(self):
-        def seedLong(part, xLeft, edges, **kwargs):
-            for thisEdge in edges:
-                edgeVertices = thisEdge.getVertices()
-                for thisVertexID in edgeVertices:
-                    vertexCoord = part.vertices[thisVertexID].pointOn
-                    if abs(abs(vertexCoord[0][0])-xLeft) < self.lenTol:
-                        if edgeVertices.index(thisVertexID) == 0:
-                            part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), constraint=FINER, **kwargs)
-                        elif edgeVertices.index(thisVertexID) == 1:
-                            part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), constraint=FINER, **kwargs)
-        ## seed ==>> global
-        self.part[0].seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
-        self.part[1].seedPart(size=self.seedSizeGlobal, deviationFactor=0.1, minSizeFactor=0.1)
-        ## seed ==>> thickness direction
-        edgesThickness = self.part[0].edges.findAt(((0, 0, self.thickness/2.0),))
-        self.part[0].seedEdgeBySize(edges=edgesThickness, size=self.seedSizeThickness, deviationFactor=0.1, constraint=FINER)
+        edgesThickness1 = self.part[0].edges.findAt(((0, 0, self.lenTol),))
+        self.part[0].seedEdgeBySize(edges=edgesThickness1, size=self.seedSizeThickness1, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> outer vertical edge
         edgesVerticalOuter = self.part[0].edges.findAt(((0, self.yA-self.yOffset+self.lenTol, self.thickness),))
         self.part[0].seedEdgeBySize(edges=edgesVerticalOuter, size=self.seedSizeVerticalOuter, deviationFactor=0.1, constraint=FINER)
@@ -275,27 +262,33 @@ class coupon_70_73_be():
         ## seed ==>> long edges along CD
         pickedEdges1 = self.part[0].edges
         edgesLongCD = self.getEdgeByLength(pickedEdges1, abs(self.xD-self.xC))
-        seedLong(self.part[0], self.xC, edgesLongCD, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        self.seedLong(self.part[0], 0, self.xC, edgesLongCD, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
         ## seed ==>> arc along DE
         pickedEdges2 = self.part[1].edges
         edgesArcDE = self.getArcEdge(pickedEdges2)
-        seedLong(self.part[1], self.xD, edgesArcDE, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
+        self.seedLong(self.part[1], 0, self.xD, edgesArcDE, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
         # ## seed ==>> long edge along DE
         edgesLongDE = self.getEdgeByLength(pickedEdges2, abs(self.xE-self.xD))
         biasRatio = self.part[1].getEdgeSeeds(edgesArcDE[0], attribute=BIAS_RATIO)
         elemNum = self.part[1].getEdgeSeeds(edgesArcDE[0], attribute=NUMBER)
-        seedLong(self.part[1], self.xD, edgesLongDE, ratio=biasRatio, number=elemNum)
+        self.seedLong(self.part[1], 0, self.xD, edgesLongDE, ratio=biasRatio, number=elemNum)
         ## seed ==>> long edges along EF
         edgesLong3 = self.getEdgeByLength(pickedEdges2, abs(self.xF-self.xE))
-        seedLong(self.part[1], self.xE, edgesLong3, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
-         ## set element types
+        self.seedLong(self.part[1], 0, self.xE, edgesLong3, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
+        ## seed ==>> thickness 2
+        edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), ))
+        self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FIXED)
+        ## seed ==>> vertical edge part 2
+        edgesVerticalPart2 = self.part[1].edges.findAt(coordinates=((self.xD, self.lenTol, 0), ))
+        self.part[1].seedEdgeBySize(edges=edgesVerticalPart2, size=self.seedSizeVertical2, deviationFactor=0.1, constraint=FIXED)
+        ## set element types
         elemTypeHex1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemTypeHex1,))
         elemTypeHex2 = mesh.ElemType(elemCode=self.elemTypeHexPart2, elemLibrary=STANDARD)
         self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
         # ## generate mesh
         for i in range(2):
-            self.part[i].generateMesh(regions=self.part[i].cells)
+            self.part[i].generateMesh()
     def createMaterial(self):
         ## material definition
         self.model.Material(name=self.materialName)
@@ -358,11 +351,12 @@ class coupon_70_73_be():
         self.couponData['givenKt'] = self.givenKt
         self.couponData['lenTol'] = self.lenTol
         self.couponData['partitionVerticalFraction'] = self.partitionVerticalFraction
-        self.couponData['elemSize']['global'] = self.seedSizeGlobal
-        self.couponData['elemSize']['thickness'] = self.seedSizeThickness
+        self.couponData['elemSize']['thickness1'] = self.seedSizeThickness1
+        self.couponData['elemSize']['thickness2'] = self.seedSizeThickness2
         self.couponData['elemSize']['verticalOuter'] = self.seedSizeVerticalOuter
         self.couponData['elemSize']['verticalMiddle'] = self.seedSizeVerticalMiddle
         self.couponData['elemSize']['verticalInner'] = self.seedSizeVerticalInner
+        self.couponData['elemSize']['vertical2'] = self.seedSizeVertical2
         self.couponData['elemSize']['long1'] = self.seedSizeLong1
         self.couponData['elemSize']['long2'] = self.seedSizeLong2
         self.couponData['elemSize']['long3'] = self.seedSizeLong3
@@ -416,6 +410,16 @@ class coupon_70_73_be():
             if abs(thisEdge.getSize(0)-length) < self.lenTol:
                 pickedEdges.append(thisEdge)
         return pickedEdges
+    def seedLong(self, part, index, distance, edges, **kwargs):
+            for thisEdge in edges:
+                edgeVertices = thisEdge.getVertices()
+                for thisVertexID in edgeVertices:
+                    vertexCoord = part.vertices[thisVertexID].pointOn
+                    if abs(abs(vertexCoord[0][index])-distance) < self.lenTol:
+                        if edgeVertices.index(thisVertexID) == 0:
+                            part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), constraint=FINER, **kwargs)
+                        elif edgeVertices.index(thisVertexID) == 1:
+                            part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), constraint=FINER, **kwargs)
     def getElemSurfFromCellFace(self, part, cellFaceArr, surfName):
         ## method to create element based surface from cell face
         elemWithFace = [[], [], [], [], [], []]
