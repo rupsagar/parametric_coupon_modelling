@@ -1,8 +1,8 @@
+## may need to modify this path depending on local machine or OS
 abqPath = 'C:/SIMULIA/Commands'
 
 import os
-import sys
-import importlib
+import imp
 import json
 import ast
 
@@ -15,6 +15,6 @@ couponJson.close()
 couponDict = ast.literal_eval(json.dumps(couponDictUnicode))
 
 ## create gui window
-sys.path.append(srcPath+'/class')
-couponGUI = getattr(importlib.import_module('class_coupon_gui'), 'coupon_gui')
-newGUI = couponGUI(abqPath, srcPath, couponDict)
+guiModule = imp.load_source('class_coupon_gui', srcPath+'/class/class_coupon_gui.py')
+guiClass = getattr(guiModule, 'coupon_gui')
+newGUI = guiClass(abqPath, srcPath, couponDict)
