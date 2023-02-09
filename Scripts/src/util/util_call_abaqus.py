@@ -1,8 +1,8 @@
 import os
 import sys
-import importlib
 import json
 import ast
+import imp
 
 srcPath = sys.argv[-1]
 savePath = sys.argv[-2]
@@ -10,8 +10,6 @@ template = sys.argv[-3]
 tempDataFileName = sys.argv[-4]
 statusFileName = sys.argv[-5]
 
-textSuccess = r'SUCCESS! Model created successfully.'
-textFail = r'FAILED! Model cannot be created.'
 statusFile = open(savePath+'/'+statusFileName, 'w')
 
 try:
@@ -19,17 +17,17 @@ try:
     couponDataUnicode = json.load(fileJson)
     fileJson.close()
     couponData = ast.literal_eval(json.dumps(couponDataUnicode))
-    
-    sys.path.append(srcPath+'/class')
-    couponDef = getattr(importlib.import_module('class_'+template.lower()), template.lower())
-    os.chdir(savePath)
-    couponDef(couponData)
-    statusFile.write(textSuccess)
-except Exception as err:
-    statusFile.write(textFail+'\nError Message: '+str(err))
 
-if os.path.exists(srcPath+'/class/class_'+template.lower()+'.pyc'):
-    os.remove(srcPath+'/class/class_'+template.lower()+'.pyc')
+    coupunModule = imp.load_source('class_'+template.lower(), srcPath+'/class/class_'+template.lower()+'.py')
+    couponClass = getattr(coupunModule, template.lower())
+    os.chdir(savePath)
+    couponClass(couponData)
+    if os.path.exists(srcPath+'/class/class_'+template.lower()+'.pyc'):
+        os.remove(srcPath+'/class/class_'+template.lower()+'.pyc')
+
+    statusFile.write('SUCCESS! Model created successfully.')
+except Exception as err:
+    statusFile.write('FAILED! Model cannot be created.\nError Message: '+str(err))
 
 statusFile.close()
 sys.exit()
