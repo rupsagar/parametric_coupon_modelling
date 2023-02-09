@@ -265,7 +265,7 @@ class coupon_74_75():
         self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
         ## generate mesh
         for i in range(len(self.part)):
-            self.part[i].generateMesh(regions=self.part[i].cells)
+            self.part[i].generateMesh()
     def createMaterial(self):
         ## material definition
         self.model.Material(name=self.materialName)
