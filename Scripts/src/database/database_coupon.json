@@ -1,7 +1,7 @@
 {   
-    "Coupon_66_69_A" : {
-        "Coupon_66A": {
-            "couponName" : "Coupon_66A",
+    "Fatigue_Coupon_66_69_A" : {
+        "Fatigue_Coupon_66A": {
+            "couponName" : "Fatigue_Coupon_66A",
             "geometry" :{
                 "phi1" : 2.82,
                 "phi2" : 5.0,
@@ -15,16 +15,13 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "seedSizeGlobal" : 0.1,
-                "seedSizeOuterArc" : 0.1,
-                "seedSizeLong1" : 0.1,
-                "seedSizeLong2" : 0.2,
-                "seedSizeLong3" : 0.3
+                "outerArc" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 0.3
             },
             "elemType" : {
-                "elemTypeHex" : "C3D8HS",
-                "elemTypePenta" : "C3D6",
-                "elemTypeTetra" : "C3D4"
+                "hex" : "C3D8HS"
             },
             "material" : {
                 "name" : "Aluminum",
@@ -39,8 +36,8 @@
             },
             "version" : ""
         },
-        "Coupon_67A": {
-            "couponName" : "Coupon_67A",
+        "Fatigue_Coupon_67A": {
+            "couponName" : "Fatigue_Coupon_67A",
             "geometry" : {
                 "phi1" : 3.99,
                 "phi2" : 7.0,
@@ -54,16 +51,13 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "seedSizeGlobal" : 0.1,
-                "seedSizeOuterArc" : 0.1,
-                "seedSizeLong1" : 0.1,
-                "seedSizeLong2" : 0.2,
-                "seedSizeLong3" : 0.3
+                "outerArc" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 0.3
             },
             "elemType" : {
-                "elemTypeHex" : "C3D8HS",
-                "elemTypePenta" : "C3D6",
-                "elemTypeTetra" : "C3D4"
+                "hex" : "C3D8HS"
             },
             "material" : {
                 "name" : "Aluminum",
@@ -78,8 +72,8 @@
             },
             "version" : ""
         },
-        "Coupon_68A": {
-            "couponName" : "Coupon_68A",
+        "Fatigue_Coupon_68A": {
+            "couponName" : "Fatigue_Coupon_68A",
             "geometry" : {
                 "phi1" : 5.64,
                 "phi2" : 10.0,
@@ -93,16 +87,13 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "seedSizeGlobal" : 0.1,
-                "seedSizeOuterArc" : 0.1,
-                "seedSizeLong1" : 0.1,
-                "seedSizeLong2" : 0.2,
-                "seedSizeLong3" : 0.3
+                "outerArc" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 0.3
             },
             "elemType" : {
-                "elemTypeHex" : "C3D8HS",
-                "elemTypePenta" : "C3D6",
-                "elemTypeTetra" : "C3D4"
+                "hex" : "C3D8HS"
             },
             "material" : {
                 "name" : "Aluminum",
@@ -117,8 +108,8 @@
             },
             "version" : ""
         },
-        "Coupon_69A": {
-            "couponName" : "Coupon_69A",
+        "Fatigue_Coupon_69A": {
+            "couponName" : "Fatigue_Coupon_69A",
             "geometry" : {
                 "phi1" : 7.98,
                 "phi2" : 14.0,
@@ -132,16 +123,13 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "seedSizeGlobal" : 0.1,
-                "seedSizeOuterArc" : 0.1,
-                "seedSizeLong1" : 0.1,
-                "seedSizeLong2" : 0.2,
-                "seedSizeLong3" : 0.3
+                "outerArc" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 0.3
             },
             "elemType" : {
-                "elemTypeHex" : "C3D8HS",
-                "elemTypePenta" : "C3D6",
-                "elemTypeTetra" : "C3D4"
+                "hex" : "C3D8HS"
             },
             "material" : {
                 "name" : "Aluminum",
@@ -157,9 +145,9 @@
             "version" : ""
         }
     },
-    "Coupon_66_69_BJ" : {
-        "Coupon_66C": {
-            "couponName" : "Coupon_66C",
+    "Fatigue_Coupon_66_69_BJ" : {
+        "Fatigue_Coupon_66C": {
+            "couponName" : "Fatigue_Coupon_66C",
             "geometry" : {
                 "phi1" : 2.82,
                 "phi2" : 5.0,
@@ -168,19 +156,19 @@
                 "rad2" : 10.0,
                 "len1" : 24.0,
                 "len2" : 40.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 1.7,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "global" : 0.3,
                 "arcOuter" : 0.03,
                 "radialOuter" : 0.01,
                 "radialMiddle" : 0.03,
                 "radialInner" : 0.03,
                 "long1" : 0.01,
-                "long2" : 0.3
+                "long2" : 0.3,
+                "part2" : 0.3
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -199,8 +187,8 @@
             },
             "version" : ""
         },
-        "Coupon_66E": {
-            "couponName" : "Coupon_66E",
+        "Fatigue_Coupon_66E": {
+            "couponName" : "Fatigue_Coupon_66E",
             "geometry" : {
                 "phi1" : 2.82,
                 "phi2" : 5.0,
@@ -209,19 +197,19 @@
                 "rad2" : 10.0,
                 "len1" : 24.0,
                 "len2" : 40.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 3.3,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,   
             "elemSize" : {
-                "global" : 0.3,
                 "arcOuter" : 0.03,
                 "radialOuter" : 0.01,
                 "radialMiddle" : 0.03,
                 "radialInner" : 0.03,
                 "long1" : 0.01,
-                "long2" : 0.3
+                "long2" : 0.3,
+                "part2" : 0.3
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -240,8 +228,8 @@
             },
             "version" : ""
         },
-        "Coupon_67C": {
-            "couponName" : "Coupon_67C",
+        "Fatigue_Coupon_67C": {
+            "couponName" : "Fatigue_Coupon_67C",
             "geometry" : {
                 "phi1" : 3.99,
                 "phi2" : 7.0,
@@ -250,19 +238,19 @@
                 "rad2" : 13.0,
                 "len1" : 34.0,
                 "len2" : 60.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 1.7,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,   
             "elemSize" : {
-                "global" : 0.4,
                 "arcOuter" : 0.04,
                 "radialOuter" : 0.015,
                 "radialMiddle" : 0.04,
                 "radialInner" : 0.04,
                 "long1" : 0.015,
-                "long2" : 0.4
+                "long2" : 0.4,
+                "part2" : 0.4
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -281,8 +269,8 @@
             },
             "version" : ""
         },
-        "Coupon_67E": {
-            "couponName" : "Coupon_67E",
+        "Fatigue_Coupon_67E": {
+            "couponName" : "Fatigue_Coupon_67E",
             "geometry" : {
                 "phi1" : 3.99,
                 "phi2" : 7.0,
@@ -291,19 +279,19 @@
                 "rad2" : 13.0,
                 "len1" : 34.0,
                 "len2" : 60.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 3.3,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,  
             "elemSize" : {
-                "global" : 0.4,
                 "arcOuter" : 0.04,
                 "radialOuter" : 0.015,
                 "radialMiddle" : 0.04,
                 "radialInner" : 0.04,
                 "long1" : 0.015,
-                "long2" : 0.4
+                "long2" : 0.4,
+                "part2" : 0.4
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -322,8 +310,8 @@
             },
             "version" : ""
         },
-        "Coupon_68C": {
-            "couponName" : "Coupon_68C",
+        "Fatigue_Coupon_68C": {
+            "couponName" : "Fatigue_Coupon_68C",
             "geometry" : {
                 "phi1" : 5.64,
                 "phi2" : 10.0,
@@ -332,19 +320,19 @@
                 "rad2" : 20.0,
                 "len1" : 48.0,
                 "len2" : 80.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 1.7,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,   
             "elemSize" : {
-                "global" : 0.6,
                 "arcOuter" : 0.06,
                 "radialOuter" : 0.02,
                 "radialMiddle" : 0.06,
                 "radialInner" : 0.06,
                 "long1" : 0.02,
-                "long2" : 0.6
+                "long2" : 0.6,
+                "part2" : 0.6
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -363,8 +351,8 @@
             },
             "version" : ""
         },
-        "Coupon_68E": {
-            "couponName" : "Coupon_68E",
+        "Fatigue_Coupon_68E": {
+            "couponName" : "Fatigue_Coupon_68E",
             "geometry" : {
                 "phi1" : 5.64,
                 "phi2" : 10.0,
@@ -373,19 +361,19 @@
                 "rad2" : 20.0,
                 "len1" : 48.0,
                 "len2" : 80.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 3.3,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,   
             "elemSize" : {
-                "global" : 0.6,
                 "arcOuter" : 0.06,
                 "radialOuter" : 0.02,
                 "radialMiddle" : 0.06,
                 "radialInner" : 0.06,
                 "long1" : 0.02,
-                "long2" : 0.6
+                "long2" : 0.6,
+                "part2" : 0.6
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -404,8 +392,8 @@
             },
             "version" : ""
         },
-        "Coupon_69C": {
-            "couponName" : "Coupon_69C",
+        "Fatigue_Coupon_69C": {
+            "couponName" : "Fatigue_Coupon_69C",
             "geometry" : {
                 "phi1" : 7.98,
                 "phi2" : 14.0,
@@ -414,19 +402,19 @@
                 "rad2" : 31.0,
                 "len1" : 68.0,
                 "len2" : 110.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 1.7,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,   
             "elemSize" : {
-                "global" : 0.85,
                 "arcOuter" : 0.085,
                 "radialOuter" : 0.03,
                 "radialMiddle" : 0.085,
                 "radialInner" : 0.085,
                 "long1" : 0.03,
-                "long2" : 0.85
+                "long2" : 0.85,
+                "part2" : 0.85
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -445,8 +433,8 @@
             },
             "version" : ""
         },
-        "Coupon_69E": {
-            "couponName" : "Coupon_69E",
+        "Fatigue_Coupon_69E": {
+            "couponName" : "Fatigue_Coupon_69E",
             "geometry" : {
                 "phi1" : 7.98,
                 "phi2" : 14.0,
@@ -455,19 +443,19 @@
                 "rad2" : 31.0,
                 "len1" : 68.0,
                 "len2" : 110.0,
-                "thetaDeg" : 30.0
+                "thetaDeg" : 60.0
             },
             "givenKt" : 3.3,
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "global" : 0.85,
                 "arcOuter" : 0.085,
                 "radialOuter" : 0.03,
                 "radialMiddle" : 0.085,
                 "radialInner" : 0.085,
                 "long1" : 0.03,
-                "long2" : 0.85
+                "long2" : 0.85,
+                "part2" : 0.85
             },
             "elemType" : {
                 "hex" : "C3D8HS",
@@ -487,9 +475,9 @@
             "version" : ""
         }
     },
-    "Coupon_70_73_A" : {
-        "Coupon_70A": {
-            "couponName" : "Coupon_70A",
+    "Fatigue_Coupon_70_73_A" : {
+        "Fatigue_Coupon_70A": {
+            "couponName" : "Fatigue_Coupon_70A",
             "geometry" : {
                 "h1" : 5.0,
                 "h2" : 12.0,
@@ -522,8 +510,8 @@
             },
             "version" : ""
         },
-        "Coupon_71A": {
-            "couponName" : "Coupon_71A",
+        "Fatigue_Coupon_71A": {
+            "couponName" : "Fatigue_Coupon_71A",
             "geometry" : {
                 "h1" : 7.0,
                 "h2" : 17.0,
@@ -556,8 +544,8 @@
             },
             "version" : ""
         },
-        "Coupon_72A": {
-            "couponName" : "Coupon_72A",
+        "Fatigue_Coupon_72A": {
+            "couponName" : "Fatigue_Coupon_72A",
             "geometry" : {
                 "h1" : 10.0,
                 "h2" : 24.0,
@@ -590,8 +578,8 @@
             },
             "version" : ""
         },
-        "Coupon_73A": {
-            "couponName" : "Coupon_73A",
+        "Fatigue_Coupon_73A": {
+            "couponName" : "Fatigue_Coupon_73A",
             "geometry" : {
                 "h1" : 15.0,
                 "h2" : 36.0,
@@ -625,9 +613,9 @@
             "version" : ""
         }
     },
-    "Coupon_70_73_BE" : {
-        "Coupon_70C": {
-            "couponName" : "Coupon_70C",
+    "Fatigue_Coupon_70_73_BE" : {
+        "Fatigue_Coupon_70C": {
+            "couponName" : "Fatigue_Coupon_70C",
             "geometry" : {
                 "h1" : 5.0,
                 "h2" : 7.0,
@@ -671,8 +659,8 @@
             },
             "version" : ""
         },
-        "Coupon_70E": {
-            "couponName" : "Coupon_70E",
+        "Fatigue_Coupon_70E": {
+            "couponName" : "Fatigue_Coupon_70E",
             "geometry" : {
                 "h1" : 5.0,
                 "h2" : 7.0,
@@ -716,8 +704,8 @@
             },
             "version" : ""
         },
-        "Coupon_73C": {
-            "couponName" : "Coupon_73C",
+        "Fatigue_Coupon_73C": {
+            "couponName" : "Fatigue_Coupon_73C",
             "geometry" : {
                 "h1" : 15.0,
                 "h2" : 21.0,
@@ -761,8 +749,8 @@
             },
             "version" : ""
         },
-        "Coupon_73E": {
-            "couponName" : "Coupon_73E",
+        "Fatigue_Coupon_73E": {
+            "couponName" : "Fatigue_Coupon_73E",
             "geometry" : {
                 "h1" : 15.0,
                 "h2" : 21.0,
@@ -807,9 +795,9 @@
             "version" : ""
         }
     },
-    "Coupon_74_75" : {
-        "Coupon_74": {
-            "couponName" : "Coupon_74",
+    "Fatigue_Coupon_74_75" : {
+        "Fatigue_Coupon_74": {
+            "couponName" : "Fatigue_Coupon_74",
             "geometry" : {
                 "len" : 150.0,
                 "width" : 30.0,
@@ -831,8 +819,72 @@
                 "long4" : 0.8
             },
             "elemType" : {
-                "hexPart1" : "C3D20H",
+                "hexPart1" : "C3D8HS",
                 "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Fatigue_Coupon_75": {
+            "couponName" : "Fatigue_Coupon_75",
+            "geometry" : {
+                "len" : 100.0,
+                "width" : 20.0,
+                "thickness" : 3.0,
+                "phi" : 6.35,
+                "chamferEdgeLength" : 0.3,
+                "chamferAngle" : 45.0
+            },
+            "isChamfer" : "true",
+            "givenKt" : 2.3,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness1" : 0.03,
+                "thickness2" : 0.2,
+                "arc" : 0.03,
+                "long1" : 0.03,
+                "long2" : 0.2,
+                "long3" : 0.27,
+                "long4" : 0.53
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        }
+    },
+    "Static_Coupon_1_1_7" : {
+        "Static_Coupon_1_1" : {
+            "couponName" : "Static_Coupon_1_1",
+            "geometry" : {
+                "lt" : 80,
+                "d" : 6,
+                "D" : 10,
+                "R" : 10,
+                "C" : 13,
+                "lc" : 42
             },
             "material" : {
                 "name" : "Aluminum",
