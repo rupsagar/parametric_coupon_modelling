@@ -1,7 +1,7 @@
-## modify these 3 lines for debugging purpose and copy/paste (or run) in Abaqus CLI
-srcPath = r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src'
-template = 'Coupon_70_73_BE'
-coupon = 'Coupon_70C'
+## modify these 3 lines for debugging purpose and copy/paste (or run) in Abaqus CLI; the list contains possible paths for src folder
+template = 'Static_Coupon_1_1_7'
+coupon = 'Static_Coupon_1_1'
+srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src', r'D:\Academics\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src']
 
 import json
 import ast
@@ -10,21 +10,26 @@ import os
 import shutil
 
 try:
-    databaseJson = open(srcPath+'/database/database_coupon.json', 'r')
+    for i in range(len(srcPath)):
+        if os.path.isdir(srcPath[i]):
+            srcPathID = i
+            break
+
+    databaseJson = open(srcPath[srcPathID]+'/database/database_coupon.json', 'r')
     databaseUnicode = json.load(databaseJson)
     databaseJson.close()
     couponDatabase = ast.literal_eval(json.dumps(databaseUnicode))
     couponData = couponDatabase[template][coupon]
 
-    couponModule = imp.load_source('class_'+template.lower(), srcPath+'/class/class_'+template.lower()+'.py')
+    couponModule = imp.load_source('class_'+template.lower(), srcPath[srcPathID]+'/class/class_'+template.lower()+'.py')
     couponClass = getattr(couponModule, template.lower())
     self = couponClass(couponData)
 
-    if os.path.exists(srcPath+'/class/class_'+template.lower()+'.pyc'):
-        os.remove(srcPath+'/class/class_'+template.lower()+'.pyc')
+    if os.path.exists(srcPath[srcPathID]+'/class/class_'+template.lower()+'.pyc'):
+        os.remove(srcPath[srcPathID]+'/class/class_'+template.lower()+'.pyc')
 
-    if os.path.isdir(srcPath+'/class/__pycache__'):
-        shutil.rmtree(srcPath+'/class/__pycache__')
+    if os.path.isdir(srcPath[srcPathID]+'/class/__pycache__'):
+        shutil.rmtree(srcPath[srcPathID]+'/class/__pycache__')
 except Exception as err:
     print(str(err))
 
