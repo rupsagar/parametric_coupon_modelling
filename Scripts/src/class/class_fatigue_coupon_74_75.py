@@ -5,7 +5,7 @@ from abaqus import *
 from abaqusConstants import *
 from caeModules import *
 
-class coupon_74_75():
+class fatigue_coupon_74_75():
     def __init__(self, couponData):
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
         self.couponData = couponData
@@ -39,6 +39,9 @@ class coupon_74_75():
         ## derived quantities
         self.thetaRad = math.pi/180*self.chamferAngle
         self.endStress = -self.nominalStress*(self.width-self.phi)/self.width
+        self.tieDistance = 2.0*self.phi
+        if (self.tieDistance-self.width/2)<=self.lenTol:
+            self.tieDistance = self.tieDistance+self.width/2
         if isinstance(self.isChamfer, float):
             self.isChamfer = str(self.isChamfer)
         if self.isChamfer.lower() in ['1.0', 'true', 'yes', 'on']:
@@ -68,7 +71,7 @@ class coupon_74_75():
         self.coordA = (self.xA, self.yA) = (0.0, self.phi/2.0)
         self.coordB = (self.xB, self.yB) = (self.phi/2.0, 0.0)
         self.coordC = (self.xC, self.yC) = (0.0, self.width/2.0)
-        self.coordD = (self.xD, self.yD) = (3.0*self.phi, 0.0)
+        self.coordD = (self.xD, self.yD) = (self.tieDistance, 0.0)
         self.coordE = (self.xE, self.yE) = (self.xD, self.width/2.0)
         self.coordF = (self.xF, self.yF) = (self.len/2.0, 0.0)
         self.coordG = (self.xG, self.yG) = (self.len/2.0, self.width/2.0)
@@ -89,6 +92,8 @@ class coupon_74_75():
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[0], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[1], entity2=self.profileGeometry1[2], addUndoState=False)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[4], textPoint=(0.0, 5.0), radius=self.phi/2.0)
+        self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[4], entity2=self.profileGeometry1[2])
+        self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[4], entity2=self.profileGeometry1[3])
         ## line AC
         self.profileSketch[0].Line(point1=self.coordA, point2=self.coordC)
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[5], addUndoState=False)
@@ -248,7 +253,7 @@ class coupon_74_75():
         self.seedEdge(self.part[0], 0, self.width/2, edgesLong4, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
         ## seed ==>> thickness2 direction
         edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), (self.xD, self.lenTol, 0)))
-        self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FIXED)
+        self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> long edge along DF
         edgesLong5 = self.part[1].edges.findAt(coordinates=((self.xD+self.lenTol, 0, 0), (self.xD+self.lenTol, self.width/2, 0), (self.xD+self.lenTol, 0, self.thickness/2), (self.xD+self.lenTol, self.width/2, self.thickness/2)))
         self.seedEdge(self.part[1], 0, self.xD, edgesLong5, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
