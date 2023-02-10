@@ -5,7 +5,7 @@ from abaqus import *
 from abaqusConstants import *
 from caeModules import *
 
-class coupon_70_73_be():
+class fatigue_coupon_70_73_be():
     def __init__(self, couponData):
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
         self.couponData = couponData
@@ -43,7 +43,8 @@ class coupon_70_73_be():
         self.nominalStress = couponData['step']['nominalStress']
         self.version = couponData['version']
         ## derived quantities
-        self.alphaRad = math.pi/180*(90-self.thetaDeg/2.0)
+        self.alphaDeg = 90.0-self.thetaDeg/2.0
+        self.alphaRad = math.pi/180*self.alphaDeg
         self.partitionVertical = self.partitionVerticalFraction*self.h1/2
         self.endStress = -self.nominalStress*self.h1/self.h3
         ## create coupon
@@ -88,10 +89,13 @@ class coupon_70_73_be():
         ## vertical fixed construction line
         self.profileSketch[0].ConstructionLine(point1=(0.0, -25.0), angle=90.0)
         self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[3])
+        ## inclined fixed construction line
+        self.profileSketch[0].ConstructionLine(point1=(0.0, 0.0), angle=self.alphaDeg)
+        self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[4])
         ## line OA
         self.profileSketch[0].Line(point1=self.coordO, point2=self.coordA)
-        self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[4], addUndoState=False)
-        self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[2], entity2=self.profileGeometry1[4], addUndoState=False)
+        self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[5], addUndoState=False)
+        self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[2], entity2=self.profileGeometry1[5], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[0], entity2=self.profileGeometry1[2], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[1], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].ObliqueDimension(vertex1=self.profileVertices1[1], vertex2=self.profileVertices1[0], textPoint=(-3.0, 0.0), value=self.h1/2.0)
@@ -99,26 +103,26 @@ class coupon_70_73_be():
         ## arc AB
         self.profileSketch[0].ArcByCenterEnds(center=self.coordC1, point1=self.coordA, point2=self.coordB, direction=COUNTERCLOCKWISE)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[3], addUndoState=False)
-        self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[5], textPoint=(0.0, 5.0), radius=self.rad1)
+        self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(0.0, 5.0), radius=self.rad1)
         (self.xB, self.yB), (self.xC1, self.yC1) = self.profileVertices1[2].coords, self.profileVertices1[3].coords
         ## line BC
         self.profileSketch[0].Line(point1=self.coordB, point2=self.coordC)
-        self.profileSketch[0].TangentConstraint(entity1=self.profileGeometry1[5], entity2=self.profileGeometry1[6], addUndoState=False)
+        self.profileSketch[0].TangentConstraint(entity1=self.profileGeometry1[6], entity2=self.profileGeometry1[7], addUndoState=False)
         self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[4], entity2=self.profileGeometry1[2], textPoint=(-5.0, 8.0), value=self.h2/2.0)
-        self.profileSketch[0].AngularDimension(line1=self.profileGeometry1[6], line2=self.profileGeometry1[3], textPoint=(2.0, self.h2), value=self.thetaDeg/2.0)
+        self.profileSketch[0].ParallelConstraint(entity1=self.profileGeometry1[4], entity2=self.profileGeometry1[7])
         (self.xC, self.yC) = self.profileVertices1[4].coords
         ## line CD
         self.profileSketch[0].Line(point1=self.coordC, point2=self.coordD)
-        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
+        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
         (self.xD, self.yD) = self.profileVertices1[5].coords
         ## line DH
         self.profileSketch[0].Line(point1=self.coordD, point2=self.coordH)
-        self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
+        self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[6], entity2=self.profileGeometry1[2], addUndoState=False)
         (self.xH, self.yH) = self.profileVertices1[6].coords
         ## line HO
         self.profileSketch[0].Line(point1=self.coordH, point2=self.coordO)
-        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
+        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[10], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[6], textPoint=(6.0, -5.0), value=self.xD)
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
@@ -276,10 +280,10 @@ class coupon_70_73_be():
         self.seedEdge(self.part[1], 0, self.xE, edgesLong3, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
         ## seed ==>> thickness 2
         edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), ))
-        self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FIXED)
+        self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> vertical edge part 2
         edgesVerticalPart2 = self.part[1].edges.findAt(coordinates=((self.xD, self.lenTol, 0), ))
-        self.part[1].seedEdgeBySize(edges=edgesVerticalPart2, size=self.seedSizeVertical2, deviationFactor=0.1, constraint=FIXED)
+        self.part[1].seedEdgeBySize(edges=edgesVerticalPart2, size=self.seedSizeVertical2, deviationFactor=0.1, constraint=FINER)
         ## set element types
         elemTypeHex1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemTypeHex1,))
@@ -303,7 +307,7 @@ class coupon_70_73_be():
     def createTie(self):
         region = len(self.part)*[None]
         for i in range(len(self.part)):
-            surf = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xD+self.lenTol, yMax = self.yD+self.yC+self.lenTol, zMax = self.thickness+self.lenTol)
+            surf = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
             surfName = 'Surf_Tie_Part_'+str(i+1)
             self.getElemSurfFromCellFace(self.part[i], surf, surfName)
             region[i] = self.instance[i].surfaces[surfName]
@@ -313,25 +317,25 @@ class coupon_70_73_be():
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         for i in range(len(self.part)):
             ## create BC at negY face
-            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xF+self.lenTol, yMax = self.lenTol, zMax = self.thickness+self.lenTol)
+            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xF+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
             nsetNameNegY = 'Nset_NegY_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
             region = self.instance[i].sets[nsetNameNegY]
             self.model.DisplacementBC(name='BC_NegY_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             ## create BC at posZ face
-            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin = -self.lenTol, zMin = self.thickness-self.lenTol, xMax = self.xF+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.thickness+self.lenTol)
+            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=self.thickness-self.lenTol, xMax=self.xF+self.lenTol, yMax=self.yF+self.lenTol, zMax=self.thickness+self.lenTol)
             nsetNamePosZ = 'Nset_PosZ_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
             region = self.instance[i].sets[nsetNamePosZ]
             self.model.DisplacementBC(name='BC_PosZ_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create BC at negX face of Part 1
-        nodesNegX = self.part[0].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xA+self.lenTol, yMax = self.yA+self.yC+self.lenTol, zMax = self.thickness+self.lenTol)
+        nodesNegX = self.part[0].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xA+self.lenTol, yMax=self.yA+self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
         nsetNameNegX = 'Nset_NegX_Part_1'
         self.part[0].Set(nodes=nodesNegX , name=nsetNameNegX)
         region = self.instance[0].sets[nsetNameNegX]
         self.model.DisplacementBC(name='BC_NegX_Part_1', createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
         ## create pressure load on posX face
-        endCellFaceArr = self.part[1].faces.getByBoundingBox(xMin=self.xF-self.lenTol, yMin = -self.lenTol, zMin = -self.lenTol, xMax = self.xF+self.lenTol, yMax = self.yF+self.lenTol, zMax = self.thickness+self.lenTol)
+        endCellFaceArr = self.part[1].faces.getByBoundingBox(xMin=self.xF-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xF+self.lenTol, yMax=self.yF+self.lenTol, zMax=self.thickness+self.lenTol)
         surfNamePosX = 'Surf_PosX_Part_2'
         self.getElemSurfFromCellFace(self.part[1], endCellFaceArr, surfNamePosX)
         region = self.instance[1].surfaces[surfNamePosX]
