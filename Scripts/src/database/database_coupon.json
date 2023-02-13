@@ -886,6 +886,18 @@
                 "C" : 13,
                 "lc" : 42
             },
+            "partitionRadialFraction" : 0.67,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 0.3
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
             "material" : {
                 "name" : "Aluminum",
                 "density" : 2.85e-6,
