@@ -142,9 +142,9 @@ class fatigue_coupon_70_73_a():
         self.couponData.update({'elemNum':len(self.part.elements)})
     def createMaterial(self):
         ## material definition
-        self.model.Material(name=self.materialName)
-        self.model.materials[self.materialName].Density(table=((self.density, ), ))
-        self.model.materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
+        self.material = self.model.Material(name=self.materialName)
+        self.material.Density(table=((self.density, ), ))
+        self.material.Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
     def createSection(self):
         ## section definition and assigning section property to elements
         self.model.HomogeneousSolidSection(name=self.couponName+'_Section', material=self.materialName, thickness=None)
