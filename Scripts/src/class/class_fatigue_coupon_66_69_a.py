@@ -218,9 +218,9 @@ class fatigue_coupon_66_69_a():
         self.couponData.update({'elemNum':len(self.part.elements)})
     def createMaterial(self):
         ## material definition
-        self.model.Material(name=self.materialName)
-        self.model.materials[self.materialName].Density(table=((self.density, ), ))
-        self.model.materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
+        self.material = self.model.Material(name=self.materialName)
+        self.material.Density(table=((self.density, ), ))
+        self.material.Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
     def createSection(self):
         ## section definition and assigning section property to elements
         self.model.HomogeneousSolidSection(name=self.couponName+'_Section', material=self.materialName, thickness=None)
@@ -296,6 +296,16 @@ class fatigue_coupon_66_69_a():
             if abs(thisEdge.getSize(0)-length) < self.lenTol:
                 pickedEdges.append(thisEdge)
         return pickedEdges
+    def seedEdge(self, part, index, distance, edges, **kwargs):
+            for thisEdge in edges:
+                edgeVertices = thisEdge.getVertices()
+                for thisVertexID in edgeVertices:
+                    vertexCoord = part.vertices[thisVertexID].pointOn
+                    if abs(abs(vertexCoord[0][index])-distance) < self.lenTol:
+                        if edgeVertices.index(thisVertexID) == 0:
+                            part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), constraint=FINER, **kwargs)
+                        elif edgeVertices.index(thisVertexID) == 1:
+                            part.seedEdgeByBias(biasMethod=SINGLE, end2Edges=(thisEdge,), constraint=FINER, **kwargs)
     def getElemSurfFromCellFace(self, part, cellFaceArr, surfName):
         ## method to create element based surface from cell face
         elemWithFace = [[], [], [], [], [], []]
