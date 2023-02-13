@@ -2,16 +2,21 @@ import os
 import sys
 import shutil
 import json
+import ast
 import math
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter.filedialog import askdirectory
 
 class coupon_gui():
-    def __init__(self, abqPath, srcPath, couponDatabase):
+    def __init__(self, abqPath, srcPath):
         self.abqPath = abqPath
         self.srcPath = srcPath
-        self.couponDatabase = couponDatabase
+        ## read coupon json database
+        couponJson = open(srcPath+'/database/database_coupon.json', 'r')
+        couponDictUnicode = json.load(couponJson)
+        couponJson.close()
+        self.couponDatabase = ast.literal_eval(json.dumps(couponDictUnicode))
         self.createGUI()
     def createGUI(self):
         windowGUI = tk.Tk()
@@ -69,7 +74,11 @@ class coupon_gui():
         def callAbaqus():
             statusFileName = 'statusInfo.txt'
             abqCall = 'abaqus cae noGUI="'+self.srcPath+'/util/util_call_abaqus.py" -- '+statusFileName+' '+self.jsonFileName+' '+templateDropDown.get()+' "'+self.pathEntry.get()+'" "'+self.srcPath+'"'
-            sys.path.append(self.abqPath)
+            for j in range(len(self.abqPath)):
+                try:
+                    sys.path.append(self.abqPath[j])
+                except:
+                    pass
             os.system(abqCall)
             statusFile = open(self.pathEntry.get()+'/'+statusFileName, 'r')
             msgText = statusFile.read()
