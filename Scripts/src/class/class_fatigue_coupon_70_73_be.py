@@ -295,9 +295,9 @@ class fatigue_coupon_70_73_be():
         self.couponData.update({'elemNum':{'part1':len(self.part[0].elements), 'part2':len(self.part[1].elements)}})
     def createMaterial(self):
         ## material definition
-        self.model.Material(name=self.materialName)
-        self.model.materials[self.materialName].Density(table=((self.density, ), ))
-        self.model.materials[self.materialName].Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
+        self.material = self.model.Material(name=self.materialName)
+        self.material.Density(table=((self.density, ), ))
+        self.material.Elastic(table=((self.youngsModulus, self.poissonsRatio), ))
     def createSection(self):
         ## section definition and assigning section property to elements
         self.model.HomogeneousSolidSection(name=self.couponName+'_Section', material=self.materialName, thickness=None)
@@ -309,7 +309,7 @@ class fatigue_coupon_70_73_be():
         for i in range(len(self.part)):
             surf = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
             surfName = 'Surf_Tie_Part_'+str(i+1)
-            self.getElemSurfFromCellFace(self.part[i], surf, surfName)
+            self.getElemSurfFromCellFace(self.part[i], surf, surfName)8
             region[i] = self.instance[i].surfaces[surfName]
         self.model.Tie(name=self.couponName+'_Tie', master=region[1], slave=region[0], positionToleranceMethod=COMPUTED, adjust=OFF, tieRotations=ON, thickness=ON, constraintEnforcement = SURFACE_TO_SURFACE)
     def createStep(self):
