@@ -879,21 +879,22 @@
         "Static_Coupon_1_1" : {
             "couponName" : "Static_Coupon_1_1",
             "geometry" : {
-                "lt" : 80,
-                "d" : 6,
-                "D" : 10,
-                "R" : 10,
-                "C" : 13,
-                "lc" : 42
+                "lt" : 80.0,
+                "d" : 6.0,
+                "D" : 10.0,
+                "R" : 10.0,
+                "C" : 13.0,
+                "lc" : 42.0
             },
             "partitionRadialFraction" : 0.67,
             "lenTol" : 1.0e-5,
             "elemSize" : {
                 "arcOuter" : 0.1,
                 "radialOuter" : 0.1,
+                "radialInner" : 0.15,
                 "long1" : 0.1,
-                "long2" : 0.2,
-                "long3" : 0.3
+                "long2" : 0.4,
+                "long3" : 0.6
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
