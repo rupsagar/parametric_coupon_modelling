@@ -19,6 +19,7 @@ class static_coupon_1_1_7():
         self.partitionRadialFraction = couponData['partitionRadialFraction']
         self.seedSizeArcOuter = couponData['elemSize']['arcOuter']
         self.seedSizeRadialOuter = couponData['elemSize']['radialOuter']
+        self.seedSizeRadialInner = couponData['elemSize']['radialInner']
         self.seedSizeLong1 = couponData['elemSize']['long1']
         self.seedSizeLong2 = couponData['elemSize']['long2']
         self.seedSizeLong3 = couponData['elemSize']['long3']
@@ -34,8 +35,6 @@ class static_coupon_1_1_7():
         ## derived quantities
         self.partitionRadius = self.partitionRadialFraction*self.d/2
         self.endStress = -self.nominalStress*(self.d/self.D)**2
-        # self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
-        # self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction
         ## create coupon
         self.createModel()
         self.createProfileSketch()
@@ -44,9 +43,9 @@ class static_coupon_1_1_7():
         self.createPartition()
         self.createMesh()
         self.createMaterial()
-        # self.createSection()
-        # self.createStep()
-        # self.createJob()
+        self.createSection()
+        self.createStep()
+        self.createJob()
     def createModel(self):
         ## define model
         session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
@@ -150,71 +149,48 @@ class static_coupon_1_1_7():
         createPartitionLong(self.xB)
         createPartitionLong(self.xC)
     def createMesh(self):
-        def seedOuterRadial(pointOnRadius, **kwargs):
-            ## method to seed the outer radial edge at sections through A and B
-            edgesOuterRadial = self.part[0].edges.findAt((pointOnRadius, ))  
-            edgesRadialVertexIDPair = edgesOuterRadial[0].getVertices()
-            for thisVertexID in edgesRadialVertexIDPair:
-                vertexCoord = self.part[0].vertices[thisVertexID].pointOn
-                if abs(abs(vertexCoord[0][1])-self.partitionRadius) < self.lenTol or abs(abs(vertexCoord[0][2])-self.partitionRadius) < self.lenTol or abs(abs(vertexCoord[0][2])-self.partitionRadius) < self.lenTol:
-                    if edgesRadialVertexIDPair.index(thisVertexID) == 0:
-                        if 'minSize' in kwargs.keys():
-                            self.part[0].seedEdgeByBias(biasMethod=SINGLE, end1Edges=edgesOuterRadial, minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FIXED)
-                        elif 'ratio' in kwargs.keys():
-                            self.part[0].seedEdgeByBias(biasMethod=SINGLE, end1Edges=edgesOuterRadial, ratio=kwargs['ratio'], number=kwargs['number'], constraint=FIXED)
-                    elif edgesRadialVertexIDPair.index(thisVertexID) == 1:
-                        if 'minSize' in kwargs.keys():
-                            self.part[0].seedEdgeByBias(biasMethod=SINGLE, end2Edges=edgesOuterRadial, minSize=kwargs['minSize'], maxSize=kwargs['maxSize'], constraint=FIXED)
-                        elif 'ratio' in kwargs.keys():
-                            self.part[0].seedEdgeByBias(biasMethod=SINGLE, end2Edges=edgesOuterRadial, ratio=kwargs['ratio'], number=kwargs['number'], constraint=FIXED)
-        def seedLongEdges(xLeft, xRight, seedSize):
-            ## method to seed the longitudinal edges
-            edgesInnerArcLong = self.part[0].edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.yD+self.lenTol))
-            edgesInnerArc = self.getArcEdge(edgesInnerArcLong)
-            edgesStraight = self.getByDifference(edgesInnerArcLong, edgesInnerArc)
-            edgesLong = self.getEdgeByLength(edgesStraight, abs(xRight-xLeft))
-            self.part[0].seedEdgeBySize(edges=edgesLong, size=seedSize, deviationFactor=0.1, constraint=FINER)
-        def setInnerCylSweepPath(xLeft, xRight):
-            ## method to set the sweep path for the inner cylindrical mesh
-            cellsInnerCyl = self.part[0].cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
-            edgesSweepPath = self.part[0].edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
-            self.part[0].setMeshControls(regions=cellsInnerCyl, technique=SWEEP, algorithm=ADVANCING_FRONT)
-            self.part[0].setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
+        def seedLong(part, xLeft, xRight, yMax, **kwargs):
+            pickedEdges = part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yMax+self.lenTol))
+            edgesLong = self.getEdgeByLength(pickedEdges, abs(xRight-xLeft))
+            self.seedEdge(part, 0, xLeft, edgesLong, **kwargs)
+        def seedInnerCyl(part, xLeft, xRight):
+            cellsInnerCyl = part.cells.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
+            part.setMeshControls(regions=cellsInnerCyl, elemShape=HEX, technique=SWEEP, algorithm=ADVANCING_FRONT)
+            edgesSweepPath = part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
+            part.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
         ## seed ==>> outer arc edge AA'
-        self.edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
+        self.edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (-self.lenTol, 0, 0), (self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
         self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
         self.part[0].seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeArcOuter, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> outer radial edges
-        edgesRadial1 = self.part[0].edges.findAt(coordinates=((0, (self.partitionRadius+self.lenTol), 0), ))
+        edgesRadial1 = self.part[0].edges.findAt(coordinates=((0, (self.partitionRadius+self.lenTol), 0), (0, 0, -(self.partitionRadius+self.lenTol))))
         self.seedEdge(self.part[0], 1, self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
-        edgesRadial2 = self.part[0].edges.findAt(coordinates=((0, 0, -(self.partitionRadius+self.lenTol)), ))
-        self.seedEdge(self.part[0], 2, self.partitionRadius, edgesRadial2, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
-        ## seed ==>> edge Bb ==>> not applied; seeding with increase the element size at the surface by small amount
-        self.edgesOuterCylAtB = self.getByCylinderDifference(self.part[0].edges, (self.xB-self.lenTol, 0, 0), (self.xB+self.lenTol, 0, 0), (self.yB+self.lenTol), (self.partitionRadius+self.lenTol))
-        self.edgesOuterArcAtB = self.getArcEdge(self.edgesOuterCylAtB)
-        self.edgesOuterRadialAtB = self.getByDifference(self.edgesOuterCylAtB, self.edgesOuterArcAtB)
-        ratioBias = self.part[0].getEdgeSeeds(self.edgesOuterRadial[0], attribute=BIAS_RATIO)
-        elemNum = self.part[0].getEdgeSeeds(self.edgesOuterRadial[0], attribute=NUMBER)
-        #seedOuterRadial((self.xB, self.partitionRadius+self.lenTol, 0.0), ratio=ratioBias, number=elemNum)
-        #seedOuterRadial((self.xB, 0.0, -(self.partitionRadius+self.lenTol)), ratio=ratioBias, number=elemNum)
-        ## seed ==>> longitudinal edges
-        seedLongEdges(self.xA, self.xB, self.seedSizeLong1)
-        seedLongEdges(self.xB, self.xC, self.seedSizeLong2)
-        seedLongEdges(self.xC, self.xD, self.seedSizeLong3)
+        self.seedEdge(self.part[0], 2, self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
         ## seed ==>> inner radial edges
-        self.edgesInnerCyl = self.part[0].edges.getByBoundingCylinder((self.xA-self.lenTol, 0, 0), (self.xB-self.lenTol, 0, 0), (self.partitionRadius+self.lenTol))
-        self.edgesInnerArc = self.getArcEdge(self.edgesInnerCyl)
-        self.edgesInnerRadial = self.getByDifference(self.edgesInnerCyl, self.edgesInnerArc)
-        self.part[0].seedEdgeBySize(edges=self.edgesInnerRadial, size=self.seedSizeInnerRadial, deviationFactor=0.1, constraint=FINER)
+        edgesRadial2 = self.part[0].edges.findAt(coordinates=((0, (self.partitionRadius-self.lenTol), 0), (0, 0, -(self.partitionRadius-self.lenTol))))
+        self.seedEdge(self.part[0], 1, self.partitionRadius, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
+        self.seedEdge(self.part[0], 2, self.partitionRadius, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
         ## sweep path ==>> inner cylinder
-        setInnerCylSweepPath(self.xA, self.xB)
-        setInnerCylSweepPath(self.xB, self.xC)
-        setInnerCylSweepPath(self.xC, self.xD)
+        seedInnerCyl(self.part[0], self.xA, self.xB)
+        seedInnerCyl(self.part[0], self.xB, self.xC)
+        seedInnerCyl(self.part[0], self.xC, self.xD)
+        ## seed ==>> longitudinal edges
+        seedLong(self.part[0], self.xA, self.xB, self.yD, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        seedLong(self.part[0], self.xB, self.xC, self.yD, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong2)
+        seedLong(self.part[0], self.xC, self.xD, self.yD, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
+        ## seed ==>> arc BC
+        edgesTemp = self.part[0].edges.findAt(coordinates=((self.xB+self.lenTol, 0, 0), ))
+        ratioBias = self.part[0].getEdgeSeeds(edgesTemp[0], attribute=BIAS_RATIO)
+        elemNum = self.part[0].getEdgeSeeds(edgesTemp[0], attribute=NUMBER)
+        edgesTemp2 = self.part[0].edges.getByBoundingCylinder((self.xB-self.lenTol, 0, 0), (self.xC+self.lenTol, 0, 0), (self.yC+self.lenTol))
+        edgesArc = self.getArcEdge(edgesTemp2)
+        self.seedEdge(self.part[0], 0, self.xB, edgesArc, ratio=ratioBias, number=elemNum)
         ## set element types
-        elemType1 = mesh.ElemType(elemCode=self.elemTypeHex, elemLibrary=STANDARD)
+        elemType1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemType1, ))
         ## generate mesh
-        self.part[0].generateMesh()
+        for i in range(len(self.part)):
+            self.part[i].generateMesh()
         self.couponData.update({'elemNum':len(self.part[0].elements)})
     def createMaterial(self):
         ## material definition
@@ -224,35 +200,40 @@ class static_coupon_1_1_7():
     def createSection(self):
         ## section definition and assigning section property to elements
         self.model.HomogeneousSolidSection(name=self.couponName+'_Section', material=self.materialName, thickness=None)
-        pickedRegion = self.part[0].Set(elements=self.part[0].elements, name='All_Elements')
-        self.part[0].SectionAssignment(region=pickedRegion, sectionName=self.couponName+'_Section', offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+        for i in range(len(self.part)):
+            pickedRegion = self.part[i].Set(elements=self.part[0].elements, name='All_Elements_Part_'+str(i+1))
+            self.part[i].SectionAssignment(region=pickedRegion, sectionName=self.couponName+'_Section', offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        ## create BC at negY face
-        nodesNegY = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin=-self.lenTol, zMin=-self.yD-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.lenTol, zMax=self.lenTol)
-        nsetNameNegY = 'Nset_NegY'
-        self.part.Set(nodes=nodesNegY, name=nsetNameNegY)
-        region = self.instance.sets[nsetNameNegY]
-        self.model.DisplacementBC(name='BC_NegY', createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-        ## create BC at posZ face
-        nodesPosZ = self.part.nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.lenTol)
-        nsetNamePosZ = 'Nset_PosZ'
-        self.part.Set(nodes=nodesPosZ, name=nsetNamePosZ)
-        region = self.instance.sets[nsetNamePosZ]
-        self.model.DisplacementBC(name='BC_PosZ', createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-        ## create BC at negX face
-        nodesNegX = self.part.nodes.getByBoundingCylinder((self.xO-self.lenTol, 0, 0), (self.xO+self.lenTol, 0, 0), (self.yA+self.lenTol))
-        nsetNameNegX = 'Nset_NegX'
-        self.part.Set(nodes=nodesNegX , name=nsetNameNegX)
-        region = self.instance.sets[nsetNameNegX]
-        self.model.DisplacementBC(name='BC_NegX', createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
-        ## create pressure load on posX face
-        endCellFaceArr = self.part.faces.getByBoundingCylinder((self.xE-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol))
-        surfNamePosX = 'Surf_PosX'
-        self.getElemSurfFromCellFace(self.part, endCellFaceArr, surfNamePosX)
-        region = self.instance.surfaces[surfNamePosX]
-        self.model.Pressure(name='Load_PosX', createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+        for i in range(len(self.part)):
+            ## create BC at negY face
+            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.yD-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.lenTol)
+            nsetNameNegY = 'Nset_NegY_Part_'+str(i+1)
+            self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
+            region = self.instance[i].sets[nsetNameNegY]
+            self.model.DisplacementBC(name='BC_NegY_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+            ## create BC at posZ face
+            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.lenTol)
+            nsetNamePosZ = 'Nset_PosZ_Part_'+str(i+1)
+            self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
+            region = self.instance[i].sets[nsetNamePosZ]
+            self.model.DisplacementBC(name='BC_PosZ_Part_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+            if i==0:
+                ## create BC at negX face of Part 1
+                nodesNegX = self.part[i].nodes.getByBoundingCylinder((-self.lenTol, 0, 0), (self.lenTol, 0, 0), (self.yA+self.lenTol))
+                nsetNameNegX = 'Nset_NegX_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
+                region = self.instance[i].sets[nsetNameNegX]
+                self.model.DisplacementBC(name='BC_NegX_Part_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+            if i==(len(self.part)-1):
+                ## create pressure load on posX face
+                endCellFaceArr = self.part[i].faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
+                surfNamePosX = 'Surf_PosX_Part_'+str(i+1)
+                self.getElemSurfFromCellFace(self.part[i], endCellFaceArr, surfNamePosX)
+                region = self.instance[i].surfaces[surfNamePosX]
+                self.model.Pressure(name='Load_PosX_Part_'+str(i+1), createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+                self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
     def createJob(self):
         ## create job
         self.job = mdb.Job(name=self.couponName+'_Job'+self.version, model=self.model, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, 
