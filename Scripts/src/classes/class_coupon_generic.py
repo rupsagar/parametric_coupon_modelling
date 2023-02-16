@@ -16,13 +16,13 @@ class coupon_generic(object):
         ## section definition and assigning section property to elements
         self.section = self.model.HomogeneousSolidSection(name=self.couponName+'_Section', material=self.materialName, thickness=None)
         for i in range(len(self.part)):
-            pickedRegion = self.part[i].Set(elements=self.part[i].elements, name='Elset_All_Part_'+str(i+1))
+            pickedRegion = self.part[i].Set(elements=self.part[0].elements, name='Elset_All_Part_'+str(i+1))
             self.part[i].SectionAssignment(region=pickedRegion, sectionName=self.section.name, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
     def createJob(self):
         ## create job
-        self.job = mdb.Job(name=self.couponName+'_Job'+self.version, model=self.model, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, memoryUnits=PERCENTAGE, 
-            getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
-            scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
+        self.job = mdb.Job(name=self.couponName+'_Job'+self.version, model=self.model, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, 
+        memory=90, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, 
+        modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
         self.job.writeInput(consistencyChecking=OFF)
         ## save cae file
         mdb.saveAs(pathName=self.model.name+self.version)
