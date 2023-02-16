@@ -876,8 +876,8 @@
         }
     },
     "Static_Coupon_1_1_7" : {
-        "Static_Coupon_1_1" : {
-            "couponName" : "Static_Coupon_1_1",
+        "Static_Coupon_1_5" : {
+            "couponName" : "Static_Coupon_1_5",
             "geometry" : {
                 "lt" : 80.0,
                 "d" : 6.0,
@@ -885,6 +885,45 @@
                 "R" : 10.0,
                 "C" : 13.0,
                 "lc" : 42.0
+            },
+            "partitionRadialFraction" : 0.67,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "radialInner" : 0.15,
+                "long1" : 0.1,
+                "long2" : 0.4,
+                "long3" : 0.6
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        }
+    },
+    "Static_Coupon_2_1_6" : {
+        "Static_Coupon_2_4" : {
+            "couponName" : "Static_Coupon_2_4",
+            "geometry" : {
+                "lt" : 150.0,
+                "b" : 12.0,
+                "B" : 25.0,
+                "R" : 25.0,
+                "C" : 28.0,
+                "lc" : 60.0,
+                "thickness" : 2.0
             },
             "partitionRadialFraction" : 0.67,
             "lenTol" : 1.0e-5,
