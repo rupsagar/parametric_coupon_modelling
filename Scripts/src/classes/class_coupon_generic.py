@@ -86,5 +86,5 @@ class coupon_generic(object):
             if len(elemWithFace[thisfaceID]) > 0:
                 elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
                 surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
-        part.Surface(**surfDict)
+        part.Surface(**surfDict)   
 
