@@ -18,12 +18,13 @@ try:
     fileJson.close()
     couponData = ast.literal_eval(json.dumps(couponDataUnicode))
 
-    coupunModule = imp.load_source('class_'+template.lower(), srcPath+'/classes/class_'+template.lower()+'.py')
-    couponClass = getattr(coupunModule, template.lower())
+    currentPath = os.getcwd()
+    os.chdir(srcPath+'/classes')
+    execfile('class_coupon_generic.py')
+    execfile('class_'+template.lower()+'.py')
+    couponClass = getattr(sys.modules[__name__], template.lower())
     os.chdir(savePath)
     couponClass(couponData)
-    if os.path.exists(srcPath+'/classes/class_'+template.lower()+'.pyc'):
-        os.remove(srcPath+'/classes/class_'+template.lower()+'.pyc')
 
     statusFile.write('SUCCESS! Model created successfully.')
 except Exception as err:
