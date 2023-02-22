@@ -48,13 +48,13 @@ class static_coupon_1_1_7(coupon_generic):
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
         ## calculate vertex coordinates #################################################################################################################
-        self.coordO = (self.xO, self.yO) = (0, 0)
-        self.coordA = (self.xA, self.yA) = (0, self.d/2.0)
-        self.coordB = (self.xB, self.yB) = (self.lc/2.0, self.yA)
-        self.coordC = (self.xC, self.yC) = ((self.lt/2.0-self.C), self.D/2)
-        self.coordD = (self.xD, self.yD) = (self.lt/2.0, self.yC)
-        self.coordE = (self.xE, self.yE) = (self.xD, 0)
-        self.coordC1 = (self.xC1, self.yC1) = (self.xB, self.yB+self.R) # center 1
+        (self.xo, self.yo) = (self.xO, self.yO) = (0, 0)
+        (self.xa, self.ya) = (self.xA, self.yA) = (0, self.d/2.0)
+        (self.xb, self.yb) = (self.xB, self.yB) = (self.lc/2.0, self.yA)
+        (self.xc, self.yc) = (self.xC, self.yC) = ((self.lt/2.0-self.C), self.D/2)
+        (self.xd, self.yd) = (self.xD, self.yD) = (self.lt/2.0, self.yC)
+        (self.xe, self.ye) = (self.xE, self.yE) = (self.xD, 0)
+        (self.xc1, self.yc1) = (self.xC1, self.yC1) = (self.xB, self.yB+self.R) # center 1
         #################################################################################################################################################
         self.profileSketch = 1*[None]
         ## define sketch
@@ -69,35 +69,57 @@ class static_coupon_1_1_7(coupon_generic):
         self.profileSketch[0].ConstructionLine(point1=(0, -30), angle=90)
         self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[3])
         ## line OA
-        self.profileSketch[0].Line(point1=self.coordO, point2=self.coordA)
+        self.profileSketch[0].Line(point1=(self.xO, self.yO), point2=(self.xA, self.yA))
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[4], addUndoState=False)
         self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[2], entity2=self.profileGeometry1[4], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[0], entity2=self.profileGeometry1[2], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[1], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].VerticalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[1], textPoint=(-3, 4), value=self.d/2)
         ## line AB
-        self.profileSketch[0].Line(point1=self.coordA, point2=self.coordB)
+        self.profileSketch[0].Line(point1=self.profileVertices1[1].coords, point2=(self.xB, self.yB))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[5], addUndoState=False)
         self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[5], entity2=self.profileGeometry1[4], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[1], vertex2=self.profileVertices1[2], textPoint=(13, 13), value=self.lc/2)
         ## arc BC
-        self.profileSketch[0].ArcByCenterEnds(center=self.coordC1, point1=self.coordB, point2=self.coordC, direction=COUNTERCLOCKWISE)
+        self.profileSketch[0].ArcByCenterEnds(center=(self.xC1, self.yC1), point1=self.profileVertices1[2].coords, point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(14, 10), radius=self.R)
+        self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.D/2)
         ## line CD
-        self.profileSketch[0].Line(point1=self.coordC, point2=self.coordD)
+        self.profileSketch[0].Line(point1=self.profileVertices1[3].coords, point2=(self.xD, self.yD))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[1], vertex2=self.profileVertices1[5], textPoint=(13, 10), value=self.lt/2)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[3], vertex2=self.profileVertices1[5], textPoint=(13, -9), value=self.C)
         ## line DE
-        self.profileSketch[0].Line(point1=self.coordD, point2=self.coordE)
+        self.profileSketch[0].Line(point1=self.profileVertices1[5].coords, point2=(self.xE, self.yE))
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[6], entity2=self.profileGeometry1[2], addUndoState=False)
-        self.profileSketch[0].VerticalDimension(vertex1=self.profileVertices1[5], vertex2=self.profileVertices1[6], textPoint=(13, 4), value=self.D/2)
         ## line EO
-        self.profileSketch[0].Line(point1=self.coordE, point2=self.coordO)
+        self.profileSketch[0].Line(point1=self.profileVertices1[6].coords, point2=self.profileVertices1[0].coords)
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
+        #######################################################################################################################################################
+        (self.xO, self.yO) = self.profileVertices1[0].coords
+        (self.xA, self.yA) = self.profileVertices1[1].coords
+        (self.xB, self.yB) = self.profileVertices1[2].coords
+        (self.xC, self.yC) = self.profileVertices1[3].coords
+        (self.xC1, self.yC1) = self.profileVertices1[4].coords
+        (self.xD, self.yD) = self.profileVertices1[5].coords
+        (self.xE, self.yE) = self.profileVertices1[6].coords
+        #######################################################################################################################################################
+        self.geomData = [['O', self.xo, self.yo, self.xO, self.yO],
+                     ['A', self.xa, self.ya, self.xA, self.yA],
+                     ['B', self.xb, self.yb, self.xB, self.yB],
+                     ['C', self.xc, self.yc, self.xC, self.yC],
+                     ['D', self.xd, self.yd, self.xD, self.yD],
+                     ['E', self.xe, self.ye, self.xE, self.yE],
+                     ['C1', self.xc1, self.yc1, self.xC1, self.yC1],
+                     ['lt', '', self.lt, '', 2*(self.xE-self.xO)],
+                     ['d', '', self.d, '', 2*(self.yA-self.yO)],
+                     ['D', '', self.D, '', 2*(self.yD-self.yE)],
+                     ['R', '', self.R, '', ((self.xC1-self.xC)**2+(self.yC1-self.yC)**2)**0.5],
+                     ['C', '', self.C, '', (self.xD-self.xC)],
+                     ['lc', '', self.lc, '', 2*(self.xB-self.xO)]]
     def createPart(self):
         ## create solid
         self.part = len(self.profileSketch)*[None]
