@@ -1,9 +1,4 @@
-import os
-import sys
-import shutil
-import json
-import ast
-import math
+import os, sys, shutil, json, ast, math
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter.filedialog import askdirectory
@@ -88,10 +83,9 @@ class coupon_gui():
             os.remove(self.pathEntry.get()+'/'+statusFileName)
             if os.path.exists(self.srcPath+'/abaqus.rpy'):
                 os.remove(self.srcPath+'/abaqus.rpy')
+            if os.path.exists(self.srcPath+'/abaqus_acis.log'):
                 os.remove(self.srcPath+'/abaqus_acis.log')
             messagebox.showinfo('Status Info', msgText)
-            # runCommand = 'cmd.exe /c'+abqCall
-            # process = subprocess.Popen(runCommand)
         def createModel():
             if self.pathEntry.get()=='' or (self.radioVar.get()==2 and self.couponNameEntry.get()==''):
                     messagebox.showinfo('Input Check', 'Enter save location and/or coupon name')
