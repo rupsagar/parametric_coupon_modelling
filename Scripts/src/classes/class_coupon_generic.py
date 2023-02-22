@@ -24,13 +24,21 @@ class coupon_generic(object):
             getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', 
             scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
         self.job.writeInput(consistencyChecking=OFF)
-        ## save cae file
+        ## create cae file
         mdb.saveAs(pathName=self.model.name+self.version)
-        ## write json data of the model
+        ## create json data of the model
         couponString = json.dumps(self.couponData, indent=4, sort_keys=True)
         couponJson = open(self.couponName+'_Data'+self.version+'.json', 'w')
         couponJson.write(couponString)
         couponJson.close()
+        ## create txt file of geometry data
+        geomFileName = self.couponName+'_Geom'+self.version+'.txt'
+        geomFile = open(geomFileName, 'w')
+        for thisList in self.geomData:
+            for i in range(len(thisList)):
+                geomFile.write(str(thisList[i])+'\t')
+            geomFile.write('\n')
+        geomFile.close()
     def getByDifference(self, listA, listB):
         ## method to return list with elements of difference of two lists
         differenceList = []
