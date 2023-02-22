@@ -1,8 +1,4 @@
-import os
-import sys
-import json
-import ast
-import imp
+import sys, os, json, ast
 
 srcPath = sys.argv[-1]
 savePath = sys.argv[-2]
@@ -18,10 +14,8 @@ try:
     fileJson.close()
     couponData = ast.literal_eval(json.dumps(couponDataUnicode))
 
-    currentPath = os.getcwd()
-    os.chdir(srcPath+'/classes')
-    execfile('class_coupon_generic.py')
-    execfile('class_'+template.lower()+'.py')
+    execfile(srcPath+'/classes/class_coupon_generic.py')
+    execfile(srcPath+'/classes/class_'+template.lower()+'.py')
     couponClass = getattr(sys.modules[__name__], template.lower())
     os.chdir(savePath)
     couponClass(couponData)
