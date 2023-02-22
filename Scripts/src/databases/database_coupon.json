@@ -911,6 +911,78 @@
                 "nominalStress" : 250.0
             },
             "version" : ""
+        },
+        "Static_Coupon_1_6" : {
+            "couponName" : "Static_Coupon_1_6",
+            "geometry" : {
+                "lt" : 110.0,
+                "d" : 8.0,
+                "D" : 16.0,
+                "R" : 16.0,
+                "C" : 20.0,
+                "lc" : 49.0
+            },
+            "partitionRadialFraction" : 0.67,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "radialInner" : 0.15,
+                "long1" : 0.1,
+                "long2" : 0.4,
+                "long3" : 0.6
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Static_Coupon_1_7" : {
+            "couponName" : "Static_Coupon_1_7",
+            "geometry" : {
+                "lt" : 130.0,
+                "d" : 10.0,
+                "D" : 16.0,
+                "R" : 18.0,
+                "C" : 25.0,
+                "lc" : 60.0
+            },
+            "partitionRadialFraction" : 0.67,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "radialInner" : 0.15,
+                "long1" : 0.1,
+                "long2" : 0.4,
+                "long3" : 0.6
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
         }
     },
     "Static_Coupon_2_1_6" : {
@@ -923,6 +995,80 @@
                 "R" : 25.0,
                 "C" : 28.0,
                 "lc" : 60.0,
+                "thickness" : 2.0
+            },
+            "partitionRadialFraction" : 0.67,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "radialInner" : 0.15,
+                "long1" : 0.1,
+                "long2" : 0.4,
+                "long3" : 0.6
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Static_Coupon_2_5" : {
+            "couponName" : "Static_Coupon_2_5",
+            "geometry" : {
+                "lt" : 95.0,
+                "b" : 10.0,
+                "B" : 15.0,
+                "R" : 10.0,
+                "C" : 23.0,
+                "lc" : 35.0,
+                "thickness" : 2.0
+            },
+            "partitionRadialFraction" : 0.67,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "radialInner" : 0.15,
+                "long1" : 0.1,
+                "long2" : 0.4,
+                "long3" : 0.6
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Static_Coupon_2_6" : {
+            "couponName" : "Static_Coupon_2_6",
+            "geometry" : {
+                "lt" : 45.0,
+                "b" : 8.0,
+                "B" : 12.0,
+                "R" : 8.0,
+                "C" : 7.0,
+                "lc" : 20.0,
                 "thickness" : 2.0
             },
             "partitionRadialFraction" : 0.67,
