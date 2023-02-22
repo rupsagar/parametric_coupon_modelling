@@ -78,50 +78,54 @@ class fatigue_coupon_66_69_a(coupon_generic):
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[0], entity2=self.profileGeometry1[2], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[1], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].ObliqueDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[1], textPoint=(-3, 4), value=self.phi1/2)
-        (self.xO, self.yO), (self.xA, self.yA) = self.profileVertices1[0].coords, self.profileVertices1[1].coords
         ## arc AB: self.profileGeometry1[5]; vertices ==>> self.profileVertices1[1], self.profileVertices1[2]; center: self.profileVertices1[3]; dimension: d[1], d[2]
-        self.profileSketch[0].ArcByCenterEnds(center=(self.xC1, self.yC1), point1=(self.xA, self.yA), point2=(self.xB, self.yB), direction=COUNTERCLOCKWISE)
+        self.profileSketch[0].ArcByCenterEnds(center=(self.xC1, self.yC1), point1=self.profileVertices1[1].coords, point2=(self.xB, self.yB), direction=COUNTERCLOCKWISE)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[5], textPoint=(0, 25), radius=self.rad1)
         self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[2], entity2=self.profileGeometry1[2], textPoint=(10, 1), value=self.phi2/2)
-        (self.xB, self.yB), (self.xC1, self.yC1) = self.profileVertices1[2].coords, self.profileVertices1[3].coords
         ## arc BC: self.profileGeometry1[6]; vertices ==>> self.profileVertices1[2], self.profileVertices1[4]; center: self.profileVertices1[5]; dimension: d[3], d[4], d[5]
-        self.profileSketch[0].ArcByCenterEnds(center=(self.xC2, self.yC2), point1=(self.xB, self.yB), point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
+        self.profileSketch[0].ArcByCenterEnds(center=(self.xC2, self.yC2), point1=self.profileVertices1[2].coords, point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(14, 10), radius=self.rad2)
         self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[4], entity2=self.profileGeometry1[2], textPoint=(25, 1), value=self.phi3/2)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[4], textPoint=(13, 9), value=self.len1/2)
-        (self.xC, self.yC), (self.xC2, self.yC2) = self.profileVertices1[4].coords, self.profileVertices1[5].coords
         ## line CD: self.profileGeometry1[7]; vertices ==>> self.profileVertices1[5], self.profileVertices1[6]; dimension: d[6]
-        self.profileSketch[0].Line(point1=(self.xC, self.yC), point2=(self.xD, self.yD))
+        self.profileSketch[0].Line(point1=self.profileVertices1[4].coords, point2=(self.xD, self.yD))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[6], textPoint=(13, -9), value=self.len2/2)
-        (self.xD, self.yD) = self.profileVertices1[6].coords
         ## line DE: self.profileGeometry1[8]; vertices ==>> self.profileVertices1[6], self.profileVertices1[7]
-        self.profileSketch[0].Line(point1=(self.xD, self.yD), point2=(self.xE, self.yE))
+        self.profileSketch[0].Line(point1=self.profileVertices1[6].coords, point2=(self.xE, self.yE))
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[7], entity2=self.profileGeometry1[2], addUndoState=False)
-        (self.xE, self.yE) = self.profileVertices1[7].coords
         ## line EO: self.profileGeometry1[9]; vertices ==>> self.profileVertices1[7], self.profileVertices1[0]
-        self.profileSketch[0].Line(point1=(self.xE, self.yE), point2=(self.xO, self.yO))
+        self.profileSketch[0].Line(point1=self.profileVertices1[7].coords, point2=self.profileVertices1[0].coords)
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
         #######################################################################################################################################################
-        self.geomData = [['O', (self.xo, self.yo), (self.xO, self.yO)],
-                     ['A', (self.xa, self.ya), (self.xA, self.yA)],
-                     ['B', (self.xb, self.yb), (self.xB, self.yB)],
-                     ['C', (self.xc, self.yc), (self.xC, self.yC)],
-                     ['D', (self.xd, self.yd), (self.xD, self.yD)],
-                     ['E', (self.xe, self.ye), (self.xE, self.yE)],
-                     ['C1', (self.xc1, self.yc1), (self.xC1, self.yC1)],
-                     ['C2', (self.xc2, self.yc2), (self.xC2, self.yC2)]]
-        import csv
-        geomFileName = self.couponName+'_Geom'+self.version+'.txt'
-        with open(geomFileName, 'w') as geomFile:
-            csvwriter = csv.writer(geomFile, delimiter='\t')
-            csvwriter.writerows(self.geomData)
-        geomFile.close()
-
+        (self.xO, self.yO) = self.profileVertices1[0].coords
+        (self.xA, self.yA) = self.profileVertices1[1].coords
+        (self.xB, self.yB) = self.profileVertices1[2].coords
+        (self.xC1, self.yC1) = self.profileVertices1[3].coords
+        (self.xC, self.yC) = self.profileVertices1[4].coords
+        (self.xC2, self.yC2) = self.profileVertices1[5].coords
+        (self.xD, self.yD) = self.profileVertices1[6].coords
+        (self.xE, self.yE) = self.profileVertices1[7].coords
+        #######################################################################################################################################################
+        self.geomData = [['O', self.xo, self.yo, self.xO, self.yO],
+                     ['A', self.xa, self.ya, self.xA, self.yA],
+                     ['B', self.xb, self.yb, self.xB, self.yB],
+                     ['C', self.xc, self.yc, self.xC, self.yC],
+                     ['D', self.xd, self.yd, self.xD, self.yD],
+                     ['E', self.xe, self.ye, self.xE, self.yE],
+                     ['C1', self.xc1, self.yc1, self.xC1, self.yC1],
+                     ['C2', self.xc2, self.yc2, self.xC2, self.yC2],
+                     ['phi1', '', self.phi1, '', 2*(self.yA-self.yO)],
+                     ['phi2', '', self.phi2, '', 2*(self.yB-self.yO)],
+                     ['phi3', '', self.phi3, '', 2*(self.yC-self.yO)],
+                     ['rad1', '', self.rad1, '', ((self.xC1-self.xB)**2+(self.yC1-self.yB)**2)**0.5],
+                     ['rad2', '', self.rad2, '', ((self.xC2-self.xB)**2+(self.yC2-self.yB)**2)**0.5],
+                     ['len1', '', self.len1, '', 2*(self.xC-self.xO)],
+                     ['len2', '', self.len2, '', 2*(self.xD-self.xO)]]
     def createPart(self):
         ## create solid
         self.part = len(self.profileSketch)*[None]
@@ -200,7 +204,7 @@ class fatigue_coupon_66_69_a(coupon_generic):
         ## seed ==>> outer arc edge AA'
         self.edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
         self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
-        self.part[0].seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FIXED)
+        self.part[0].seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> outer radial edges
         self.edgesOuterRadial = self.getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
         seedOuterRadial((0.0, self.partitionRadius+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
