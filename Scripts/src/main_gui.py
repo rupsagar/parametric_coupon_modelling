@@ -1,8 +1,7 @@
 ## user may need to modify this path depending on local machine or OS
 abqPath = [r'C:/SIMULIA/Commands']
 
-import os
-import imp
+import os, imp
 
 srcPath = os.getcwd()
 
