@@ -106,11 +106,15 @@ class fatigue_coupon_74_75(coupon_generic):
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
         #######################################################################################################################################################
+        
+        #######################################################################################################################################################
         ## define sketch ==>> part 2 ==>> away from area of interest  #########################################################################################
         self.profileSketch[1] = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_2', sheetSize=200.0)
         self.profileSketch[1].setPrimaryObject(option=STANDALONE)        
         self.profileSketch[1].rectangle(point1=self.coordD, point2=self.coordG)
+        #######################################################################################################################################################
         self.profileSketch[1].unsetPrimaryObject()
+        #######################################################################################################################################################
         if self.provideChamfer==True:
             ## calculate vertex coordinates for chamfer ###########################################################################################################
             self.coordODash = (self.xODash, self.yODash) = (0.0, 0.0)
@@ -140,6 +144,7 @@ class fatigue_coupon_74_75(coupon_generic):
             ## line O'B'
             self.sketchChamferProfile.Line(point1=self.coordODash, point2=self.coordBDash)
             self.sketchChamferProfile.VerticalConstraint(entity=self.profileGeometryChamfer[6], addUndoState=False)
+            #######################################################################################################################################################
             self.sketchChamferProfile.unsetPrimaryObject()
     def createPart(self):
         ## create solid
