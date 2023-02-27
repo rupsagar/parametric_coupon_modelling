@@ -16,13 +16,12 @@ class static_coupon_2_1_6(coupon_generic):
         self.lc = couponData['geometry']['lc']
         self.thickness = couponData['geometry']['thickness']
         self.lenTol = couponData['lenTol']
-        self.partitionRadialFraction = couponData['partitionRadialFraction']
-        self.seedSizeArcOuter = couponData['elemSize']['arcOuter']
-        self.seedSizeRadialOuter = couponData['elemSize']['radialOuter']
-        self.seedSizeRadialInner = couponData['elemSize']['radialInner']
+        self.seedSizeThickness = couponData['elemSize']['thickness']
+        self.seedSizeVertical = couponData['elemSize']['vertical']
         self.seedSizeLong1 = couponData['elemSize']['long1']
         self.seedSizeLong2 = couponData['elemSize']['long2']
         self.seedSizeLong3 = couponData['elemSize']['long3']
+        self.seedSizeLong4 = couponData['elemSize']['long4']
         self.elemTypeHexPart1 = SymbolicConstant(couponData['elemType']['hexPart1'])
         self.materialName = couponData['material']['name']
         self.density = couponData['material']['density']
@@ -33,19 +32,18 @@ class static_coupon_2_1_6(coupon_generic):
         self.nominalStress = couponData['step']['nominalStress']
         self.version = couponData['version']
         ## derived quantities
-        self.partitionRadius = self.partitionRadialFraction*self.b/2
-        self.endStress = -self.nominalStress*(self.b/self.B)**2
+        self.endStress = -self.nominalStress*(self.b/self.B)
         ## create coupon
         self.createModel()
         self.createProfileSketch()
         self.createPart()
         self.createAssembly()
-        # self.createPartition()
-        # self.createMesh()
-        # self.createMaterial()
-        # self.createSection()
-        # self.createStep()
-        # self.createJob()
+        self.createPartition()
+        self.createMesh()
+        self.createMaterial()
+        self.createSection()
+        self.createStep()
+        self.createJob()
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
         ## calculate vertex coordinates #################################################################################################################
@@ -65,7 +63,6 @@ class static_coupon_2_1_6(coupon_generic):
         ## horizontal fixed construction line ==>> self.profileGeometry1[2]
         self.profileSketch[0].ConstructionLine(point1=(-80, 0), angle=0)
         self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[2])
-        self.profileSketch[0].assignCenterline(line=self.profileGeometry1[2])
         ## vertical fixed construction line ==>> self.profileGeometry1[3]
         self.profileSketch[0].ConstructionLine(point1=(0, -30), angle=90)
         self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[3])
@@ -84,7 +81,8 @@ class static_coupon_2_1_6(coupon_generic):
         ## arc BC
         self.profileSketch[0].ArcByCenterEnds(center=(self.xC1, self.yC1), point1=self.profileVertices1[2].coords, point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(14, 10), radius=self.R)
-        self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.B/2)
+        self.profileSketch[0].TangentConstraint(entity1=self.profileGeometry1[5], entity2=self.profileGeometry1[6], addUndoState=False)
+        # self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.B/2)
         ## line CD
         self.profileSketch[0].Line(point1=self.profileVertices1[3].coords, point2=(self.xD, self.yD))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
@@ -121,13 +119,6 @@ class static_coupon_2_1_6(coupon_generic):
                      ['R', '', self.R, '', ((self.xC1-self.xC)**2+(self.yC1-self.yC)**2)**0.5],
                      ['C', '', self.C, '', (self.xD-self.xC)],
                      ['lc', '', self.lc, '', 2*(self.xB-self.xO)]]
-        geomFileName = self.couponName+'_Geom'+self.version+'.txt'
-        geomFile = open(geomFileName, 'w')
-        for thisList in self.geomData:
-            for i in range(len(thisList)):
-                geomFile.write(str(thisList[i])+'\t')
-            geomFile.write('\n')
-        geomFile.close()
     def createPart(self):
         ## create solid
         self.part = len(self.profileSketch)*[None]
@@ -142,4 +133,67 @@ class static_coupon_2_1_6(coupon_generic):
         self.instance = len(self.part)*[None]
         for i in range(len(self.part)):
             self.instance[i] = self.assembly.Instance(name=self.couponName+'_Instance_'+str(i+1), part=self.part[i], dependent=ON)
-    
+    def createPartition(self):
+        def createPartitionLong(offsetDistance):
+            ## partition by YZ plane
+            self.datumPlane_ID = self.part[0].DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=offsetDistance).id
+            self.part[0].PartitionCellByDatumPlane(datumPlane=self.part[0].datums[self.datumPlane_ID], cells=self.part[0].cells)
+        createPartitionLong(self.xB)
+        createPartitionLong(self.xC)
+    def createMesh(self):
+        ## seed ==>> thickness direction
+        edgesThickness = self.part[0].edges.findAt(coordinates=((0, 0, self.lenTol), ))
+        self.part[0].seedEdgeBySize(edges=edgesThickness, size=self.seedSizeThickness, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> vertical direction
+        edgesVertical = self.part[0].edges.findAt(coordinates=((0, self.lenTol, 0), ))
+        self.part[0].seedEdgeBySize(edges=edgesVertical, size=self.seedSizeVertical, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> long edges along AB
+        pickedEdges3 = self.part[0].edges.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xB+self.lenTol, yMax=self.yB+self.lenTol, zMax=self.thickness+self.lenTol)
+        edgesLong3 = self.getEdgeByLength(pickedEdges3, abs(self.xB-self.xA))
+        self.seedEdge(self.part[0], 0, self.xA, edgesLong3, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        ## seed ==>> long edges along BC
+        # pickedEdges1 = self.part[0].edges.getByBoundingBox(xMin=self.xB-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
+        # edgesLong1 = self.getEdgeByLength(pickedEdges1, abs(self.xC-self.xB))
+        # self.seedEdge(self.part[0], 0, self.xB, edgesLong1, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
+        ## seed ==>> long edges along CD
+        pickedEdges3 = self.part[0].edges.getByBoundingBox(xMin=self.xC-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+        edgesLong3 = self.getEdgeByLength(pickedEdges3, abs(self.xD-self.xC))
+        self.seedEdge(self.part[0], 0, self.xC, edgesLong3, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
+        ## generate mesh
+        self.couponData.update({'elemNum':dict()})
+        for i in range(len(self.part)):
+            self.part[i].generateMesh()
+            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
+    def createStep(self):
+        ## create step for load and boundary conditions
+        self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
+        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
+        self.couponData['step'].update({'endPressure':self.endStress})
+        for i in range(len(self.part)):
+            ## create BC at negY face
+            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
+            nsetNameNegY = 'Nset_NegY_Part_'+str(i+1)
+            self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
+            region = self.instance[i].sets[nsetNameNegY]
+            self.model.DisplacementBC(name='BC_NegY_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+            ## create BC at negZ face
+            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.lenTol)
+            nsetNamePosZ = 'Nset_NegZ_Part_'+str(i+1)
+            self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
+            region = self.instance[i].sets[nsetNamePosZ]
+            self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+            if i==0:
+                ## create BC at negX face
+                nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xA+self.lenTol, yMax=self.yA+self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
+                nsetNameNegX = 'Nset_NegX_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
+                region = self.instance[i].sets[nsetNameNegX]
+                self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+            if i==(len(self.part)-1):
+                ## create pressure load on posX face
+                endCellFaceArr = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+                surfNamePosX = 'Surf_PosX_Part_'+str(i+1)
+                self.getElemSurfFromCellFace(self.part[i], endCellFaceArr, surfNamePosX)
+                region = self.instance[i].surfaces[surfNamePosX]
+                self.model.Pressure(name='Load_PosX_Instance_'+str(i+1), createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+                
