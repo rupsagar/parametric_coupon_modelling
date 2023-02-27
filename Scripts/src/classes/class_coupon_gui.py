@@ -69,7 +69,7 @@ class coupon_gui():
                 self.iRetrieve = self.iRetrieve+1
             return dictData
         def callAbaqus():
-            statusFileName = 'statusInfo.txt'
+            statusFileName = self.couponOutput['couponName']+'_Status'+self.couponOutput['version']+'.txt'
             abqCall = 'abaqus cae noGUI="'+self.srcPath+'/utils/util_call_abaqus.py" -- '+statusFileName+' '+self.jsonFileName+' '+templateDropDown.get()+' "'+self.pathEntry.get()+'" "'+self.srcPath+'"'
             for j in range(len(self.abqPath)):
                 try:
@@ -80,7 +80,6 @@ class coupon_gui():
             statusFile = open(self.pathEntry.get()+'/'+statusFileName, 'r')
             msgText = statusFile.read()
             statusFile.close()
-            os.remove(self.pathEntry.get()+'/'+statusFileName)
             if os.path.exists(self.srcPath+'/abaqus.rpy'):
                 os.remove(self.srcPath+'/abaqus.rpy')
             if os.path.exists(self.srcPath+'/abaqus_acis.log'):
