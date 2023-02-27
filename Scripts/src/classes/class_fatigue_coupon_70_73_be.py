@@ -309,9 +309,10 @@ class fatigue_coupon_70_73_be(coupon_generic):
         elemTypeHex2 = mesh.ElemType(elemCode=self.elemTypeHexPart2, elemLibrary=STANDARD)
         self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
         ## generate mesh
+        self.couponData.update({'elemNum':dict()})
         for i in range(len(self.part)):
             self.part[i].generateMesh()
-        self.couponData.update({'elemNum':{'part1':len(self.part[0].elements), 'part2':len(self.part[1].elements)}})
+            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
     def createTie(self):
         region = len(self.part)*[None]
         for i in range(len(self.part)):
@@ -324,6 +325,7 @@ class fatigue_coupon_70_73_be(coupon_generic):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
+        self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xF+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
