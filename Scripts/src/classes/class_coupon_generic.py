@@ -34,6 +34,7 @@ class coupon_generic(object):
         ## create txt file of geometry data
         geomFileName = self.couponName+'_Geom'+self.version+'.txt'
         geomFile = open(geomFileName, 'w')
+        self.geomData.insert(0, ['', 'Initial', '', 'Final', ''])
         for thisList in self.geomData:
             for i in range(len(thisList)):
                 geomFile.write(str(thisList[i])+'\t')
