@@ -83,7 +83,8 @@ class static_coupon_1_1_7(coupon_generic):
         ## arc BC
         self.profileSketch[0].ArcByCenterEnds(center=(self.xC1, self.yC1), point1=self.profileVertices1[2].coords, point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(14, 10), radius=self.R)
-        self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.D/2)
+        self.profileSketch[0].TangentConstraint(entity1=self.profileGeometry1[5], entity2=self.profileGeometry1[6], addUndoState=False)
+        # self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.D/2)
         ## line CD
         self.profileSketch[0].Line(point1=self.profileVertices1[3].coords, point2=(self.xD, self.yD))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
@@ -159,8 +160,8 @@ class static_coupon_1_1_7(coupon_generic):
             self.part[0].PartitionCellBySweepEdge(sweepPath=self.sweepEdges[0], cells=self.part[0].cells, edges=self.edgesArcForPartition)
         def createPartitionLong(offsetDistance):
             ## partition by YZ plane
-            self.datumPlane1_ID = self.part[0].DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=offsetDistance).id
-            self.part[0].PartitionCellByDatumPlane(datumPlane=self.part[0].datums[self.datumPlane1_ID], cells=self.part[0].cells)
+            self.datumPlane_ID = self.part[0].DatumPlaneByPrincipalPlane(principalPlane=YZPLANE, offset=offsetDistance).id
+            self.part[0].PartitionCellByDatumPlane(datumPlane=self.part[0].datums[self.datumPlane_ID], cells=self.part[0].cells)
         createPartitionCyl()
         createPartitionLong(self.xB)
         createPartitionLong(self.xC)
@@ -205,13 +206,15 @@ class static_coupon_1_1_7(coupon_generic):
         elemType1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemType1, ))
         ## generate mesh
+        self.couponData.update({'elemNum':dict()})
         for i in range(len(self.part)):
             self.part[i].generateMesh()
-        self.couponData.update({'elemNum':len(self.part[0].elements)})
+            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
+        self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.yD-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.lenTol)
