@@ -151,12 +151,15 @@ class fatigue_coupon_70_73_a(coupon_generic):
         elemType1 = mesh.ElemType(elemCode=self.elemTypeHex, elemLibrary=STANDARD)
         self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemType1,))
         ## generate mesh
-        self.part[0].generateMesh()
-        self.couponData.update({'elemNum':len(self.part[0].elements)})
+        self.couponData.update({'elemNum':dict()})
+        for i in range(len(self.part)):
+            self.part[i].generateMesh()
+            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
+        self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
