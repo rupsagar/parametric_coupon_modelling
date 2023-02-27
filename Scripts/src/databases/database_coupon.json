@@ -816,10 +816,11 @@
                 "long1" : 0.05,
                 "long2" : 0.3,
                 "long3" : 0.4,
-                "long4" : 0.8
+                "long4" : 0.8,
+                "width" : 0.3
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -849,16 +850,17 @@
             "givenKt" : 2.3,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness1" : 0.03,
-                "thickness2" : 0.2,
-                "arc" : 0.03,
-                "long1" : 0.03,
+                "thickness1" : 0.05,
+                "thickness2" : 0.3,
+                "arc" : 0.033,
+                "long1" : 0.033,
                 "long2" : 0.2,
                 "long3" : 0.27,
-                "long4" : 0.53
+                "long4" : 0.53,
+                "width" : 0.2
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -1071,15 +1073,14 @@
                 "lc" : 20.0,
                 "thickness" : 2.0
             },
-            "partitionRadialFraction" : 0.67,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "arcOuter" : 0.1,
-                "radialOuter" : 0.1,
-                "radialInner" : 0.15,
+                "thickness" : 0.1,
+                "vertical" : 0.2,
                 "long1" : 0.1,
-                "long2" : 0.4,
-                "long3" : 0.6
+                "long2" : 0.3,
+                "long3" : 0.5,
+                "long4" : 0.7
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
