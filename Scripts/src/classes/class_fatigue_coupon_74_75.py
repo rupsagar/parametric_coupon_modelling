@@ -20,6 +20,7 @@ class fatigue_coupon_74_75(coupon_generic):
         self.lenTol = couponData['lenTol']
         self.seedSizeThickness1 = couponData['elemSize']['thickness1']
         self.seedSizeThickness2 = couponData['elemSize']['thickness2']
+        self.seedSizeWidth = couponData['elemSize']['width']
         self.seedSizeArc = couponData['elemSize']['arc']
         self.seedSizeLong1 = couponData['elemSize']['long1']
         self.seedSizeLong2 = couponData['elemSize']['long2']
@@ -62,14 +63,14 @@ class fatigue_coupon_74_75(coupon_generic):
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
         ## calculate vertex coordinates #################################################################################################################
-        self.coordO = (self.xO, self.yO) = (0.0, 0.0)
-        self.coordA = (self.xA, self.yA) = (0.0, self.phi/2.0)
-        self.coordB = (self.xB, self.yB) = (self.phi/2.0, 0.0)
-        self.coordC = (self.xC, self.yC) = (0.0, self.width/2.0)
-        self.coordD = (self.xD, self.yD) = (self.tieDistance, 0.0)
-        self.coordE = (self.xE, self.yE) = (self.xD, self.width/2.0)
-        self.coordF = (self.xF, self.yF) = (self.len/2.0, 0.0)
-        self.coordG = (self.xG, self.yG) = (self.len/2.0, self.width/2.0)
+        (self.xo, self.yo) = (self.xO, self.yO) = (0.0, 0.0)
+        (self.xa, self.ya) = (self.xA, self.yA) = (0.0, self.phi/2.0)
+        (self.xb, self.yb) = (self.xB, self.yB) = (self.phi/2.0, 0.0)
+        (self.xc, self.yc) = (self.xC, self.yC) = (0.0, self.width/2.0)
+        (self.xd, self.yd) = (self.xD, self.yD) = (self.tieDistance, 0.0)
+        (self.xe, self.ye) = (self.xE, self.yE) = (self.xD, self.width/2.0)
+        (self.xf, self.yf) = (self.xF, self.yF) = (self.len/2.0, 0.0)
+        (self.xg, self.yg) = (self.xG, self.yG) = (self.len/2.0, self.width/2.0)
         #################################################################################################################################################
         self.profileSketch = 2*[None]
         ## define sketch ==>> part 1 ==>> area of interest  #############################################################################################
@@ -83,49 +84,52 @@ class fatigue_coupon_74_75(coupon_generic):
         self.profileSketch[0].ConstructionLine(point1=(0.0, -25.0), angle=90.0)
         self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[3])
         ## arc AB
-        self.profileSketch[0].ArcByCenterEnds(center=self.coordO, point1=self.coordA, point2=self.coordB, direction=CLOCKWISE)
+        self.profileSketch[0].ArcByCenterEnds(center=(self.xO, self.yO), point1=(self.xA, self.yA), point2=(self.xB, self.yB), direction=CLOCKWISE)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[0], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[1], entity2=self.profileGeometry1[2], addUndoState=False)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[4], textPoint=(0.0, 5.0), radius=self.phi/2.0)
         self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[4], entity2=self.profileGeometry1[2])
         self.profileSketch[0].PerpendicularConstraint(entity1=self.profileGeometry1[4], entity2=self.profileGeometry1[3])
         ## line AC
-        self.profileSketch[0].Line(point1=self.coordA, point2=self.coordC)
+        self.profileSketch[0].Line(point1=self.profileVertices1[0].coords, point2=(self.xC, self.yC))
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[5], addUndoState=False)
         self.profileSketch[0].VerticalDimension(vertex1=self.profileVertices1[2], vertex2=self.profileVertices1[3], textPoint=(-15.0, 15.0), value=self.width/2.0)
         ## line BD
-        self.profileSketch[0].Line(point1=self.coordB, point2=self.coordD)
+        self.profileSketch[0].Line(point1=self.profileVertices1[1].coords, point2=(self.xD, self.yD))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[6], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[2], vertex2=self.profileVertices1[4], textPoint=(50.0, -5.0), value=self.xD)
         ## line CE
-        self.profileSketch[0].Line(point1=self.coordC, point2=self.coordE)
+        self.profileSketch[0].Line(point1=self.profileVertices1[3].coords, point2=(self.xE, self.yE))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
         ## line DE
-        self.profileSketch[0].Line(point1=self.coordD, point2=self.coordE)
+        self.profileSketch[0].Line(point1=self.profileVertices1[4].coords, point2=self.profileVertices1[5].coords)
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
         #######################################################################################################################################################
-        
+        (self.xA, self.yA) = self.profileVertices1[0].coords
+        (self.xB, self.yB) = self.profileVertices1[1].coords
+        (self.xO, self.yO) = self.profileVertices1[2].coords
+        (self.xC, self.yC) = self.profileVertices1[3].coords
+        (self.xD, self.yD) = self.profileVertices1[4].coords
+        (self.xE, self.yE) = self.profileVertices1[5].coords
         #######################################################################################################################################################
         ## define sketch ==>> part 2 ==>> away from area of interest  #########################################################################################
         self.profileSketch[1] = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_2', sheetSize=200.0)
         self.profileSketch[1].setPrimaryObject(option=STANDALONE)        
-        self.profileSketch[1].rectangle(point1=self.coordD, point2=self.coordG)
-        #######################################################################################################################################################
+        self.profileSketch[1].rectangle(point1=(self.xD, self.yD), point2=(self.xG, self.yG))
         self.profileSketch[1].unsetPrimaryObject()
         #######################################################################################################################################################
         if self.provideChamfer==True:
+            self.sketchChamferSweepPath = self.model.ConstrainedSketch(name=self.couponName+'_Temp_Sweep_Path', sheetSize=200.0)
+            self.sketchChamferSweepPath.setPrimaryObject(option=STANDALONE)
+            self.sketchChamferSweepPath.ArcByCenterEnds(center=(self.xO, self.yO), point1=(self.xA, self.yA), point2=(self.xB, self.yB), direction=CLOCKWISE)
+            self.sketchChamferSweepPath.unsetPrimaryObject()
             ## calculate vertex coordinates for chamfer ###########################################################################################################
             self.coordODash = (self.xODash, self.yODash) = (0.0, 0.0)
             self.coordADash = (self.xADash, self.yADash) = (-self.chamferEdgeLength, self.chamferEdgeLength*math.tan(self.thetaRad))
             self.coordBDash = (self.xBDash, self.yBDash) = (0.0, self.yADash)
-            #######################################################################################################################################################
-            self.sketchChamferSweepPath = self.model.ConstrainedSketch(name=self.couponName+'_Temp_Sweep_Path', sheetSize=200.0)
-            self.sketchChamferSweepPath.setPrimaryObject(option=STANDALONE)
-            self.sketchChamferSweepPath.ArcByCenterEnds(center=self.coordO, point1=self.coordA, point2=self.coordB, direction=CLOCKWISE)
-            self.sketchChamferSweepPath.unsetPrimaryObject()
-            ## define sketch ==>> temp part chamfer    ###################################################################
+            ## define sketch ==>> temp part chamfer ############################################################################################################
             self.sketchChamferProfile = self.model.ConstrainedSketch(name=self.couponName+'_Temp_Profile_Sketch', sheetSize=200.0, transform=(0.0, -1.0, 0.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0))
             self.profileGeometryChamfer, self.profileVerticesChamfer = self.sketchChamferProfile.geometry, self.sketchChamferProfile.vertices
             self.sketchChamferProfile.setPrimaryObject(option=SUPERIMPOSE)
@@ -146,6 +150,16 @@ class fatigue_coupon_74_75(coupon_generic):
             self.sketchChamferProfile.VerticalConstraint(entity=self.profileGeometryChamfer[6], addUndoState=False)
             #######################################################################################################################################################
             self.sketchChamferProfile.unsetPrimaryObject()
+        self.geomData = [['O', self.xo, self.yo, self.xO, self.yO],
+                     ['A', self.xa, self.ya, self.xA, self.yA],
+                     ['B', self.xb, self.yb, self.xB, self.yB],
+                     ['C', self.xc, self.yc, self.xC, self.yC],
+                     ['D', self.xd, self.yd, self.xD, self.yD],
+                     ['E', self.xe, self.ye, self.xE, self.yE],
+                     ['G', self.xg, self.yg, self.xG, self.yG],
+                     ['len', '', self.len, '', 2*(self.xG-self.xO)],
+                     ['width', '', self.width, '', 2*(self.yC-self.yO)],
+                     ['phi', '', self.phi, '', 2*((self.xO-self.xB)**2+(self.yO-self.yB)**2)**0.5]]
     def createPart(self):
         ## create solid
         self.part = len(self.profileSketch)*[None]
@@ -252,8 +266,11 @@ class fatigue_coupon_74_75(coupon_generic):
         edgesLong4 = self.part[0].edges.findAt(coordinates=((self.width/2+self.lenTol, 0, 0), (self.width/2+self.lenTol, self.width/2, 0), (self.width/2+self.lenTol, 0, self.thickness/2), (self.width/2+self.lenTol, self.width/2, self.thickness/2)))
         self.seedEdge(self.part[0], 0, self.width/2, edgesLong4, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
         ## seed ==>> thickness2 direction
-        edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), (self.xD, self.lenTol, 0)))
+        edgesThickness2 = self.part[1].edges.findAt(coordinates=((self.xD, 0, self.lenTol), ))
         self.part[1].seedEdgeBySize(edges=edgesThickness2, size=self.seedSizeThickness2, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> width direction of part2
+        edgesWidth = self.part[1].edges.findAt(coordinates=((self.xD, self.lenTol, 0), ))
+        self.part[1].seedEdgeBySize(edges=edgesWidth, size=self.seedSizeWidth, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> long edge along DF
         edgesLong5 = self.part[1].edges.findAt(coordinates=((self.xD+self.lenTol, 0, 0), (self.xD+self.lenTol, self.width/2, 0), (self.xD+self.lenTol, 0, self.thickness/2), (self.xD+self.lenTol, self.width/2, self.thickness/2)))
         self.seedEdge(self.part[1], 0, self.xD, edgesLong5, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
@@ -263,9 +280,10 @@ class fatigue_coupon_74_75(coupon_generic):
         elemTypeHex2 = mesh.ElemType(elemCode=self.elemTypeHexPart2, elemLibrary=STANDARD)
         self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
         ## generate mesh
+        self.couponData.update({'elemNum':dict()})
         for i in range(len(self.part)):
             self.part[i].generateMesh()
-        self.couponData.update({'elemNum':{'part1':len(self.part[0].elements), 'part2':len(self.part[1].elements)}})
+            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
     def createTie(self):
         region = len(self.part)*[None]
         for i in range(len(self.part)):
@@ -278,6 +296,7 @@ class fatigue_coupon_74_75(coupon_generic):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
+        self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xG+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2+self.lenTol)
