@@ -292,7 +292,7 @@ class fatigue_coupon_66_69_bj(coupon_generic):
         ## seed radial edges
         seedRadial((self.yA+self.lenTol), (self.yA-self.yOffset+self.lenTol), self.seedRadialOuter, constraint=FIXED) ## outer radial edge
         seedRadial((self.yA-self.lenTol), (self.partitionRadius+self.lenTol), self.seedRadialMiddle, constraint=FIXED) ## mid radial edge
-        seedRadial((self.partitionRadius+self.lenTol), (self.partitionRadius-self.lenTol), self.seedRadialInner, constraint=FREE) ## inner radial edge
+        seedRadial((self.partitionRadius+self.lenTol), (self.partitionRadius-self.lenTol), self.seedRadialInner, constraint=FIXED) ## inner radial edge
         ## seed long edges
         seedLong(self.xA, self.xB, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong1)
         seedLong(self.xB, self.xC, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong1)
