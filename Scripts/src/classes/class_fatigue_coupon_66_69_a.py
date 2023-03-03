@@ -57,7 +57,7 @@ class fatigue_coupon_66_69_a(coupon_generic):
         (self.xd, self.yd) = (self.xD, self.yD) = (self.len2/2, self.phi3/2)
         (self.xe, self.ye) = (self.xE, self.yE) = (self.len2/2, 0)
         (self.xc1, self.yc1) = (self.xC1, self.yC1) = (0, self.yA+self.rad1) # center 1
-        (self.xc2, self.yc2) = (self.xC2, self.yC2) = ((self.xB+self.xC)/2,(self.yB+self.yC)/2) # arbitrary center 2 ==>> true value set by dimension method on arc
+        (self.xc2, self.yc2) = (self.xC2, self.yC2) = (self.xB, (self.yB+self.rad2))
         #################################################################################################################################################
         self.profileSketch = 1*[None]
         ## define sketch ==>> area of interest  #########################################################################################################
@@ -83,22 +83,25 @@ class fatigue_coupon_66_69_a(coupon_generic):
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[3], addUndoState=False)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[5], textPoint=(0, 25), radius=self.rad1)
         self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[2], entity2=self.profileGeometry1[2], textPoint=(10, 1), value=self.phi2/2)
+        ## horizontal fixed construction line at point B ==>> self.profileGeometry1[6]
+        self.profileSketch[0].ConstructionLine(point1=self.profileVertices1[2].coords, angle=0)
+        self.profileSketch[0].FixedConstraint(entity=self.profileGeometry1[6])
         ## arc BC: self.profileGeometry1[6]; vertices ==>> self.profileVertices1[2], self.profileVertices1[4]; center: self.profileVertices1[5]; dimension: d[3], d[4], d[5]
         self.profileSketch[0].ArcByCenterEnds(center=(self.xC2, self.yC2), point1=self.profileVertices1[2].coords, point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
-        self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(14, 10), radius=self.rad2)
+        self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[7], textPoint=(14, 10), radius=self.rad2)
         self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[4], entity2=self.profileGeometry1[2], textPoint=(25, 1), value=self.phi3/2)
-        self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[4], textPoint=(13, 9), value=self.len1/2)
+        self.profileSketch[0].TangentConstraint(entity1=self.profileGeometry1[6], entity2=self.profileGeometry1[7], addUndoState=False)
         ## line CD: self.profileGeometry1[7]; vertices ==>> self.profileVertices1[5], self.profileVertices1[6]; dimension: d[6]
         self.profileSketch[0].Line(point1=self.profileVertices1[4].coords, point2=(self.xD, self.yD))
-        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
+        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[0], vertex2=self.profileVertices1[6], textPoint=(13, -9), value=self.len2/2)
         ## line DE: self.profileGeometry1[8]; vertices ==>> self.profileVertices1[6], self.profileVertices1[7]
         self.profileSketch[0].Line(point1=self.profileVertices1[6].coords, point2=(self.xE, self.yE))
-        self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
+        self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[7], entity2=self.profileGeometry1[2], addUndoState=False)
         ## line EO: self.profileGeometry1[9]; vertices ==>> self.profileVertices1[7], self.profileVertices1[0]
         self.profileSketch[0].Line(point1=self.profileVertices1[7].coords, point2=self.profileVertices1[0].coords)
-        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[9], addUndoState=False)
+        self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[10], addUndoState=False)
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
         #######################################################################################################################################################
