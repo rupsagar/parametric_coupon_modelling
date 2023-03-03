@@ -522,11 +522,11 @@
             "givenKt" : 1.036,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.05,
-                "vertical" : 0.05,
-                "long1" : 0.05,
-                "long2" : 0.15,
-                "long3" : 0.25
+                "thickness" : 0.07,
+                "vertical" : 0.07,
+                "long1" : 0.07,
+                "long2" : 0.21,
+                "long3" : 0.35
             },
             "elemType" : {
                 "hex" : "C3D8HS"
@@ -556,11 +556,11 @@
             "givenKt" : 1.032,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.05,
-                "vertical" : 0.05,
-                "long1" : 0.05,
-                "long2" : 0.15,
-                "long3" : 0.25
+                "thickness" : 0.1,
+                "vertical" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.3,
+                "long3" : 0.5
             },
             "elemType" : {
                 "hex" : "C3D8HS"
@@ -590,11 +590,11 @@
             "givenKt" : 1.036,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.05,
-                "vertical" : 0.05,
-                "long1" : 0.05,
-                "long2" : 0.15,
-                "long3" : 0.25
+                "thickness" : 0.15,
+                "vertical" : 0.15,
+                "long1" : 0.15,
+                "long2" : 0.45,
+                "long3" : 0.75
             },
             "elemType" : {
                 "hex" : "C3D8HS"
@@ -686,6 +686,186 @@
                 "long2" : 0.2,
                 "long3" : 0.4,
                 "long4" : 0.6
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Fatigue_Coupon_71C": {
+            "couponName" : "Fatigue_Coupon_71C",
+            "geometry" : {
+                "h1" : 7.0,
+                "h2" : 10.0,
+                "h3" : 17.0,
+                "rad1" : 1.41,
+                "rad2" : 12.0,
+                "len1" : 90.0,
+                "len2" : 21.0,
+                "thetaDeg" : 60.0,
+                "thickness" : 2.0
+            },
+            "givenKt" : 2.0,
+            "lenTol" : 1.0e-5,
+            "partitionVerticalFraction" : 0.67,
+            "elemSize" : {
+                "thickness1" : 0.07,
+                "thickness2" : 0.14,
+                "verticalOuter" : 0.014,
+                "verticalMiddle" : 0.07,
+                "verticalInner" : 0.14,
+                "vertical2" : 0.42,
+                "long1" : 0.014,
+                "long2" : 0.28,
+                "long3" : 0.56,
+                "long4" : 0.84
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Fatigue_Coupon_71E": {
+            "couponName" : "Fatigue_Coupon_71E",
+            "geometry" : {
+                "h1" : 7.0,
+                "h2" : 10.0,
+                "h3" : 17.0,
+                "rad1" : 0.44,
+                "rad2" : 12.0,
+                "len1" : 90.0,
+                "len2" : 21.0,
+                "thetaDeg" : 60.0,
+                "thickness" : 2.0
+            },
+            "givenKt" : 3.0,
+            "lenTol" : 1.0e-5,
+            "partitionVerticalFraction" : 0.67,
+            "elemSize" : {
+                "thickness1" : 0.07,
+                "thickness2" : 0.14,
+                "verticalOuter" : 0.014,
+                "verticalMiddle" : 0.07,
+                "verticalInner" : 0.14,
+                "vertical2" : 0.42,
+                "long1" : 0.014,
+                "long2" : 0.28,
+                "long3" : 0.56,
+                "long4" : 0.84
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Fatigue_Coupon_72C": {
+            "couponName" : "Fatigue_Coupon_72C",
+            "geometry" : {
+                "h1" : 10.0,
+                "h2" : 14.0,
+                "h3" : 24.0,
+                "rad1" : 2.0,
+                "rad2" : 16.0,
+                "len1" : 130.0,
+                "len2" : 30.0,
+                "thetaDeg" : 60.0,
+                "thickness" : 2.0
+            },
+            "givenKt" : 2.0,
+            "lenTol" : 1.0e-5,
+            "partitionVerticalFraction" : 0.67,
+            "elemSize" : {
+                "thickness1" : 0.1,
+                "thickness2" : 0.2,
+                "verticalOuter" : 0.02,
+                "verticalMiddle" : 0.1,
+                "verticalInner" : 0.2,
+                "vertical2" : 0.6,
+                "long1" : 0.02,
+                "long2" : 0.4,
+                "long3" : 0.8,
+                "long4" : 1.2
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Fatigue_Coupon_72E": {
+            "couponName" : "Fatigue_Coupon_72E",
+            "geometry" : {
+                "h1" : 10.0,
+                "h2" : 14.0,
+                "h3" : 24.0,
+                "rad1" : 0.68,
+                "rad2" : 16.0,
+                "len1" : 130.0,
+                "len2" : 30.0,
+                "thetaDeg" : 60.0,
+                "thickness" : 2.0
+            },
+            "givenKt" : 3.0,
+            "lenTol" : 1.0e-5,
+            "partitionVerticalFraction" : 0.67,
+            "elemSize" : {
+                "thickness1" : 0.1,
+                "thickness2" : 0.2,
+                "verticalOuter" : 0.02,
+                "verticalMiddle" : 0.1,
+                "verticalInner" : 0.2,
+                "vertical2" : 0.6,
+                "long1" : 0.02,
+                "long2" : 0.4,
+                "long3" : 0.8,
+                "long4" : 1.2
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -877,7 +1057,7 @@
             "version" : ""
         }
     },
-    "Static_Coupon_1_1_7" : {
+    "Static_Coupon_1_1_7_Symmetric" : {
         "Static_Coupon_1_5" : {
             "couponName" : "Static_Coupon_1_5",
             "geometry" : {
@@ -987,7 +1167,7 @@
             "version" : ""
         }
     },
-    "Static_Coupon_2_1_6" : {
+    "Static_Coupon_2_1_6_Symmetric" : {
         "Static_Coupon_2_4" : {
             "couponName" : "Static_Coupon_2_4",
             "geometry" : {
@@ -996,18 +1176,17 @@
                 "B" : 25.0,
                 "R" : 25.0,
                 "C" : 28.0,
-                "lc" : 60.0,
-                "thickness" : 2.0
+                "lc" : 60.0
             },
-            "partitionRadialFraction" : 0.67,
+            "thickness" : 4.0,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "arcOuter" : 0.1,
-                "radialOuter" : 0.1,
-                "radialInner" : 0.15,
+                "thickness" : 0.1,
+                "vertical" : 0.2,
                 "long1" : 0.1,
-                "long2" : 0.4,
-                "long3" : 0.6
+                "long2" : 0.3,
+                "long3" : 0.5,
+                "long4" : 0.7
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
@@ -1033,18 +1212,17 @@
                 "B" : 15.0,
                 "R" : 10.0,
                 "C" : 23.0,
-                "lc" : 35.0,
-                "thickness" : 2.0
+                "lc" : 35.0
             },
-            "partitionRadialFraction" : 0.67,
+            "thickness" : 3.0,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "arcOuter" : 0.1,
-                "radialOuter" : 0.1,
-                "radialInner" : 0.15,
-                "long1" : 0.1,
-                "long2" : 0.4,
-                "long3" : 0.6
+                "thickness" : 0.1,
+                "vertical" : 0.1,
+                "long1" : 0.05,
+                "long2" : 0.15,
+                "long3" : 0.25,
+                "long4" : 0.35
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
@@ -1070,17 +1248,17 @@
                 "B" : 12.0,
                 "R" : 8.0,
                 "C" : 7.0,
-                "lc" : 20.0,
-                "thickness" : 2.0
+                "lc" : 20.0
             },
+            "thickness" : 2.0,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.1,
-                "vertical" : 0.2,
-                "long1" : 0.1,
-                "long2" : 0.3,
-                "long3" : 0.5,
-                "long4" : 0.7
+                "thickness" : 0.05,
+                "vertical" : 0.1,
+                "long1" : 0.05,
+                "long2" : 0.15,
+                "long3" : 0.25,
+                "long4" : 0.35
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
