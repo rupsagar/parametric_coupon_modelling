@@ -157,7 +157,7 @@ class coupon_gui():
         templateLabel.place(x=0.02*self.windowGUIWidth, y=0.02*self.windowGUIHeight)
         templateOptions = list(self.couponDatabase.keys())
         templateDropDown = ttk.Combobox(windowGUI, values=templateOptions, state='readonly')
-        templateDropDown.place(x=0.25*self.windowGUIWidth, y=0.02*self.windowGUIHeight)
+        templateDropDown.place(x=0.25*self.windowGUIWidth, y=0.02*self.windowGUIHeight, width=0.3*self.windowGUIWidth)
         templateDropDown.bind('<<ComboboxSelected>>', templateSelection)
         windowGUI.mainloop()
 
