@@ -2,9 +2,9 @@ from abaqus import *
 from abaqusConstants import *
 from caeModules import *
 
-class static_coupon_1_1_7(coupon_generic):
+class static_coupon_1_1_7_symmetric(coupon_generic):
     def __init__(self, couponData):
-        super(static_coupon_1_1_7, self).__init__()
+        super(static_coupon_1_1_7_symmetric, self).__init__()
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
         self.couponData = couponData
         self.couponName = couponData['couponName']
@@ -84,12 +84,12 @@ class static_coupon_1_1_7(coupon_generic):
         self.profileSketch[0].ArcByCenterEnds(center=(self.xC1, self.yC1), point1=self.profileVertices1[2].coords, point2=(self.xC, self.yC), direction=COUNTERCLOCKWISE)
         self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[6], textPoint=(14, 10), radius=self.R)
         self.profileSketch[0].TangentConstraint(entity1=self.profileGeometry1[5], entity2=self.profileGeometry1[6], addUndoState=False)
-        # self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.D/2)
+        self.profileSketch[0].DistanceDimension(entity1=self.profileVertices1[3], entity2=self.profileGeometry1[2], textPoint=(13, 4), value=self.D/2)
         ## line CD
         self.profileSketch[0].Line(point1=self.profileVertices1[3].coords, point2=(self.xD, self.yD))
         self.profileSketch[0].HorizontalConstraint(entity=self.profileGeometry1[7], addUndoState=False)
         self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[1], vertex2=self.profileVertices1[5], textPoint=(13, 10), value=self.lt/2)
-        self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[3], vertex2=self.profileVertices1[5], textPoint=(13, -9), value=self.C)
+        # self.profileSketch[0].HorizontalDimension(vertex1=self.profileVertices1[3], vertex2=self.profileVertices1[5], textPoint=(13, -9), value=self.C)
         ## line DE
         self.profileSketch[0].Line(point1=self.profileVertices1[5].coords, point2=(self.xE, self.yE))
         self.profileSketch[0].VerticalConstraint(entity=self.profileGeometry1[8], addUndoState=False)
