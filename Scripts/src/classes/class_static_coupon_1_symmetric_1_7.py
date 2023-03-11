@@ -2,9 +2,9 @@ from abaqus import *
 from abaqusConstants import *
 from caeModules import *
 
-class static_coupon_1_1_7_symmetric(coupon_generic):
+class static_coupon_1_symmetric_1_7(coupon_generic):
     def __init__(self, couponData):
-        super(static_coupon_1_1_7_symmetric, self).__init__()
+        super(static_coupon_1_symmetric_1_7, self).__init__()
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
         self.couponData = couponData
         self.couponName = couponData['couponName']
