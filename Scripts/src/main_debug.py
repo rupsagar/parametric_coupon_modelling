@@ -4,8 +4,8 @@ srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',
         r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
         r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
 
-template = 'Fatigue_Coupon_66_69_A'
-coupon = 'Fatigue_Coupon_66A'
+# template = 'Fatigue_Coupon_66_69_A'
+# coupon = 'Fatigue_Coupon_66A'
 
 # template = 'Fatigue_Coupon_66_69_BJ'
 # coupon = 'Fatigue_Coupon_69E'
@@ -19,11 +19,17 @@ coupon = 'Fatigue_Coupon_66A'
 # template = 'Fatigue_Coupon_74_75'
 # coupon = 'Fatigue_Coupon_74'
 
-# template = 'Static_Coupon_1_1_7_Symmetric'
-# coupon = 'Static_Coupon_1_7'
+# template = 'Static_Coupon_1_Full_1_7'
+# coupon = 'Static_Coupon_1_Full_5'
 
-# template = 'Static_Coupon_2_1_6_Symmetric'
-# coupon = 'Static_Coupon_2_6'
+# template = 'Static_Coupon_1_Symmetric_1_7'
+# coupon = 'Static_Coupon_1_Symmetric_7'
+
+template = 'Static_Coupon_2_Full_1_6'
+coupon = 'Static_Coupon_2_Full_6'
+
+# template = 'Static_Coupon_2_Symmetric_1_6'
+# coupon = 'Static_Coupon_2_Symmetric_6'
 
 import os, sys
 
