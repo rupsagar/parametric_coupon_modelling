@@ -75,7 +75,7 @@ class coupon_generic(object):
                 edgeVertices = thisEdge.getVertices()
                 for thisVertexID in edgeVertices:
                     vertexCoord = part.vertices[thisVertexID].pointOn
-                    if abs(abs(vertexCoord[0][index])-distance) < self.lenTol:
+                    if abs(vertexCoord[0][index]-distance) < self.lenTol:
                         if edgeVertices.index(thisVertexID) == 0:
                             part.seedEdgeByBias(biasMethod=SINGLE, end1Edges=(thisEdge,), constraint=FINER, **kwargs)
                         elif edgeVertices.index(thisVertexID) == 1:
