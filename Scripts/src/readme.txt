@@ -7,6 +7,7 @@ d. Select 'Built-in/Custom' model
 e. Enter model parameters
 f. Select a location to save the model
 g. 'Create Model' to generate the model
+h. Upon successful run, 6 files (_Data.json, _Geom.txt, _Job.inp, _Model.cae, _Model.jnl, _Status.txt) are generated in destination folder. 
 
 
 
