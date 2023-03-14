@@ -250,15 +250,15 @@ class static_coupon_1_full_1_7(coupon_generic):
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
         self.couponData['step'].update({'endPressure':self.endStress})
         ## create pressure load on posX face
-        endCellFaceArr = self.part[0].faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
+        endCellFaceArr1 = self.part[0].faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
         surfNamePosX = 'Surf_PosX_Part_'+str(0+1)
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr, surfNamePosX)
-        region = self.instance[0].surfaces[surfNamePosX]
-        self.model.Pressure(name='Load_PosX_Instance_'+str(0+1), createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr1, surfNamePosX)
+        region1 = self.instance[0].surfaces[surfNamePosX]
+        self.model.Pressure(name='Load_PosX_Instance_'+str(0+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
         ## create pressure load on negX face
-        endCellFaceArr = self.part[0].faces.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yG+self.lenTol))
-        surfNamePosX = 'Surf_NegX_Part_'+str(0+1)
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr, surfNamePosX)
-        region = self.instance[0].surfaces[surfNamePosX]
-        self.model.Pressure(name='Load_NegX_Instance_'+str(0+1), createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+        endCellFaceArr2 = self.part[0].faces.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yG+self.lenTol))
+        surfNameNegX = 'Surf_NegX_Part_'+str(0+1)
+        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr2, surfNameNegX)
+        region2 = self.instance[0].surfaces[surfNameNegX]
+        self.model.Pressure(name='Load_NegX_Instance_'+str(0+1), createStepName='Load', region=region2, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
 
