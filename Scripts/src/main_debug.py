@@ -25,11 +25,14 @@ srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',
 # template = 'Static_Coupon_1_Symmetric_1_7'
 # coupon = 'Static_Coupon_1_Symmetric_7'
 
-template = 'Static_Coupon_2_Full_1_6'
-coupon = 'Static_Coupon_2_Full_6'
+# template = 'Static_Coupon_2_Full_1_6'
+# coupon = 'Static_Coupon_2_Full_4'
 
 # template = 'Static_Coupon_2_Symmetric_1_6'
 # coupon = 'Static_Coupon_2_Symmetric_6'
+
+template = 'Static_Coupon_Bearing_18_21'
+coupon = 'Static_Coupon_Bearing_18'
 
 import os, sys
 
