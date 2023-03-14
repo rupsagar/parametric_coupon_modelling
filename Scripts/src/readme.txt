@@ -17,3 +17,4 @@ b. Add the path of the 'src' folder to 'srcPath'
 	(New paths can be appended to the existing list separated by comma; the current folder path is added; my guess is it should work correctly)
 c. Uncomment the desired the template and coupon and comment out the remaining ones
 d. Copy the script and paste in Abaqus CLI (command line interface) to generate the model. Or run the script from File -> Run Script option
+
