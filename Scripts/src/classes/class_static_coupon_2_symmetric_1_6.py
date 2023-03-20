@@ -207,3 +207,4 @@ class static_coupon_2_symmetric_1_6(coupon_generic):
                 region = self.instance[i].surfaces[surfNamePosX]
                 self.model.Pressure(name='Load_PosX_Instance_'+str(i+1), createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
                 
+                
