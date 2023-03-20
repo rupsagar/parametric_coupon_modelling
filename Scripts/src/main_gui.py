@@ -1,12 +1,11 @@
 ## user may need to modify this path depending on local machine or OS
 abqPath = [r'C:/SIMULIA/Commands']
 
-import os, imp
+import os, sys
 
 srcPath = os.getcwd()
 
 ## create gui window
-guiModule = imp.load_source('class_coupon_gui', srcPath+'/classes/class_coupon_gui.py')
-guiClass = getattr(guiModule, 'coupon_gui')
+exec(open(srcPath+'/classes/class_coupon_gui.py').read())
+guiClass = getattr(sys.modules[__name__], 'coupon_gui')
 newGUI = guiClass(abqPath, srcPath)
-
