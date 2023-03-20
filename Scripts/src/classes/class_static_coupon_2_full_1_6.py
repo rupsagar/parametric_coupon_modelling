@@ -163,7 +163,10 @@ class static_coupon_2_full_1_6(coupon_generic):
                          ['L', self.xl, self.yl, self.xL, self.yL],
                          ['Center1', self.xc1, self.yc1, self.xC1, self.yC1],
                          ['Center2', self.xc2, self.yc2, self.xC2, self.yC2],
-                         ['lt', '', self.lt, '', (self.xE-self.xF)],
+                         ['Center3', self.xc3, self.yc3, self.xC3, self.yC3],
+                         ['Center4', self.xc4, self.yc4, self.xC4, self.yC4],
+                         ['lt1', '', self.lt, '', (self.xD-self.xK)],
+                         ['lt2', '', self.lt, '', (self.xE-self.xJ)],
                          ['b1', '', self.b, '', (self.yA-self.yH)],
                          ['b2', '', self.b, '', (self.yB-self.yG)],
                          ['B1', '', self.B, '', (self.yD-self.yE)],
@@ -257,16 +260,24 @@ class static_coupon_2_full_1_6(coupon_generic):
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
         self.couponData['step'].update({'endPressure':self.endStress})
-        ## create pressure load on posX face
-        endCellFaceArr1 = self.part[0].faces.getByBoundingBox(xMin=self.xE-self.lenTol, yMin=self.yE-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
-        surfNamePosX = 'Surf_PosX_Part_'+str(0+1)
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr1, surfNamePosX)
-        region1 = self.instance[0].surfaces[surfNamePosX]
-        self.model.Pressure(name='Load_PosX_Instance_'+str(0+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
-        ## create pressure load on negX face
-        endCellFaceArr2 = self.part[0].faces.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=self.yJ-self.lenTol, zMin=-self.lenTol, xMax=self.xK+self.lenTol, yMax=self.yK+self.lenTol, zMax=self.thickness+self.lenTol)
-        surfNameNegX = 'Surf_NegX_Part_'+str(0+1)
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr2, surfNameNegX)
-        region2 = self.instance[0].surfaces[surfNameNegX]
-        self.model.Pressure(name='Load_NegX_Instance_'+str(0+1), createStepName='Load', region=region2, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
-
+        for i in range(len(self.part)):
+            if i==1:
+                ## create BC at negX face
+                nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=self.yJ-self.lenTol, zMin=-self.lenTol, xMax=self.xK+self.lenTol, yMax=self.yK+self.lenTol, zMax=self.thickness+self.lenTol)
+                nsetNameNegX = 'Nset_NegX_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
+                region = self.instance[i].sets[nsetNameNegX]
+                self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create BC at negX face at Y=0, Z=0
+                nodesNegXYZ = self.part[i].nodes.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=-self.lenTol, zMin=self.thickness/2.0-self.lenTol, xMax=self.xJ+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2.0+self.lenTol)
+                nsetNameNegXYZ = 'Nset_NegXYZ_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegXYZ , name=nsetNameNegXYZ)
+                region = self.instance[i].sets[nsetNameNegXYZ]
+                self.model.DisplacementBC(name='BC_NegXYZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create pressure load on posX face
+                endCellFaceArr1 = self.part[i].faces.getByBoundingBox(xMin=self.xE-self.lenTol, yMin=self.yE-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+                surfNamePosX = 'Surf_PosX_Part_'+str(i+1)
+                self.getElemSurfFromCellFace(self.part[i], endCellFaceArr1, surfNamePosX)
+                region1 = self.instance[i].surfaces[surfNamePosX]
+                self.model.Pressure(name='Load_PosX_Instance_'+str(i+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+        
