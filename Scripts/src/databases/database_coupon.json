@@ -482,9 +482,9 @@
                 "h1" : 5.0,
                 "h2" : 12.0,
                 "rad1" : 50.0,
-                "len1" : 65.0,
-                "thickness" : 2.0
+                "len1" : 65.0
             },
+            "thickness" : 2.0,
             "givenKt" : 1.032,
             "lenTol" : 1.0e-5,
             "elemSize" : {
@@ -516,9 +516,9 @@
                 "h1" : 7.0,
                 "h2" : 17.0,
                 "rad1" : 62.5,
-                "len1" : 90.0,
-                "thickness" : 2.5
+                "len1" : 90.0
             },
+            "thickness" : 2.5,
             "givenKt" : 1.036,
             "lenTol" : 1.0e-5,
             "elemSize" : {
@@ -550,9 +550,9 @@
                 "h1" : 10.0,
                 "h2" : 24.0,
                 "rad1" : 100.0,
-                "len1" : 130.0,
-                "thickness" : 4.0
+                "len1" : 130.0
             },
+            "thickness" : 4.0,
             "givenKt" : 1.032,
             "lenTol" : 1.0e-5,
             "elemSize" : {
@@ -584,9 +584,9 @@
                 "h1" : 15.0,
                 "h2" : 36.0,
                 "rad1" : 135.0,
-                "len1" : 195.0,
-                "thickness" : 6.0
+                "len1" : 195.0
             },
+            "thickness" : 6.0,
             "givenKt" : 1.036,
             "lenTol" : 1.0e-5,
             "elemSize" : {
@@ -624,9 +624,9 @@
                 "rad2" : 8.0,
                 "len1" : 65.0,
                 "len2" : 15.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 2.0
+                "thetaDeg" : 60.0
             },
+            "thickness" : 2.0,
             "givenKt" : 2.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -669,9 +669,9 @@
                 "rad2" : 8.0,
                 "len1" : 65.0,
                 "len2" : 15.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 2.0
+                "thetaDeg" : 60.0
             },
+            "thickness" : 2.0,
             "givenKt" : 3.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -714,9 +714,9 @@
                 "rad2" : 12.0,
                 "len1" : 90.0,
                 "len2" : 21.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 2.5
+                "thetaDeg" : 60.0
             },
+            "thickness" : 2.5,
             "givenKt" : 2.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -759,9 +759,9 @@
                 "rad2" : 12.0,
                 "len1" : 90.0,
                 "len2" : 21.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 2.5
+                "thetaDeg" : 60.0
             },
+            "thickness" : 2.5,
             "givenKt" : 3.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -804,9 +804,9 @@
                 "rad2" : 16.0,
                 "len1" : 130.0,
                 "len2" : 30.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 4.0
+                "thetaDeg" : 60.0
             },
+            "thickness" : 4.0,
             "givenKt" : 2.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -849,9 +849,9 @@
                 "rad2" : 16.0,
                 "len1" : 130.0,
                 "len2" : 30.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 4.0
+                "thetaDeg" : 60.0
             },
+            "thickness" : 4.0,
             "givenKt" : 3.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -894,9 +894,9 @@
                 "rad2" : 25.0,
                 "len1" : 195.0,
                 "len2" : 45.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 6.0
+                "thetaDeg" : 60.0
             },
+            "thickness" : 6.0,
             "givenKt" : 2.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -939,9 +939,9 @@
                 "rad2" : 25.0,
                 "len1" : 195.0,
                 "len2" : 45.0,
-                "thetaDeg" : 60.0,
-                "thickness" : 6.0
+                "thetaDeg" : 60.0
             },
+            "thickness" : 6.0,
             "givenKt" : 3.0,
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
@@ -981,11 +981,11 @@
             "geometry" : {
                 "len" : 150.0,
                 "width" : 30.0,
-                "thickness" : 3.0,
                 "phi" : 10.0,
                 "chamferEdgeLength" : 0.3,
                 "chamferAngle" : 45.0
             },
+            "thickness" : 3.0,
             "isChamfer" : "true",
             "givenKt" : 2.3,
             "lenTol" : 1.0e-5,
@@ -1021,11 +1021,11 @@
             "geometry" : {
                 "len" : 100.0,
                 "width" : 20.0,
-                "thickness" : 3.0,
                 "phi" : 6.35,
                 "chamferEdgeLength" : 0.3,
                 "chamferAngle" : 45.0
             },
+            "thickness" : 3.0,
             "isChamfer" : "true",
             "givenKt" : 2.3,
             "lenTol" : 1.0e-5,
@@ -1497,37 +1497,51 @@
             "version" : ""
         }
     },
-    "Static_Coupon_Bearing_18_21" : {
-        "Static_Coupon_Bearing_18" : {
-            "couponName" : "Static_Coupon_Bearing_18",
+    "Static_Coupon_18_21" : {
+        "Static_Coupon_18" : {
+            "couponName" : "Static_Coupon_18",
             "geometry" : {
                 "len1" : 144.0,
                 "len2" : 122.0,
                 "width" : 30.0,
                 "phi1" : 4.0,
                 "E" : 6.0,
-                "phi2" : 12.0
+                "phi2" : 12.0,
+                "pinExtension" : 5.0
             },
             "thickness" : 2.0,
             "lenTol" : 1.0e-5,
             "elemSize" : {
                 "arc" : 0.15,
                 "long1" : 0.2,
-                "long2" : 0.5,
+                "long2" : 0.7,
+                "long3" : 0.9,
                 "radialInner" : 0.2,
                 "radialOuter" : 0.2,
-                "thickness" : 0.2,
+                "thickness1" : 0.2,
+                "thickness2" : 0.3,
                 "vertical1" : 0.2,
-                "vertical2" : 0.5
+                "vertical2" : 0.5,
+                "vertical3" : 0.7,
+                "pinDia" : 0.2,
+                "pinLength" : 0.3
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS"
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS",
+                "hexPart3" : "C3D8HS"
             },
-            "material" : {
+            "materialPlate" : {
                 "name" : "Aluminum",
                 "density" : 2.85e-6,
                 "youngsModulus" : 72000.0,
                 "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
             },
             "step" : {
                 "nlGeom" : "OFF",
