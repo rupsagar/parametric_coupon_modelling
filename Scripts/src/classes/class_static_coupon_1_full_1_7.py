@@ -249,16 +249,24 @@ class static_coupon_1_full_1_7(coupon_generic):
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
         self.couponData['step'].update({'endPressure':self.endStress})
-        ## create pressure load on posX face
-        endCellFaceArr1 = self.part[0].faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
-        surfNamePosX = 'Surf_PosX_Part_'+str(0+1)
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr1, surfNamePosX)
-        region1 = self.instance[0].surfaces[surfNamePosX]
-        self.model.Pressure(name='Load_PosX_Instance_'+str(0+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
-        ## create pressure load on negX face
-        endCellFaceArr2 = self.part[0].faces.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yG+self.lenTol))
-        surfNameNegX = 'Surf_NegX_Part_'+str(0+1)
-        self.getElemSurfFromCellFace(self.part[0], endCellFaceArr2, surfNameNegX)
-        region2 = self.instance[0].surfaces[surfNameNegX]
-        self.model.Pressure(name='Load_NegX_Instance_'+str(0+1), createStepName='Load', region=region2, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
-
+        for i in range(len(self.part)):
+            if i==1:
+                ## create BC at negX face of Part 1
+                nodesNegX = self.part[i].nodes.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yG+self.lenTol))
+                nsetNameNegX = 'Nset_NegX_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
+                region = self.instance[i].sets[nsetNameNegX]
+                self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create BC at negX face of Part 1 at Y=0, Z=0
+                nodesNegXYZ = self.part[i].nodes.getByBoundingCylinder((self.xF-self.lenTol, 0, 0), (self.xF+self.lenTol, 0, 0), self.lenTol)
+                nsetNameNegXYZ = 'Nset_NegXYZ_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegXYZ , name=nsetNameNegXYZ)
+                region = self.instance[i].sets[nsetNameNegXYZ]
+                self.model.DisplacementBC(name='BC_NegXYZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create pressure load on posX face
+                endCellFaceArr1 = self.part[i].faces.getByBoundingCylinder((self.xD-self.lenTol, 0, 0), (self.xD+self.lenTol, 0, 0), (self.yD+self.lenTol))
+                surfNamePosX = 'Surf_PosX_Part_'+str(i+1)
+                self.getElemSurfFromCellFace(self.part[i], endCellFaceArr1, surfNamePosX)
+                region1 = self.instance[i].surfaces[surfNamePosX]
+                self.model.Pressure(name='Load_PosX_Instance_'+str(i+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
+        
