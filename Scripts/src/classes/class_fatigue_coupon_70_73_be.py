@@ -17,7 +17,7 @@ class fatigue_coupon_70_73_be(coupon_generic):
         self.len1 = couponData['geometry']['len1']
         self.len2 = couponData['geometry']['len2']
         self.thetaDeg = couponData['geometry']['thetaDeg']
-        self.thickness = couponData['geometry']['thickness']
+        self.thickness = couponData['thickness']
         self.givenKt = couponData['givenKt']
         self.lenTol = couponData['lenTol']
         self.partitionVerticalFraction = couponData['partitionVerticalFraction']
