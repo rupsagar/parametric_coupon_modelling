@@ -57,6 +57,7 @@ class static_coupon_18_21(coupon_generic):
         self.createMesh()
         self.createMaterial()
         self.createSection()
+        self.createEquation()
         self.createTie()
         self.createContact()
         self.createStep()
@@ -290,6 +291,15 @@ class static_coupon_18_21(coupon_generic):
             else:
                 pickedRegion = self.part[i].Set(elements=self.part[i].elements, name='Elset_All_Part_'+str(i+1))
                 self.part[i].SectionAssignment(region=pickedRegion, sectionName=self.sectionPlate.name, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+    def createEquation(self):
+        i=2
+        nodesEqnPosY = self.part[i].nodes.getByBoundingSphere((self.xC1, self.phi1/2, 0), self.lenTol)
+        nsetNameEqnPosY = 'Nset_Eqn_PosY_Part_'+str(i+1)
+        self.part[i].Set(nodes=nodesEqnPosY, name=nsetNameEqnPosY)
+        nodesEqnNegY = self.part[i].nodes.getByBoundingSphere((self.xC1, -self.phi1/2, 0), self.lenTol)
+        nsetNameEqnNegY = 'Nset_Eqn_NegY_Part_'+str(i+1)
+        self.part[i].Set(nodes=nodesEqnNegY, name=nsetNameEqnNegY)
+        self.model.Equation(name=self.couponName+'_Equation', terms=((1.0, self.instance[i].name+'.'+nsetNameEqnPosY, 1), (-1.0, self.instance[i].name+'.'+nsetNameEqnNegY, 1)))
     def createTie(self):
         region = (len(self.part)-1)*[None]
         for i in range(len(region)):
