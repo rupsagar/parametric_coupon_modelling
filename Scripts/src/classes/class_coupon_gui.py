@@ -130,14 +130,14 @@ class coupon_gui():
             self.labelBuiltIn = ttk.Label(self.typeFrame, text='Select built-in coupon')
             self.labelBuiltIn.place(x=0.02*self.typeFrameWidth, y=0.05*self.typeFrameHeight)
             self.couponDropDown = ttk.Combobox(self.typeFrame, values=self.couponOptions, state='readonly')
-            self.couponDropDown.place(x=0.25*self.typeFrameWidth, y=0.05*self.typeFrameHeight)
+            self.couponDropDown.place(x=0.2*self.typeFrameWidth, y=0.05*self.typeFrameHeight, width=0.25*self.typeFrameWidth)
             self.couponDropDown.bind('<<ComboboxSelected>>', selectCoupon)
             self.couponDropDown.set(self.couponOptions[self.currentCouponID])
             selectCoupon(self.couponOptions[self.currentCouponID])
             self.labelCustom = ttk.Label(self.typeFrame, text='Enter coupon name')
             self.labelCustom.place(x=0.5*self.typeFrameWidth, y=0.05*self.typeFrameHeight)
             self.couponNameEntry = ttk.Entry(self.typeFrame)
-            self.couponNameEntry.place(x=0.75*self.typeFrameWidth, y=0.05*self.typeFrameHeight)     
+            self.couponNameEntry.place(x=0.7*self.typeFrameWidth, y=0.05*self.typeFrameHeight, width=0.25*self.typeFrameWidth)     
             if self.radioVar.get()==1:
                 self.couponNameEntry.config(state='readonly')
         def templateSelection(event):
