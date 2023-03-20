@@ -25,6 +25,10 @@ class coupon_generic(object):
             scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, numDomains=2, numGPUs=1)
         self.job.writeInput(consistencyChecking=OFF)
         ## create cae file
+        try:
+            del mdb.models['Model-1']
+        except:
+            pass
         mdb.saveAs(pathName=self.model.name+self.version)
         ## create json data of the model
         couponString = json.dumps(self.couponData, indent=4, sort_keys=True)
