@@ -1,3 +1,19 @@
+#################################################################################################################
+###################                 ABAQUS PARAMETRIC COUPON MODEL                     ##########################
+#################################################################################################################
+###################    CLASS DEFINITION : STATIC COUPON : BEARING SPECIMEN 18 TO 21    ##########################
+#################################################################################################################
+## +------------------------------------------------------------------------------------------------------------+
+## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
+## +------------------------------------------------------------------------------------------------------------+
+## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |               BC added to the pin               |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## +------------------------------------------------------------------------------------------------------------+
+#################################################################################################################
+
+
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *
@@ -335,20 +351,32 @@ class static_coupon_18_21(coupon_generic):
             if i==1:
                 ## create BC at posX face
                 nodesPosX = self.part[i].nodes.getByBoundingBox(xMin=self.xF-self.lenTol, yMin=self.yF-self.lenTol, zMin=-self.lenTol, xMax=self.xE+self.lenTol, yMax=self.yE+self.lenTol, zMax=self.thickness+self.lenTol)
-                nsetNamePosX = 'Nset_PosX_Part_'+str(i+1)
+                nsetNamePosX = 'Nset_BC_PosX_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesPosX, name=nsetNamePosX)
                 region = self.instance[i].sets[nsetNamePosX]
                 self.model.DisplacementBC(name='BC_PosX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==2:
+                ## create BC at negZ face of Part 3
+                nodesNegZ = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, 0), (self.xC1, 0, self.lenTol), (self.phi1+self.lenTol))
+                nsetNameNegZ = 'Nset_BC_NegZ_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegZ , name=nsetNameNegZ)
+                region = self.instance[i].sets[nsetNameNegZ]
+                self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create BC at posZ face of Part 3
+                nodesPosZ = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, self.thickness+2*self.pinExtension), (self.xC1, 0, self.thickness+2*self.pinExtension+self.lenTol), (self.phi1+self.lenTol))
+                nsetNamePosZ = 'Nset_BC_PosZ_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesPosZ , name=nsetNamePosZ)
+                region = self.instance[i].sets[nsetNamePosZ]
+                self.model.DisplacementBC(name='BC_PosZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create pressure load on pin NegZ portion
                 endCellFaceArr1 = self.part[i].faces.findAt(coordinates=((self.xC1+self.phi1/2, 0, self.lenTol), ))
-                surfNameNegZ = 'Surf_NegZ_Part_'+str(i+1)
+                surfNameNegZ = 'Surf_Load_NegZ_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], endCellFaceArr1, surfNameNegZ)
                 region1 = self.instance[i].surfaces[surfNameNegZ]
                 self.model.Pressure(name='Load_NegZ_Instance_'+str(i+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.pinPressure, amplitude=UNSET)
                 ## create pressure load on pin NegZ portion
                 endCellFaceArr2 = self.part[i].faces.findAt(coordinates=((self.xC1+self.phi1/2, 0, self.pinExtension+self.thickness+self.lenTol), ))
-                surfNamePosZ = 'Surf_PosZ_Part_'+str(i+1)
+                surfNamePosZ = 'Surf_Load_PosZ_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], endCellFaceArr2, surfNamePosZ)
                 region2 = self.instance[i].surfaces[surfNamePosZ]
                 self.model.Pressure(name='Load_PosZ_Instance_'+str(i+1), createStepName='Load', region=region2, distributionType=UNIFORM, field='', magnitude=self.pinPressure, amplitude=UNSET)
