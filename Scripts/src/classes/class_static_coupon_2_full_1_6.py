@@ -1,3 +1,19 @@
+#################################################################################################################
+###################                 ABAQUS PARAMETRIC COUPON MODEL                     ##########################
+#################################################################################################################
+#######################    CLASS DEFINITION : STATIC COUPON : SPECIMEN 2 : FULL MODEL   #########################
+#################################################################################################################
+## +------------------------------------------------------------------------------------------------------------+
+## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
+## +------------------------------------------------------------------------------------------------------------+
+## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## +------------------------------------------------------------------------------------------------------------+
+#################################################################################################################
+
+
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *
@@ -264,19 +280,19 @@ class static_coupon_2_full_1_6(coupon_generic):
             if i==1:
                 ## create BC at negX face
                 nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=self.yJ-self.lenTol, zMin=-self.lenTol, xMax=self.xK+self.lenTol, yMax=self.yK+self.lenTol, zMax=self.thickness+self.lenTol)
-                nsetNameNegX = 'Nset_NegX_Part_'+str(i+1)
+                nsetNameNegX = 'Nset_BC_NegX_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
                 region = self.instance[i].sets[nsetNameNegX]
                 self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create BC at negX face at Y=0, Z=0
                 nodesNegXYZ = self.part[i].nodes.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=-self.lenTol, zMin=self.thickness/2.0-self.lenTol, xMax=self.xJ+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2.0+self.lenTol)
-                nsetNameNegXYZ = 'Nset_NegXYZ_Part_'+str(i+1)
+                nsetNameNegXYZ = 'Nset_BC_NegXYZ_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesNegXYZ , name=nsetNameNegXYZ)
                 region = self.instance[i].sets[nsetNameNegXYZ]
                 self.model.DisplacementBC(name='BC_NegXYZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create pressure load on posX face
                 endCellFaceArr1 = self.part[i].faces.getByBoundingBox(xMin=self.xE-self.lenTol, yMin=self.yE-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
-                surfNamePosX = 'Surf_PosX_Part_'+str(i+1)
+                surfNamePosX = 'Surf_Load_PosX_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], endCellFaceArr1, surfNamePosX)
                 region1 = self.instance[i].surfaces[surfNamePosX]
                 self.model.Pressure(name='Load_PosX_Instance_'+str(i+1), createStepName='Load', region=region1, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
