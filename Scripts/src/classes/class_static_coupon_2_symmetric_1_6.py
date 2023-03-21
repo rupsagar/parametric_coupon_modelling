@@ -1,3 +1,19 @@
+#################################################################################################################
+###################                 ABAQUS PARAMETRIC COUPON MODEL                     ##########################
+#################################################################################################################
+#####################    CLASS DEFINITION : STATIC COUPON : SPECIMEN 2 SYMMETRIC   ##############################
+#################################################################################################################
+## +------------------------------------------------------------------------------------------------------------+
+## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
+## +------------------------------------------------------------------------------------------------------------+
+## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |               Model seems okay                  |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## +------------------------------------------------------------------------------------------------------------+
+#################################################################################################################
+
+
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *
@@ -182,27 +198,27 @@ class static_coupon_2_symmetric_1_6(coupon_generic):
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
-            nsetNameNegY = 'Nset_NegY_Part_'+str(i+1)
+            nsetNameNegY = 'Nset_BC_NegY_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
             region = self.instance[i].sets[nsetNameNegY]
             self.model.DisplacementBC(name='BC_NegY_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             ## create BC at negZ face
             nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.lenTol)
-            nsetNamePosZ = 'Nset_NegZ_Part_'+str(i+1)
+            nsetNamePosZ = 'Nset_BC_NegZ_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
             region = self.instance[i].sets[nsetNamePosZ]
             self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==0:
                 ## create BC at negX face
                 nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xA+self.lenTol, yMax=self.yA+self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
-                nsetNameNegX = 'Nset_NegX_Part_'+str(i+1)
+                nsetNameNegX = 'Nset_BC_NegX_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
                 region = self.instance[i].sets[nsetNameNegX]
                 self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==(len(self.part)-1):
                 ## create pressure load on posX face
                 endCellFaceArr = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
-                surfNamePosX = 'Surf_PosX_Part_'+str(i+1)
+                surfNamePosX = 'Surf_Load_PosX_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], endCellFaceArr, surfNamePosX)
                 region = self.instance[i].surfaces[surfNamePosX]
                 self.model.Pressure(name='Load_PosX_Instance_'+str(i+1), createStepName='Load', region=region, distributionType=UNIFORM, field='', magnitude=self.endStress, amplitude=UNSET)
