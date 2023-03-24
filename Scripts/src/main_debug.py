@@ -1,5 +1,22 @@
-## Modify the template and coupon lines for debugging purpose and copy+paste or run the script in Abaqus CLI
-## The srcPath list contains possible paths for src folder which may need to be updated based on where the script is located
+#################################################################################################################
+###################                 ABAQUS PARAMETRIC COUPON MODEL                     ##########################
+#################################################################################################################
+#####################################    DRIVER SCRIPT : FOR DEBUGGING    #######################################
+#################################################################################################################
+## +------------------------------------------------------------------------------------------------------------+
+## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
+## +------------------------------------------------------------------------------------------------------------+
+## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## +------------------------------------------------------------------------------------------------------------+
+#################################################################################################################
+## MODIFY THE TEMPLATE AND COUPON LINES FOR DEBUGGING PURPOSE AND COPY+PASTE OR RUN THE SCRIPT IN ABAQUS CLI
+## USER MAY NEED TO UPDATE srcPath LIST TO INCLUDE THE SRC FOLDER WHERE THE SCRIPT IS LOCATED
+#################################################################################################################
+
+
 srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src', 
         r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
         r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
