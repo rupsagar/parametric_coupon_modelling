@@ -1,3 +1,19 @@
+#################################################################################################################
+######################                 ABAQUS PARAMETRIC COUPON MODEL                     #######################
+#################################################################################################################
+############################    CLASS DEFINITION : GRAPHICAL USER INTERFACE   ###################################
+#################################################################################################################
+## +------------------------------------------------------------------------------------------------------------+
+## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
+## +------------------------------------------------------------------------------------------------------------+
+## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## |                                |           |             |                                                 |
+## +------------------------------------------------------------------------------------------------------------+
+#################################################################################################################
+
+
 import os, sys, shutil, json, ast, math
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -17,7 +33,7 @@ class coupon_gui():
         self.createGUI()
     def createGUI(self):
         windowGUI = tk.Tk()
-        windowGUI.title('Coupon Modelling')
+        windowGUI.title('Parametric Coupon Modelling')
         self.dispWidth, self.dispHeight = int(windowGUI.winfo_screenwidth()), int(windowGUI.winfo_screenheight())
         self.windowGUIWidth, self.windowGUIHeight = 0.5*self.dispWidth, 0.8*self.dispHeight
         windowGUI.geometry('%dx%d' % (self.windowGUIWidth, self.windowGUIHeight))
