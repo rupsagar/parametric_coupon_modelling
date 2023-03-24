@@ -16,7 +16,7 @@ d. Select 'Built-in/Custom' model.
 e. Enter model parameters.
 f. Select a location to save the model.
 g. Click 'Create Model' to generate the model.
-h. Upon successful run, 6 files (_Data.json, _Geom.txt, _Job.inp, _Model.cae, _Model.jnl, _Status.txt) are generated in destination folder. 
+h. Upon successful run, 6 files (_Data.json, _Geom.txt, _Job.inp, _Model.cae, _Model.jnl, _Status.txt) are generated in the destination folder.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -27,5 +27,6 @@ b. Add the path of the 'src' folder to variable 'srcPath' if the script is run f
    New paths can be appended to the existing list by separating with commas. The path of the current folder is already added.
 c. Uncomment the desired the template and coupon and comment out the remaining ones.
 d. Copy the script and paste in Abaqus CLI to generate the model. Alternatively, run the script from Abaqus menu option: File -> Run Script.
+e. Upon successful run, 6 files (_Data.json, _Geom.txt, _Job.inp, _Model.cae, _Model.jnl, _Status.txt) are generated in the current working directory.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
