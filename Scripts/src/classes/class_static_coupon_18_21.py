@@ -345,7 +345,7 @@ class static_coupon_18_21(coupon_generic):
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
+        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF', 'CDISP', 'CSTRESS'))
         self.couponData['step'].update({'pinPressure':self.pinPressure})
         for i in range(len(self.part)):
             if i==1:
