@@ -362,12 +362,24 @@ class static_coupon_18_21(coupon_generic):
                 self.part[i].Set(nodes=nodesNegZ , name=nsetNameNegZ)
                 region = self.instance[i].sets[nsetNameNegZ]
                 self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create BC at negZ face of Part 3 for Y
+                nodesNegZ_Y = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, 0), (self.xC1, 0, self.lenTol), self.lenTol)
+                nsetNameNegZ_Y = 'Nset_BC_NegZ_Y_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegZ_Y , name=nsetNameNegZ_Y)
+                region = self.instance[i].sets[nsetNameNegZ_Y]
+                self.model.DisplacementBC(name='BC_NegZ_Y_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create BC at posZ face of Part 3
                 nodesPosZ = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, self.thickness+2*self.pinExtension), (self.xC1, 0, self.thickness+2*self.pinExtension+self.lenTol), (self.phi1+self.lenTol))
                 nsetNamePosZ = 'Nset_BC_PosZ_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesPosZ , name=nsetNamePosZ)
                 region = self.instance[i].sets[nsetNamePosZ]
                 self.model.DisplacementBC(name='BC_PosZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
+                ## create BC at posZ face of Part 3 for Y
+                nodesPosZ_Y = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, self.thickness+2*self.pinExtension), (self.xC1, 0, self.thickness+2*self.pinExtension+self.lenTol), self.lenTol)
+                nsetNamePosZ_Y = 'Nset_BC_PosZ_Y_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesPosZ_Y , name=nsetNamePosZ_Y)
+                region = self.instance[i].sets[nsetNamePosZ_Y]
+                self.model.DisplacementBC(name='BC_PosZ_Y_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create pressure load on pin NegZ portion
                 endCellFaceArr1 = self.part[i].faces.findAt(coordinates=((self.xC1+self.phi1/2, 0, self.lenTol), ))
                 surfNameNegZ = 'Surf_Load_NegZ_Part_'+str(i+1)
