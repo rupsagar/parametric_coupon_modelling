@@ -266,7 +266,7 @@ class static_coupon_1_full_1_7(coupon_generic):
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
         self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
-            if i==1:
+            if i==0:
                 ## create BC at negX face of Part 1
                 nodesNegX = self.part[i].nodes.getByBoundingCylinder((self.xG-self.lenTol, 0, 0), (self.xG+self.lenTol, 0, 0), (self.yG+self.lenTol))
                 nsetNameNegX = 'Nset_BC_NegX_Part_'+str(i+1)
