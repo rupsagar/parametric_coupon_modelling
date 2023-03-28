@@ -305,6 +305,10 @@ class fatigue_coupon_66_69_bj(coupon_generic):
         edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.yOffset+self.lenTol))
         edgesOuterArc = self.getArcEdge(edgesOuterCyl)
         self.part[0].seedEdgeBySize(edges=edgesOuterArc, size=self.seedSizeArcOuter, deviationFactor=0.1, constraint=FINER)
+        ## seed ==>> outer arc edge BB'
+        elemNum = self.part[0].getEdgeSeeds(edgesOuterArc[0], attribute=NUMBER)
+        edgesOuterArc2 = self.part[0].edges.findAt(coordinates=((self.xB, self.yB*math.cos(math.pi/4.0), -self.yB*math.sin(math.pi/4.0)), ))
+        self.part[0].seedEdgeByNumber(edges=edgesOuterArc2, number=elemNum, constraint=FINER)
         ## seed radial edges
         seedRadial((self.yA+self.lenTol), (self.yA-self.yOffset+self.lenTol), self.seedRadialOuter, constraint=FIXED) ## outer radial edge
         seedRadial((self.yA-self.lenTol), (self.partitionRadius+self.lenTol), self.seedRadialMiddle, constraint=FIXED) ## mid radial edge
