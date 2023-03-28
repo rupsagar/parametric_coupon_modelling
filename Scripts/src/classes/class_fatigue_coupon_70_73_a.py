@@ -184,10 +184,10 @@ class fatigue_coupon_70_73_a(coupon_generic):
             region = self.instance[i].sets[nsetNameNegY]
             self.model.DisplacementBC(name='BC_NegY_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             ## create BC at negZ face
-            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.yC+self.lenTol, zMax=self.lenTol)
-            nsetNamePosZ = 'Nset_BC_NegZ_Part_'+str(i+1)
-            self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
-            region = self.instance[i].sets[nsetNamePosZ]
+            nodesNegZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.yC+self.lenTol, zMax=self.lenTol)
+            nsetNameNegZ = 'Nset_BC_NegZ_Part_'+str(i+1)
+            self.part[i].Set(nodes=nodesNegZ, name=nsetNameNegZ)
+            region = self.instance[i].sets[nsetNameNegZ]
             self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==0:
                 ## create BC at negX face
