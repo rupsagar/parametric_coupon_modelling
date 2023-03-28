@@ -54,7 +54,6 @@ class fatigue_coupon_74_75(coupon_generic):
         self.version = couponData['version']
         ## derived quantities
         self.thetaRad = math.pi/180*self.chamferAngle
-        self.endStress = -self.nominalStress*(self.width-self.phi)/self.width
         self.tieDistance = 2.0*self.phi
         if (self.tieDistance-self.width/2)<=self.lenTol:
             self.tieDistance = self.tieDistance+self.width/2
@@ -64,6 +63,10 @@ class fatigue_coupon_74_75(coupon_generic):
             self.provideChamfer = True
         elif self.isChamfer.lower() in ['0.0', 'false', 'no', 'off', '']:
             self.provideChamfer = False
+        if self.provideChamfer==True:
+            self.endStress = -self.nominalStress*((self.width-self.phi)/2*self.thickness/2-0.5*self.chamferEdgeLength**2*math.tan(self.thetaRad))/(self.width/2*self.thickness/2)
+        elif self.provideChamfer==False:
+            self.endStress = -self.nominalStress*(self.width-self.phi)/self.width
         ## create coupon
         self.createModel()
         self.createProfileSketch()
