@@ -224,8 +224,11 @@ class static_coupon_2_full_1_6(coupon_generic):
         self.part[0].PartitionCellByDatumPlane(datumPlane=self.part[0].datums[self.datumPlaneXZ_ID], cells=self.part[0].cells)
     def createMesh(self):
         ## seed ==>> thickness direction
+        numThicknessElem = self.thickness/self.seedSizeThickness
+        if (numThicknessElem%2)!=0:
+            numThicknessElem = ceil(numThicknessElem)
         edgesThickness = self.part[0].edges.findAt(coordinates=((0, 0, self.lenTol), ))
-        self.part[0].seedEdgeBySize(edges=edgesThickness, size=self.seedSizeThickness, deviationFactor=0.1, constraint=FINER)
+        self.part[0].seedEdgeByNumber(edges=edgesThickness, number=int(numThicknessElem), constraint=FIXED)
         ## seed ==>> vertical direction
         edgesVertical1 = self.part[0].edges.findAt(coordinates=((0, self.lenTol, 0), ))
         self.part[0].seedEdgeBySize(edges=edgesVertical1, size=self.seedSizeVertical, deviationFactor=0.1, constraint=FINER)
@@ -277,7 +280,7 @@ class static_coupon_2_full_1_6(coupon_generic):
         self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
         self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
-            if i==1:
+            if i==0:
                 ## create BC at negX face
                 nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=self.yJ-self.lenTol, zMin=-self.lenTol, xMax=self.xK+self.lenTol, yMax=self.yK+self.lenTol, zMax=self.thickness+self.lenTol)
                 nsetNameNegX = 'Nset_BC_NegX_Part_'+str(i+1)
