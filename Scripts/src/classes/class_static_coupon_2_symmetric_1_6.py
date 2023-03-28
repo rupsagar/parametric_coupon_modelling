@@ -140,7 +140,7 @@ class static_coupon_2_symmetric_1_6(coupon_generic):
         self.part = len(self.profileSketch)*[None]
         for i in range(len(self.part)):
             self.part[i] = self.model.Part(name=self.couponName+'_Part_'+str(i+1), dimensionality=THREE_D, type=DEFORMABLE_BODY)
-            self.part[i].BaseSolidExtrude(sketch=self.profileSketch[i], depth=self.thickness)
+            self.part[i].BaseSolidExtrude(sketch=self.profileSketch[i], depth=self.thickness/2.0)
         session.viewports[session.currentViewportName].setValues(displayedObject=self.part[0])        
     def createAssembly(self):
         ## create assembly
@@ -164,22 +164,22 @@ class static_coupon_2_symmetric_1_6(coupon_generic):
         edgesVertical = self.part[0].edges.findAt(coordinates=((0, self.lenTol, 0), ))
         self.part[0].seedEdgeBySize(edges=edgesVertical, size=self.seedSizeVertical, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> long edges along AB
-        pickedEdges3 = self.part[0].edges.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xB+self.lenTol, yMax=self.yB+self.lenTol, zMax=self.thickness+self.lenTol)
+        pickedEdges3 = self.part[0].edges.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xB+self.lenTol, yMax=self.yB+self.lenTol, zMax=self.thickness/2.0+self.lenTol)
         edgesLong3 = self.getEdgeByLength(pickedEdges3, abs(self.xB-self.xA))
         self.seedEdge(self.part[0], 0, self.xA, edgesLong3, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
         ## seed ==>> long edges along BC
-        pickedEdges1 = self.part[0].edges.getByBoundingBox(xMin=self.xB-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
+        pickedEdges1 = self.part[0].edges.getByBoundingBox(xMin=self.xB-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2.0+self.lenTol)
         edgesLong1 = self.getEdgeByLength(pickedEdges1, abs(self.xC-self.xB))
         self.seedEdge(self.part[0], 0, self.xB, edgesLong1, minSize=self.seedSizeLong2, maxSize=self.seedSizeLong3)
         ## seed ==>> arc BC
         edgesTemp = self.part[0].edges.findAt(coordinates=((self.xB+self.lenTol, 0, 0), ))
         ratioBias = self.part[0].getEdgeSeeds(edgesTemp[0], attribute=BIAS_RATIO)
         elemNum = self.part[0].getEdgeSeeds(edgesTemp[0], attribute=NUMBER)
-        edgesTemp2 = self.part[0].edges.getByBoundingBox(xMin=self.xB-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
+        edgesTemp2 = self.part[0].edges.getByBoundingBox(xMin=self.xB-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xC+self.lenTol, yMax=self.yC+self.lenTol, zMax=self.thickness/2.0+self.lenTol)
         edgesArc = self.getArcEdge(edgesTemp2)
         self.seedEdge(self.part[0], 0, self.xB, edgesArc, ratio=ratioBias, number=elemNum)
         ## seed ==>> long edges along CD
-        pickedEdges3 = self.part[0].edges.getByBoundingBox(xMin=self.xC-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+        pickedEdges3 = self.part[0].edges.getByBoundingBox(xMin=self.xC-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness/2.0+self.lenTol)
         edgesLong3 = self.getEdgeByLength(pickedEdges3, abs(self.xD-self.xC))
         self.seedEdge(self.part[0], 0, self.xC, edgesLong3, minSize=self.seedSizeLong3, maxSize=self.seedSizeLong4)
         ## set element types
@@ -197,27 +197,27 @@ class static_coupon_2_symmetric_1_6(coupon_generic):
         self.couponData['step'].update({'endPressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
-            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
+            nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2.0+self.lenTol)
             nsetNameNegY = 'Nset_BC_NegY_Part_'+str(i+1)
             self.part[i].Set(nodes=nodesNegY, name=nsetNameNegY)
             region = self.instance[i].sets[nsetNameNegY]
             self.model.DisplacementBC(name='BC_NegY_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             ## create BC at negZ face
-            nodesPosZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.lenTol)
-            nsetNamePosZ = 'Nset_BC_NegZ_Part_'+str(i+1)
-            self.part[i].Set(nodes=nodesPosZ, name=nsetNamePosZ)
-            region = self.instance[i].sets[nsetNamePosZ]
+            nodesNegZ = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.lenTol)
+            nsetNameNegZ = 'Nset_BC_NegZ_Part_'+str(i+1)
+            self.part[i].Set(nodes=nodesNegZ, name=nsetNameNegZ)
+            region = self.instance[i].sets[nsetNameNegZ]
             self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==0:
                 ## create BC at negX face
-                nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xA+self.lenTol, yMax=self.yA+self.yC+self.lenTol, zMax=self.thickness+self.lenTol)
+                nodesNegX = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xA+self.lenTol, yMax=self.yA+self.yC+self.lenTol, zMax=self.thickness/2.0+self.lenTol)
                 nsetNameNegX = 'Nset_BC_NegX_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesNegX , name=nsetNameNegX)
                 region = self.instance[i].sets[nsetNameNegX]
                 self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==(len(self.part)-1):
                 ## create pressure load on posX face
-                endCellFaceArr = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+                endCellFaceArr = self.part[i].faces.getByBoundingBox(xMin=self.xD-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness/2.0+self.lenTol)
                 surfNamePosX = 'Surf_Load_PosX_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], endCellFaceArr, surfNamePosX)
                 region = self.instance[i].surfaces[surfNamePosX]
