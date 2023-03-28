@@ -8,7 +8,8 @@ There are two ways to generate the models:
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 1. Using GUI script:
 ==================================
-a. Run the script 'main_gui.py'.
+a. Run the script 'main_gui.py'. It can be run from terminal or command prompt using the command 'python main_gui.py'. 
+   Alternatively, the file can be opened in any code editor (like VS Code) and run from there.
 b. The user may have to add path of the Abaqus to the variable 'abqPath' depending on the local machine or the OS where the script is run.
    New paths can be appended to the existing list by separating with commas. The script has been tested in Windows and Giseh environment (both India and Europe).
 c. Choose the coupon template.
