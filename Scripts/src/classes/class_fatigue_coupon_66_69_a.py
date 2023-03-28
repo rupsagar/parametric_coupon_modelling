@@ -34,7 +34,7 @@ class fatigue_coupon_66_69_a(coupon_generic):
         self.givenKt = couponData['givenKt']
         self.lenTol = couponData['lenTol']
         self.partitionRadialFraction = couponData['partitionRadialFraction']
-        self.seedSizeOuterArc = couponData['elemSize']['outerArc']
+        self.seedSizeArcOuter = couponData['elemSize']['arcOuter']
         self.seedSizeLong1 = couponData['elemSize']['long1']
         self.seedSizeLong2 = couponData['elemSize']['long2']
         self.seedSizeLong3 = couponData['elemSize']['long3']
@@ -50,8 +50,8 @@ class fatigue_coupon_66_69_a(coupon_generic):
         ## derived quantities
         self.partitionRadius = self.partitionRadialFraction*self.phi1/2
         self.endStress = -self.nominalStress*(self.phi1/self.phi3)**2
-        self.seedSizeOuterRadialMin = self.seedSizeOuterArc*self.partitionRadialFraction
-        self.seedSizeInnerRadial = self.seedSizeOuterArc*self.partitionRadialFraction
+        self.seedSizeOuterRadialMin = self.seedSizeArcOuter*self.partitionRadialFraction
+        self.seedSizeInnerRadial = self.seedSizeArcOuter*self.partitionRadialFraction
         ## create coupon
         self.createModel()
         self.createProfileSketch()
@@ -223,11 +223,11 @@ class fatigue_coupon_66_69_a(coupon_generic):
         ## seed ==>> outer arc edge AA'
         self.edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
         self.edgesOuterArc = self.getArcEdge(self.edgesOuterCyl)
-        self.part[0].seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeOuterArc, deviationFactor=0.1, constraint=FINER)
+        self.part[0].seedEdgeBySize(edges=self.edgesOuterArc, size=self.seedSizeArcOuter, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> outer radial edges
         self.edgesOuterRadial = self.getByDifference(self.edgesOuterCyl, self.edgesOuterArc)
-        seedOuterRadial((0.0, self.partitionRadius+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
-        seedOuterRadial((0.0, 0.0, -(self.partitionRadius+self.lenTol)), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeOuterArc)
+        seedOuterRadial((0.0, self.partitionRadius+self.lenTol, 0.0), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeArcOuter)
+        seedOuterRadial((0.0, 0.0, -(self.partitionRadius+self.lenTol)), minSize=self.seedSizeOuterRadialMin, maxSize=self.seedSizeArcOuter)
         ## seed ==>> edge Bb ==>> not applied; seeding with increase the element size at the surface by small amount
         self.edgesOuterCylAtB = self.getByCylinderDifference(self.part[0].edges, (self.xB-self.lenTol, 0, 0), (self.xB+self.lenTol, 0, 0), (self.yB+self.lenTol), (self.partitionRadius+self.lenTol))
         self.edgesOuterArcAtB = self.getArcEdge(self.edgesOuterCylAtB)
