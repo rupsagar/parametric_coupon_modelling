@@ -15,10 +15,10 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "outerArc" : 0.1,
-                "long1" : 0.1,
-                "long2" : 0.2,
-                "long3" : 0.3
+                "arcOuter" : 0.07,
+                "long1" : 0.07,
+                "long2" : 0.14,
+                "long3" : 0.21
             },
             "elemType" : {
                 "hex" : "C3D8HS"
@@ -51,7 +51,7 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "outerArc" : 0.1,
+                "arcOuter" : 0.1,
                 "long1" : 0.1,
                 "long2" : 0.2,
                 "long3" : 0.3
@@ -87,10 +87,10 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "outerArc" : 0.1,
-                "long1" : 0.1,
-                "long2" : 0.2,
-                "long3" : 0.3
+                "arcOuter" : 0.14,
+                "long1" : 0.14,
+                "long2" : 0.28,
+                "long3" : 0.42
             },
             "elemType" : {
                 "hex" : "C3D8HS"
@@ -123,10 +123,10 @@
             "lenTol" : 1.0e-5,
             "partitionRadialFraction" : 0.67,
             "elemSize" : {
-                "outerArc" : 0.1,
-                "long1" : 0.1,
-                "long2" : 0.2,
-                "long3" : 0.3
+                "arcOuter" : 0.2,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6
             },
             "elemType" : {
                 "hex" : "C3D8HS"
@@ -212,7 +212,7 @@
                 "part2" : 0.3
             },
             "elemType" : {
-                "hex" : "C3D8HS",
+                "hex" : "C3D20H",
                 "tet" : "C3D4"
             },
             "material" :{
@@ -294,7 +294,7 @@
                 "part2" : 0.4
             },
             "elemType" : {
-                "hex" : "C3D8HS",
+                "hex" : "C3D20H",
                 "tet" : "C3D4"
             },
             "material" :{
@@ -376,7 +376,7 @@
                 "part2" : 0.6
             },
             "elemType" : {
-                "hex" : "C3D8HS",
+                "hex" : "C3D20H",
                 "tet" : "C3D4"
             },
             "material" :{
@@ -458,7 +458,7 @@
                 "part2" : 0.85
             },
             "elemType" : {
-                "hex" : "C3D8HS",
+                "hex" : "C3D20H",
                 "tet" : "C3D4"
             },
             "material" :{
@@ -631,7 +631,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.05,
+                "thickness1" : 0.1,
                 "thickness2" : 0.1,
                 "verticalOuter" : 0.01,
                 "verticalMiddle" : 0.05,
@@ -676,7 +676,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.05,
+                "thickness1" : 0.1,
                 "thickness2" : 0.1,
                 "verticalOuter" : 0.01,
                 "verticalMiddle" : 0.05,
@@ -688,7 +688,7 @@
                 "long4" : 0.6
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -721,7 +721,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.06,
+                "thickness1" : 0.14,
                 "thickness2" : 0.14,
                 "verticalOuter" : 0.014,
                 "verticalMiddle" : 0.07,
@@ -766,7 +766,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.06,
+                "thickness1" : 0.14,
                 "thickness2" : 0.14,
                 "verticalOuter" : 0.014,
                 "verticalMiddle" : 0.07,
@@ -778,7 +778,7 @@
                 "long4" : 0.84
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -811,7 +811,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.1,
+                "thickness1" : 0.2,
                 "thickness2" : 0.2,
                 "verticalOuter" : 0.02,
                 "verticalMiddle" : 0.1,
@@ -856,7 +856,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.1,
+                "thickness1" : 0.2,
                 "thickness2" : 0.2,
                 "verticalOuter" : 0.02,
                 "verticalMiddle" : 0.1,
@@ -868,7 +868,7 @@
                 "long4" : 1.2
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -901,7 +901,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.15,
+                "thickness1" : 0.3,
                 "thickness2" : 0.3,
                 "verticalOuter" : 0.03,
                 "verticalMiddle" : 0.15,
@@ -946,7 +946,7 @@
             "lenTol" : 1.0e-5,
             "partitionVerticalFraction" : 0.67,
             "elemSize" : {
-                "thickness1" : 0.15,
+                "thickness1" : 0.3,
                 "thickness2" : 0.3,
                 "verticalOuter" : 0.03,
                 "verticalMiddle" : 0.15,
@@ -958,7 +958,7 @@
                 "long4" : 1.8
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -1000,7 +1000,7 @@
                 "width" : 0.3
             },
             "elemType" : {
-                "hexPart1" : "C3D20H",
+                "hexPart1" : "C3D8HS",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -1040,7 +1040,7 @@
                 "width" : 0.2
             },
             "elemType" : {
-                "hexPart1" : "C3D20H",
+                "hexPart1" : "C3D8HS",
                 "hexPart2" : "C3D8HS"
             },
             "material" : {
@@ -1217,12 +1217,12 @@
             "partitionRadialFraction" : 0.67,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "arcOuter" : 0.1,
-                "radialOuter" : 0.1,
-                "radialInner" : 0.15,
-                "long1" : 0.1,
-                "long2" : 0.4,
-                "long3" : 0.6
+                "arcOuter" : 0.14,
+                "radialOuter" : 0.14,
+                "radialInner" : 0.2,
+                "long1" : 0.14,
+                "long2" : 0.55,
+                "long3" : 0.83
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
@@ -1253,12 +1253,12 @@
             "partitionRadialFraction" : 0.67,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "arcOuter" : 0.1,
-                "radialOuter" : 0.1,
-                "radialInner" : 0.15,
-                "long1" : 0.1,
-                "long2" : 0.4,
-                "long3" : 0.6
+                "arcOuter" : 0.16,
+                "radialOuter" : 0.16,
+                "radialInner" : 0.24,
+                "long1" : 0.16,
+                "long2" : 0.7,
+                "long3" : 0.9
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
@@ -1364,11 +1364,11 @@
             "lenTol" : 1.0e-5,
             "elemSize" : {
                 "thickness" : 0.05,
-                "vertical" : 0.1,
+                "vertical" : 0.09,
                 "long1" : 0.05,
-                "long2" : 0.15,
-                "long3" : 0.25,
-                "long4" : 0.35
+                "long2" : 0.09,
+                "long3" : 0.15,
+                "long4" : 0.21
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
@@ -1474,11 +1474,11 @@
             "lenTol" : 1.0e-5,
             "elemSize" : {
                 "thickness" : 0.05,
-                "vertical" : 0.1,
+                "vertical" : 0.09,
                 "long1" : 0.05,
-                "long2" : 0.15,
-                "long3" : 0.25,
-                "long4" : 0.35
+                "long2" : 0.09,
+                "long3" : 0.15,
+                "long4" : 0.21
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS"
@@ -1502,32 +1502,30 @@
             "couponName" : "Static_Coupon_18",
             "geometry" : {
                 "len1" : 144.0,
-                "len2" : 122.0,
                 "width" : 30.0,
                 "phi1" : 4.0,
                 "E" : 6.0,
-                "phi2" : 12.0,
                 "pinExtension" : 5.0
             },
             "thickness" : 2.0,
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "arc" : 0.15,
-                "long1" : 0.2,
-                "long2" : 0.7,
-                "long3" : 0.9,
-                "radialInner" : 0.2,
-                "radialOuter" : 0.2,
-                "thickness1" : 0.2,
-                "thickness2" : 0.3,
-                "vertical1" : 0.2,
-                "vertical2" : 0.5,
-                "vertical3" : 0.7,
-                "pinDia" : 0.2,
-                "pinLength" : 0.3
+                "arc": 0.075, 
+                "long1": 0.1, 
+                "long2": 0.35, 
+                "long3": 0.9, 
+                "pinDia": 0.2, 
+                "pinLength": 0.3, 
+                "radialInner": 0.1, 
+                "radialOuter": 0.1, 
+                "thickness1": 0.1, 
+                "thickness2": 0.3, 
+                "vertical1": 0.1, 
+                "vertical2": 0.25, 
+                "vertical3": 0.7
             },
             "elemType" : {
-                "hexPart1" : "C3D8HS",
+                "hexPart1" : "C3D20H",
                 "hexPart2" : "C3D8HS",
                 "hexPart3" : "C3D8HS"
             },
@@ -1544,8 +1542,158 @@
                 "poissonsRatio" : 0.2816
             },
             "step" : {
-                "nlGeom" : "OFF",
-                "initIncr" : 1.0,
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Static_Coupon_19" : {
+            "couponName" : "Static_Coupon_19",
+            "geometry" : {
+                "len1" : 144.0,
+                "width" : 30.0,
+                "phi1" : 4.0,
+                "E" : 8.0,
+                "pinExtension" : 5.0
+            },
+            "thickness" : 2.0,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arc": 0.075, 
+                "long1": 0.1, 
+                "long2": 0.35, 
+                "long3": 0.9, 
+                "pinDia": 0.2, 
+                "pinLength": 0.3, 
+                "radialInner": 0.1, 
+                "radialOuter": 0.1, 
+                "thickness1": 0.1, 
+                "thickness2": 0.3, 
+                "vertical1": 0.1, 
+                "vertical2": 0.25, 
+                "vertical3": 0.7
+            },
+            "elemType" : {
+                "hexPart1" : "C3D20H",
+                "hexPart2" : "C3D8HS",
+                "hexPart3" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Static_Coupon_20" : {
+            "couponName" : "Static_Coupon_20",
+            "geometry" : {
+                "len1" : 144.0,
+                "width" : 38.0,
+                "phi1" : 6.35,
+                "E" : 9.5,
+                "pinExtension" : 5.0
+            },
+            "thickness" : 2.0,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arc": 0.075, 
+                "long1": 0.1, 
+                "long2": 0.35, 
+                "long3": 0.9, 
+                "pinDia": 0.2, 
+                "pinLength": 0.3, 
+                "radialInner": 0.1, 
+                "radialOuter": 0.1, 
+                "thickness1": 0.1, 
+                "thickness2": 0.3, 
+                "vertical1": 0.1, 
+                "vertical2": 0.25, 
+                "vertical3": 0.7
+            },
+            "elemType" : {
+                "hexPart1" : "C3D20H",
+                "hexPart2" : "C3D8HS",
+                "hexPart3" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "nominalStress" : 250.0
+            },
+            "version" : ""
+        },
+        "Static_Coupon_21" : {
+            "couponName" : "Static_Coupon_21",
+            "geometry" : {
+                "len1" : 144.0,
+                "width" : 38.0,
+                "phi1" : 6.35,
+                "E" : 12.7,
+                "pinExtension" : 5.0
+            },
+            "thickness" : 2.0,
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "arc": 0.075, 
+                "long1": 0.1, 
+                "long2": 0.35, 
+                "long3": 0.9, 
+                "pinDia": 0.2, 
+                "pinLength": 0.3, 
+                "radialInner": 0.1, 
+                "radialOuter": 0.1, 
+                "thickness1": 0.1, 
+                "thickness2": 0.3, 
+                "vertical1": 0.1, 
+                "vertical2": 0.25, 
+                "vertical3": 0.7
+            },
+            "elemType" : {
+                "hexPart1" : "C3D20H",
+                "hexPart2" : "C3D8HS",
+                "hexPart3" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
                 "nominalStress" : 250.0
             },
             "version" : ""
