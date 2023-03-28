@@ -7,7 +7,7 @@
 ## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
 ## +------------------------------------------------------------------------------------------------------------+
 ## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |               BC added to the pin               |
-## |                                |           |             |                                                 |
+## |        Rupsagar Chatterjee     |   v2.0    | 24-Mar-2023 |     Contact clearance, small sliding added      |
 ## |                                |           |             |                                                 |
 ## |                                |           |             |                                                 |
 ## +------------------------------------------------------------------------------------------------------------+
@@ -25,11 +25,9 @@ class static_coupon_18_21(coupon_generic):
         self.couponData = couponData
         self.couponName = couponData['couponName']
         self.len1 = couponData['geometry']['len1']
-        self.len2 = couponData['geometry']['len2']
         self.width = couponData['geometry']['width']
         self.phi1 = couponData['geometry']['phi1']
         self.E = couponData['geometry']['E']
-        self.phi2 = couponData['geometry']['phi2']
         self.pinExtension = couponData['geometry']['pinExtension']
         self.thickness = couponData['thickness']
         self.lenTol = couponData['lenTol']
@@ -62,7 +60,7 @@ class static_coupon_18_21(coupon_generic):
         self.nominalStress = couponData['step']['nominalStress']
         self.version = couponData['version']
         ## derived quantities
-        self.tieDistance = self.len1/2.0*0.25
+        self.tieDistance = 3*self.E
         self.pinPressure = self.nominalStress*self.thickness/(2*self.pinExtension)
         ## create coupon
         self.createModel()
@@ -270,7 +268,10 @@ class static_coupon_18_21(coupon_generic):
         self.part[2].seedEdgeBySize(edges=self.getArcEdge(self.part[2].edges), size=self.seedSizePinDia, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> pin diameter portion
         diaEdges = self.part[2].edges.findAt(coordinates=((self.xC1, 0, 0), (self.xC1, 0, self.pinExtension), (self.xC1, 0, self.pinExtension+self.thickness), (self.xC1, 0, 2*self.pinExtension+self.thickness)))
-        self.part[2].seedEdgeBySize(edges=diaEdges, size=self.seedSizePinDia, deviationFactor=0.1, constraint=FINER)
+        numDiaElem = self.phi1/self.seedSizePinDia
+        if (numDiaElem%2)!=0:
+            numDiaElem = ceil(numDiaElem)
+        self.part[2].seedEdgeByNumber(edges=diaEdges, number=int(numDiaElem), constraint=FIXED)
         ## seed ==>> pin length portion
         lenEdges = self.part[2].edges.findAt(coordinates=((self.xC1, self.phi1/2, self.lenTol), (self.xC1, -self.phi1/2, self.lenTol), 
                                                           (self.xC1, self.phi1/2, self.pinExtension+self.lenTol), (self.xC1, -self.phi1/2, self.pinExtension+self.lenTol), 
@@ -340,8 +341,7 @@ class static_coupon_18_21(coupon_generic):
                 region2 = self.instance[i].surfaces[surfNamePinContact]
         self.contactProperty = self.model.ContactProperty(self.couponName+'_Contact_Property')
         self.contactProperty.NormalBehavior(pressureOverclosure=HARD, allowSeparation=ON, constraintEnforcementMethod=DEFAULT)
-        self.model.SurfaceToSurfaceContactStd(name=self.couponName+'_Contact', createStepName='Initial', master=region2, slave=region1, sliding=FINITE, 
-                                              thickness=ON, interactionProperty=self.contactProperty.name, adjustMethod=NONE, initialClearance=OMIT, datumAxis=None, clearanceRegion=None)
+        self.model.SurfaceToSurfaceContactStd(name=self.couponName+'_Contact', createStepName='Initial', master=region2, slave=region1, sliding=SMALL, thickness=ON, interactionProperty=self.contactProperty.name, adjustMethod=NONE, initialClearance=0.0, datumAxis=None, clearanceRegion=None)
     def createStep(self):
         ## create step for load and boundary conditions
         self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
@@ -357,29 +357,17 @@ class static_coupon_18_21(coupon_generic):
                 self.model.DisplacementBC(name='BC_PosX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
             if i==2:
                 ## create BC at negZ face of Part 3
-                nodesNegZ = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, 0), (self.xC1, 0, self.lenTol), (self.phi1+self.lenTol))
+                nodesNegZ = self.part[i].nodes.getByBoundingSphere((self.xC1, 0, 0), self.lenTol)
                 nsetNameNegZ = 'Nset_BC_NegZ_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesNegZ , name=nsetNameNegZ)
                 region = self.instance[i].sets[nsetNameNegZ]
                 self.model.DisplacementBC(name='BC_NegZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-                ## create BC at negZ face of Part 3 for Y
-                nodesNegZ_Y = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, 0), (self.xC1, 0, self.lenTol), self.lenTol)
-                nsetNameNegZ_Y = 'Nset_BC_NegZ_Y_Part_'+str(i+1)
-                self.part[i].Set(nodes=nodesNegZ_Y , name=nsetNameNegZ_Y)
-                region = self.instance[i].sets[nsetNameNegZ_Y]
-                self.model.DisplacementBC(name='BC_NegZ_Y_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create BC at posZ face of Part 3
-                nodesPosZ = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, self.thickness+2*self.pinExtension), (self.xC1, 0, self.thickness+2*self.pinExtension+self.lenTol), (self.phi1+self.lenTol))
+                nodesPosZ = self.part[i].nodes.getByBoundingSphere((self.xC1, 0, self.thickness+2*self.pinExtension), self.lenTol)
                 nsetNamePosZ = 'Nset_BC_PosZ_Part_'+str(i+1)
                 self.part[i].Set(nodes=nodesPosZ , name=nsetNamePosZ)
                 region = self.instance[i].sets[nsetNamePosZ]
                 self.model.DisplacementBC(name='BC_PosZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=UNSET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
-                ## create BC at posZ face of Part 3 for Y
-                nodesPosZ_Y = self.part[i].nodes.getByBoundingCylinder((self.xC1, 0, self.thickness+2*self.pinExtension), (self.xC1, 0, self.thickness+2*self.pinExtension+self.lenTol), self.lenTol)
-                nsetNamePosZ_Y = 'Nset_BC_PosZ_Y_Part_'+str(i+1)
-                self.part[i].Set(nodes=nodesPosZ_Y , name=nsetNamePosZ_Y)
-                region = self.instance[i].sets[nsetNamePosZ_Y]
-                self.model.DisplacementBC(name='BC_PosZ_Y_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create pressure load on pin NegZ portion
                 endCellFaceArr1 = self.part[i].faces.findAt(coordinates=((self.xC1+self.phi1/2, 0, self.lenTol), ))
                 surfNameNegZ = 'Surf_Load_NegZ_Part_'+str(i+1)
