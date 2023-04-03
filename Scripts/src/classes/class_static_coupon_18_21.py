@@ -14,6 +14,7 @@
 #################################################################################################################
 
 
+import math
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *
@@ -248,11 +249,11 @@ class static_coupon_18_21(coupon_generic):
                                                                 (self.xB, -self.xC1-self.lenTol, 0), (self.xB, -self.xC1-self.lenTol, self.thickness)))
         self.seedEdge(self.part[0], 1, -self.xC1, edgesVertical2, minSize=self.seedSizeVertical1, maxSize=self.seedSizeVertical2)
         ## seed ==>> long edges along B'B
-        pickedEdges1 = self.part[0].edges.getByBoundingBox(xMin=2*self.xC1-self.lenTol, yMin=self.yD-self.lenTol, zMin=-self.lenTol, xMax=self.xB+self.lenTol, yMax=self.yB+self.lenTol, zMax=self.thickness+self.lenTol)
-        pickedEdges2 = self.part[0].edges.findAt(coordinates=((2*self.xC1, self.xC1-self.lenTol, 0), (2*self.xC1, self.xC1-self.lenTol, self.thickness),
-                                                              (2*self.xC1, -(self.xC1-self.lenTol), 0), (2*self.xC1, -(self.xC1-self.lenTol), self.thickness)))
-        pickedEdges3 = self.getByDifference(pickedEdges1, pickedEdges2)
-        edgesLong1 = self.getEdgeByLength(pickedEdges3, abs(self.xB-2*self.xC1))
+        edgesLong1 = self.part[0].edges.findAt(coordinates=((2*self.xC1+self.lenTol, self.yB, 0), (2*self.xC1+self.lenTol, self.yB, self.thickness), 
+                                                            (2*self.xC1+self.lenTol, self.xC1, 0), (2*self.xC1+self.lenTol, self.xC1, self.thickness), 
+                                                            (2*self.xC1+self.lenTol, 0, 0), (2*self.xC1+self.lenTol, 0, self.thickness), 
+                                                            (2*self.xC1+self.lenTol, -self.xC1, 0), (2*self.xC1+self.lenTol, -self.xC1, self.thickness), 
+                                                            (2*self.xC1+self.lenTol, self.yD, 0), (2*self.xC1+self.lenTol, self.yD, self.thickness), ))
         self.seedEdge(self.part[0], 0, 2*self.xC1, edgesLong1, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
         ## seed ==>> vertical edge plate away from region of interest
         edgesVertical3 = self.part[1].edges.findAt(coordinates=((self.xB, 0, 0), ))
@@ -270,7 +271,7 @@ class static_coupon_18_21(coupon_generic):
         diaEdges = self.part[2].edges.findAt(coordinates=((self.xC1, 0, 0), (self.xC1, 0, self.pinExtension), (self.xC1, 0, self.pinExtension+self.thickness), (self.xC1, 0, 2*self.pinExtension+self.thickness)))
         numDiaElem = self.phi1/self.seedSizePinDia
         if (numDiaElem%2)!=0:
-            numDiaElem = ceil(numDiaElem)
+            numDiaElem = math.ceil(numDiaElem)
         self.part[2].seedEdgeByNumber(edges=diaEdges, number=int(numDiaElem), constraint=FIXED)
         ## seed ==>> pin length portion
         lenEdges = self.part[2].edges.findAt(coordinates=((self.xC1, self.phi1/2, self.lenTol), (self.xC1, -self.phi1/2, self.lenTol), 
