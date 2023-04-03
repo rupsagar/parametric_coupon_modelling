@@ -14,7 +14,7 @@
 #################################################################################################################
 
 
-import json
+import json, os, re
 
 class coupon_generic(object):
     def __init__(self):
@@ -60,6 +60,8 @@ class coupon_generic(object):
                 geomFile.write(str(thisList[i])+'\t')
             geomFile.write('\n')
         geomFile.close()
+        ## creating separate inp files
+        self.inpFileSplitter()
     def getByDifference(self, listA, listB):
         ## method to return list with elements of difference of two lists
         differenceList = []
@@ -116,4 +118,50 @@ class coupon_generic(object):
                 elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
                 surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
         part.Surface(**surfDict)
+    def inpFileSplitter(self):
+        dictFileID = {0:'Job', 
+                      1:'Parts', 
+                      2:'Materials', 
+                      3:'Step'}
+        eliminationList = ['** ASSEMBLY','** INTERACTION PROPERTIES', '** INTERACTIONS']
+        oldJobFileName = self.job.name+'.inp'
+        newJobFileName = self.couponName+'_Job_Temp'+self.version+'.inp'
+        os.rename(oldJobFileName, newJobFileName)
+        fileTemp = open(newJobFileName, 'r')
+        InpFolderName = self.couponName+'_InpFolder'+self.version
+        try:
+            os.mkdir(InpFolderName)
+        except:
+            pass
+        file = len(dictFileID)*[None] 
+        for key, val in dictFileID.items():
+            if key==0:
+                file[key] = open(self.couponName+'_'+val+self.version+'.inp', 'w')
+            else:
+                file[key] = open(InpFolderName+'/'+self.couponName+'_'+val+self.version+'.inp', 'w')
+        prevFile = 0
+        currentFile = 0
+        lineCount = len(dictFileID)*[0]
+        for thisLine in fileTemp:
+            lineCount[currentFile] = lineCount[currentFile]+1
+            for key in range(len(file)):
+                if re.search("^\*\*.*"+dictFileID[key], thisLine.title()):
+                    prevFile = currentFile
+                    currentFile = key
+                    break
+                elif thisLine.rstrip('\n') in eliminationList:
+                    prevFile = currentFile
+                    currentFile = 0
+            if currentFile!=0 and prevFile!=currentFile and lineCount[currentFile]==0:
+                file[0].write(thisLine)
+                file[0].write('*Include, input = ./'+file[currentFile].name+'\n')
+                lineCount[0] = lineCount[0]+1
+            else:
+                file[currentFile].write(thisLine)
+        fileTemp.close()
+        for i in range(len(file)):
+            file[i].close()
+        ## delete old temp job file
+        if os.path.exists(newJobFileName):
+                os.remove(newJobFileName)
 
