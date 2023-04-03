@@ -198,11 +198,11 @@ class static_coupon_1_symmetric_1_7(coupon_generic):
         ## seed ==>> outer radial edges
         edgesRadial1 = self.part[0].edges.findAt(coordinates=((0, (self.partitionRadius+self.lenTol), 0), (0, 0, -(self.partitionRadius+self.lenTol))))
         self.seedEdge(self.part[0], 1, self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
-        self.seedEdge(self.part[0], 2, self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
+        self.seedEdge(self.part[0], 2, -self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
         ## seed ==>> inner radial edges
-        edgesRadial2 = self.part[0].edges.findAt(coordinates=((0, (self.partitionRadius-self.lenTol), 0), (0, 0, -(self.partitionRadius-self.lenTol))))
-        self.seedEdge(self.part[0], 1, self.partitionRadius, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
-        self.seedEdge(self.part[0], 2, self.partitionRadius, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
+        edgesRadial2 = self.part[0].edges.findAt(coordinates=((0, self.lenTol, 0), (0, 0, -self.lenTol)))
+        self.seedEdge(self.part[0], 1, 0, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
+        self.seedEdge(self.part[0], 2, 0, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
         ## sweep path ==>> inner cylinder
         seedInnerCyl(self.part[0], self.xA, self.xB)
         seedInnerCyl(self.part[0], self.xB, self.xC)
