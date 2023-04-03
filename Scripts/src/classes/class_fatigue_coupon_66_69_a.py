@@ -31,7 +31,6 @@ class fatigue_coupon_66_69_a(coupon_generic):
         self.rad2 = couponData['geometry']['rad2']
         self.len1 = couponData['geometry']['len1']
         self.len2 = couponData['geometry']['len2']
-        self.givenKt = couponData['givenKt']
         self.lenTol = couponData['lenTol']
         self.partitionRadialFraction = couponData['partitionRadialFraction']
         self.seedSizeArcOuter = couponData['elemSize']['arcOuter']
