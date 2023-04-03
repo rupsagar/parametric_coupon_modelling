@@ -211,17 +211,19 @@ class static_coupon_1_full_1_7(coupon_generic):
             edgesSweepPath = part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), self.lenTol)
             part.setSweepPath(region=cellsInnerCyl[0], edge=edgesSweepPath[0], sense=FORWARD)
         ## seed ==>> outer arc edge AA'
-        edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xE-self.lenTol, 0, 0), (self.xE+self.lenTol, 0, 0), (self.yD+self.lenTol), (self.partitionRadius+self.lenTol))
+        edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xO-self.lenTol, 0, 0), (self.xO+self.lenTol, 0, 0), (self.yA+self.lenTol), (self.partitionRadius+self.lenTol))
         edgesOuterArc = self.getArcEdge(edgesOuterCyl)
         self.part[0].seedEdgeBySize(edges=edgesOuterArc, size=self.seedSizeArcOuter, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> outer radial edges
-        edgesRadial1 = self.part[0].edges.findAt(coordinates=((self.xE, (self.partitionRadius+self.lenTol), 0), (self.xE, -(self.partitionRadius+self.lenTol), 0), 
-                                                              (self.xE, 0, (self.partitionRadius+self.lenTol)), (self.xE, 0, -(self.partitionRadius+self.lenTol))))
-        self.seedEdge(self.part[0], 1, 0, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
-        self.seedEdge(self.part[0], 2, 0, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
+        edgesRadial1 = self.part[0].edges.findAt(coordinates=((self.xO, (self.partitionRadius+self.lenTol), 0), (self.xO, -(self.partitionRadius+self.lenTol), 0), 
+                                                              (self.xO, 0, (self.partitionRadius+self.lenTol)), (self.xO, 0, -(self.partitionRadius+self.lenTol))))
+        self.seedEdge(self.part[0], 1, self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
+        self.seedEdge(self.part[0], 1, -self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
+        self.seedEdge(self.part[0], 2, self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
+        self.seedEdge(self.part[0], 2, -self.partitionRadius, edgesRadial1, minSize=self.seedSizeRadialOuter, maxSize=self.seedSizeRadialOuter)
         ## seed ==>> inner radial edges
-        edgesRadial2 = self.part[0].edges.findAt(coordinates=((self.xE, (self.partitionRadius-self.lenTol), 0), (self.xE, -(self.partitionRadius-self.lenTol), 0), 
-                                                              (self.xE, 0, (self.partitionRadius-self.lenTol)), (self.xE, 0, -(self.partitionRadius-self.lenTol))))
+        edgesRadial2 = self.part[0].edges.findAt(coordinates=((self.xO, (self.partitionRadius-self.lenTol), 0), (self.xO, -(self.partitionRadius-self.lenTol), 0), 
+                                                              (self.xO, 0, (self.partitionRadius-self.lenTol)), (self.xO, 0, -(self.partitionRadius-self.lenTol))))
         self.seedEdge(self.part[0], 1, 0, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
         self.seedEdge(self.part[0], 2, 0, edgesRadial2, minSize=self.seedSizeRadialInner, maxSize=self.seedSizeRadialInner)
         ## sweep path ==>> inner cylinder
