@@ -32,7 +32,6 @@ class fatigue_coupon_74_75(coupon_generic):
         self.chamferAngle = couponData['geometry']['chamferAngle']
         self.thickness = couponData['thickness']
         self.isChamfer = couponData['isChamfer']
-        self.givenKt = couponData['givenKt']
         self.lenTol = couponData['lenTol']
         self.seedSizeThickness1 = couponData['elemSize']['thickness1']
         self.seedSizeThickness2 = couponData['elemSize']['thickness2']
