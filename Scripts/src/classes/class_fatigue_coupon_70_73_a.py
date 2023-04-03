@@ -29,7 +29,6 @@ class fatigue_coupon_70_73_a(coupon_generic):
         self.rad1 = couponData['geometry']['rad1']
         self.len1 = couponData['geometry']['len1']
         self.thickness = couponData['thickness']
-        self.givenKt = couponData['givenKt']
         self.lenTol = couponData['lenTol']
         self.seedSizeThickness = couponData['elemSize']['thickness']
         self.seedSizeVertical = couponData['elemSize']['vertical']
