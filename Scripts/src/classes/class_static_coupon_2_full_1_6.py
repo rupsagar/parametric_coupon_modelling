@@ -14,6 +14,7 @@
 #################################################################################################################
 
 
+import math
 from abaqus import *
 from abaqusConstants import *
 from caeModules import *
@@ -226,7 +227,7 @@ class static_coupon_2_full_1_6(coupon_generic):
         ## seed ==>> thickness direction
         numThicknessElem = self.thickness/self.seedSizeThickness
         if (numThicknessElem%2)!=0:
-            numThicknessElem = ceil(numThicknessElem)
+            numThicknessElem = math.ceil(numThicknessElem)
         edgesThickness = self.part[0].edges.findAt(coordinates=((0, 0, self.lenTol), ))
         self.part[0].seedEdgeByNumber(edges=edgesThickness, number=int(numThicknessElem), constraint=FIXED)
         ## seed ==>> vertical direction
@@ -288,11 +289,15 @@ class static_coupon_2_full_1_6(coupon_generic):
                 region = self.instance[i].sets[nsetNameNegX]
                 self.model.DisplacementBC(name='BC_NegX_Instance_'+str(i+1), createStepName='Load', region=region, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create BC at negX face at Y=0, Z=0
-                nodesNegXYZ = self.part[i].nodes.getByBoundingBox(xMin=self.xJ-self.lenTol, yMin=-self.lenTol, zMin=self.thickness/2.0-self.lenTol, xMax=self.xJ+self.lenTol, yMax=self.lenTol, zMax=self.thickness/2.0+self.lenTol)
-                nsetNameNegXYZ = 'Nset_BC_NegXYZ_Part_'+str(i+1)
-                self.part[i].Set(nodes=nodesNegXYZ , name=nsetNameNegXYZ)
-                region = self.instance[i].sets[nsetNameNegXYZ]
-                self.model.DisplacementBC(name='BC_NegXYZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
+                nodesNegX_YZ_1 = self.part[i].nodes.getByBoundingSphere((self.xK, self.yK, 0), self.lenTol)
+                nodesNegX_YZ_2 = self.part[i].nodes.getByBoundingSphere((self.xK, self.yK, self.thickness), self.lenTol)
+                nodesNegX_YZ_3 = self.part[i].nodes.getByBoundingSphere((self.xJ, self.yJ, 0), self.lenTol)
+                nodesNegX_YZ_4 = self.part[i].nodes.getByBoundingSphere((self.xJ, self.yJ, self.thickness), self.lenTol)
+                nodesNegX_YZ = [nodesNegX_YZ_1, nodesNegX_YZ_2, nodesNegX_YZ_3, nodesNegX_YZ_4]
+                nsetNameNegX_YZ = 'Nset_BC_NegX_YZ_Part_'+str(i+1)
+                self.part[i].Set(nodes=nodesNegX_YZ , name=nsetNameNegX_YZ)
+                region = self.instance[i].sets[nsetNameNegX_YZ]
+                self.model.DisplacementBC(name='BC_NegX_YZ_Instance_'+str(i+1), createStepName='Load', region=region, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## create pressure load on posX face
                 endCellFaceArr1 = self.part[i].faces.getByBoundingBox(xMin=self.xE-self.lenTol, yMin=self.yE-self.lenTol, zMin=-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
                 surfNamePosX = 'Surf_Load_PosX_Part_'+str(i+1)
