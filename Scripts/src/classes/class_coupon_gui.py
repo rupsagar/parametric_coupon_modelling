@@ -60,8 +60,7 @@ class coupon_gui():
                 paramEntry.place(x=(0.25+0.5*self.xCount)*self.paramFrameWidth, y=(0.015+0.04*self.yCount)*self.paramFrameHeight)
                 paramEntry.insert(0, val)
                 self.modelData.append(paramEntry)
-                if (self.radioVar.get()==1 and (keyStr=='geometry: ' or key=='lenTol' or key=='givenKt')): 
-                    ## or (self.radioVar.get()==2 and (key=='lenTol' or key=='givenKt'))):
+                if (self.radioVar.get()==1 and (keyStr=='geometry: ' or key=='lenTol')):
                     paramEntry.config(state='readonly')
                 self.yCount = self.yCount+1
                 if self.yCount>=math.ceil((self.totalNumParam-1)/2.0):
