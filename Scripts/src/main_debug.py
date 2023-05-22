@@ -17,7 +17,9 @@
 #################################################################################################################
 
 
-srcPath = [r'\\fr0-svm20\St_RnT_METAL2\05_A350_FREIGHTER\Parametric_Coupon_Modelling\Scripts\src']
+srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src', 
+        r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
+        r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
 
 # template = 'Fatigue_Coupon_66_69_A'
 # coupon = 'Fatigue_Coupon_69A'
@@ -45,6 +47,9 @@ srcPath = [r'\\fr0-svm20\St_RnT_METAL2\05_A350_FREIGHTER\Parametric_Coupon_Model
 
 # template = 'Static_Coupon_2_Symmetric_1_6'
 # coupon = 'Static_Coupon_2_Symmetric_4'
+
+template = 'Static_Coupon_18_21'
+coupon = 'Static_Coupon_19'
 
 import os, sys
 
