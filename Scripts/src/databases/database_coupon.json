@@ -1672,6 +1672,27 @@
             },
             "version" : ""
         }
+    },
+    "Fracture_Toughness_Coupon_22_36" : {
+        "Fracture_Toughness_Coupon_22" : {
+            "couponName" : "Fracture_Toughness_Coupon_22",
+            "geometry" : {
+                "width" : 25.0,
+                "base" : 24.0,
+                "diameter" : 5,
+                "centerOffset1" : 20.0,
+                "notchOffset" : 7,
+                "centerOffset2" : 11,
+                "notchOpening1Angle" : 60,
+                "notchOpening2Angle" : 90,
+                "notchTipAngle" : 90,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 2.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5
+        }
     }
 }
 
