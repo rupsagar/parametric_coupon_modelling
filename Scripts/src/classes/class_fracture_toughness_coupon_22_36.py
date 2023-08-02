@@ -148,7 +148,7 @@ class fracture_coupon_22_36(coupon_generic):
         #######################################################################################################################################################
         self.profileSketch[0].unsetPrimaryObject()
         #######################################################################################################################################################
-        ## define sketch ==>> hole #####s#######################################################################################################################
+        ## define sketch ==>> hole ############################################################################################################################
         self.profileSketch[1] = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_2', sheetSize=200.0)
         self.profileGeometry2, self.profileVertices2 = self.profileSketch[1].geometry, self.profileSketch[1].vertices
         self.profileSketch[1].setPrimaryObject(option=STANDALONE)
@@ -260,7 +260,7 @@ class fracture_coupon_22_36(coupon_generic):
                 numThicknessElem = numThicknessElem+1
         edgesThickness = self.part[0].edges.findAt(coordinates=((self.xE, self.yE, self.lenTol), ))
         # self.part[0].seedEdgeBySize(edges=edgesThickness, size=self.seedSizeThickness, deviationFactor=0.1, constraint=FINER)
-        self.part[0].seedEdgeByNumber(edges=edgesThickness, number=int(numThicknessElem), constraint=FIXED)
+        self.part[0].seedEdgeByNumber(edges=edgesThickness, number=int(numThicknessElem), constraint=FINER)
         ## seed ==>> edges long 1
         edgesLong1 = self.part[0].edges.findAt(coordinates=((self.xE, self.yE-self.lenTol, 0), (self.xE, self.yE-self.lenTol, self.thickness)))
         self.seedEdge(self.part[0], 1, self.yE, edgesLong1, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
