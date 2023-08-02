@@ -1673,25 +1673,541 @@
             "version" : ""
         }
     },
-    "Fracture_Toughness_Coupon_22_36" : {
-        "Fracture_Toughness_Coupon_22" : {
-            "couponName" : "Fracture_Toughness_Coupon_22",
+    "Fracture_Coupon_22_36" : {
+        "Fracture_Coupon_22" : {
+            "couponName" : "Fracture_Coupon_22",
             "geometry" : {
-                "width" : 25.0,
-                "base" : 24.0,
-                "diameter" : 5,
+                "height" : 25.0,
+                "width" : 24.0,
+                "thickness" : 10.0,
+                "diameter" : 5.0,
                 "centerOffset1" : 20.0,
-                "notchOffset" : 7,
-                "centerOffset2" : 11,
-                "notchOpening1Angle" : 60,
-                "notchOpening2Angle" : 90,
-                "notchTipAngle" : 90,
+                "notchOffset" : 7.0,
+                "centerOffset2" : 11.0,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
                 "notchOpeningTop" : 5.0,
                 "notchOpeningBottom" : 2.0,
                 "notchOpeningDepth" : 1.4
             },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.05,
+                "long1" : 0.05,
+                "long2" : 0.1,
+                "long3" : 0.6,
+                "notch" : 0.05,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_24" : {
+            "couponName" : "Fracture_Coupon_24",
+            "geometry" : {
+                "height" : 32.0,
+                "width" : 30.0,
+                "thickness" : 12.5,
+                "diameter" : 6.0,
+                "centerOffset1" : 25.0,
+                "notchOffset" : 8.75,
+                "centerOffset2" : 14.0,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 2.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_26" : {
+            "couponName" : "Fracture_Coupon_26",
+            "geometry" : {
+                "height" : 35.0,
+                "width" : 33.6,
+                "thickness" : 14.0,
+                "diameter" : 7.0,
+                "centerOffset1" : 28.0,
+                "notchOffset" : 9.8,
+                "centerOffset2" : 15.4,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 2.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_28" : {
+            "couponName" : "Fracture_Coupon_28",
+            "geometry" : {
+                "height" : 37.5,
+                "width" : 36.0,
+                "thickness" : 15.0,
+                "diameter" : 7.5,
+                "centerOffset1" : 30.0,
+                "notchOffset" : 10.5,
+                "centerOffset2" : 16.5,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 3.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_30" : {
+            "couponName" : "Fracture_Coupon_30",
+            "geometry" : {
+                "height" : 50.0,
+                "width" : 48.0,
+                "thickness" : 20.0,
+                "diameter" : 10.0,
+                "centerOffset1" : 40.0,
+                "notchOffset" : 14.0,
+                "centerOffset2" : 22.0,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 3.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_32" : {
+            "couponName" : "Fracture_Coupon_32",
+            "geometry" : {
+                "height" : 62.5,
+                "width" : 60.0,
+                "thickness" : 25.0,
+                "diameter" : 12.5,
+                "centerOffset1" : 50.0,
+                "notchOffset" : 17.5,
+                "centerOffset2" : 27.5,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 3.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_34" : {
+            "couponName" : "Fracture_Coupon_34",
+            "geometry" : {
+                "height" : 75.0,
+                "width" : 72.0,
+                "thickness" : 30.0,
+                "diameter" : 15.0,
+                "centerOffset1" : 60.0,
+                "notchOffset" : 21.0,
+                "centerOffset2" : 33.0,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 3.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        },
+        "Fracture_Coupon_36" : {
+            "couponName" : "Fracture_Coupon_36",
+            "geometry" : {
+                "height" : 100.0,
+                "width" : 96.0,
+                "thickness" : 40.0,
+                "diameter" : 20.0,
+                "centerOffset1" : 80.0,
+                "notchOffset" : 28.0,
+                "centerOffset2" : 44.0,
+                "notchOpening1Angle" : 60.0,
+                "notchOpening2Angle" : 90.0,
+                "notchTipAngle" : 90.0,
+                "notchOpeningTop" : 5.0,
+                "notchOpeningBottom" : 3.0,
+                "notchOpeningDepth" : 1.4
+            },
+            "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6,
+                "notch" : 0.15,
+                "pinDia" : 0.4,
+                "pinLength" : 0.4
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
+            "version" : ""
+        }
+    },
+    "Crack_Growth_Coupon_44_50" : {
+        "Crack_Growth_Coupon_44" : {
+            "couponName" : "Crack_Growth_Coupon_44",
+            "geometry" : {
+                "length" : 150.0,
+                "width" : 50.0,
+                "phi1" : 3.0,
+                "notchLength" : 8.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 0.0,
+                "nHoleRow2" : 0.0,
+                "phi2" : 0.0,
+                "centerOffsetRow1" : 0.0,
+                "centerOffsetRow2" : 0.0,
+                "centerOffsetColumn" : 0.0
+            },
             "thickness" : 10.0,
-            "lenTol" : 1.0e-5
+            "lenTol" : 1.0e-5,
+            "version" : ""
+        },
+        "Crack_Growth_Coupon_45" : {
+            "couponName" : "Crack_Growth_Coupon_45",
+            "geometry" : {
+                "length" : 240.0,
+                "width" : 80.0,
+                "phi1" : 3.0,
+                "notchLength" : 8.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 3.0,
+                "nHoleRow2" : 2.0,
+                "phi2" : 10.0,
+                "centerOffsetRow1" : 20.0,
+                "centerOffsetRow2" : 26.0,
+                "centerOffsetColumn" : 25.0
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5,
+            "version" : ""
+        },
+        "Crack_Growth_Coupon_46" : {
+            "couponName" : "Crack_Growth_Coupon_46",
+            "geometry" : {
+                "length" : 300.0,
+                "width" : 100.0,
+                "phi1" : 3.0,
+                "notchLength" : 8.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 3.0,
+                "nHoleRow2" : 2.0,
+                "phi2" : 12.0,
+                "centerOffsetRow1" : 24.0,
+                "centerOffsetRow2" : 26.0,
+                "centerOffsetColumn" : 30.0
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5,
+            "version" : ""
+        },
+        "Crack_Growth_Coupon_47" : {
+            "couponName" : "Crack_Growth_Coupon_47",
+            "geometry" : {
+                "length" : 480.0,
+                "width" : 160.0,
+                "phi1" : 3.0,
+                "notchLength" : 12.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 5.0,
+                "nHoleRow2" : 4.0,
+                "phi2" : 12.0,
+                "centerOffsetRow1" : 30.0,
+                "centerOffsetRow2" : 26.0,
+                "centerOffsetColumn" : 30.0
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5,
+            "version" : ""
+        },
+        "Crack_Growth_Coupon_48" : {
+            "couponName" : "Crack_Growth_Coupon_48",
+            "geometry" : {
+                "length" : 600.0,
+                "width" : 200.0,
+                "phi1" : 3.0,
+                "notchLength" : 12.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 7.0,
+                "nHoleRow2" : 6.0,
+                "phi2" : 12.0,
+                "centerOffsetRow1" : 30.0,
+                "centerOffsetRow2" : 26.0,
+                "centerOffsetColumn" : 30.0
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5,
+            "version" : ""
+        },
+        "Crack_Growth_Coupon_49" : {
+            "couponName" : "Crack_Growth_Coupon_49",
+            "geometry" : {
+                "length" : 900.0,
+                "width" : 300.0,
+                "phi1" : 3.0,
+                "notchLength" : 12.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 9.0,
+                "nHoleRow2" : 10.0,
+                "phi2" : 12.0,
+                "centerOffsetRow1" : 30.0,
+                "centerOffsetRow2" : 26.0,
+                "centerOffsetColumn" : 30.0
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5,
+            "version" : ""
+        },
+        "Crack_Growth_Coupon_50" : {
+            "couponName" : "Crack_Growth_Coupon_50",
+            "geometry" : {
+                "length" : 1000.0,
+                "width" : 400.0,
+                "phi1" : 3.0,
+                "notchLength" : 12.0,
+                "notchThickness" : 0.35,
+                "nHoleRow1" : 9.0,
+                "nHoleRow2" : 10.0,
+                "phi2" : 12.0,
+                "centerOffsetRow1" : 70.0,
+                "centerOffsetRow2" : 50.0,
+                "centerOffsetColumn" : 70.0
+            },
+            "thickness" : 10.0,
+            "lenTol" : 1.0e-5,
+            "version" : ""
         }
     }
 }
