@@ -1680,7 +1680,7 @@
                 "height" : 25.0,
                 "width" : 24.0,
                 "thickness" : 10.0,
-                "diameter" : 5.0,
+                "phi" : 5.0,
                 "centerOffset1" : 20.0,
                 "notchOffset" : 7.0,
                 "centerOffset2" : 11.0,
@@ -1693,7 +1693,7 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.05,
+                "thickness" : 0.25,
                 "long1" : 0.05,
                 "long2" : 0.1,
                 "long3" : 0.6,
@@ -1730,7 +1730,7 @@
                 "height" : 32.0,
                 "width" : 30.0,
                 "thickness" : 12.5,
-                "diameter" : 6.0,
+                "phi" : 6.0,
                 "centerOffset1" : 25.0,
                 "notchOffset" : 8.75,
                 "centerOffset2" : 14.0,
@@ -1743,13 +1743,13 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.5,
-                "long1" : 0.2,
-                "long2" : 0.4,
-                "long3" : 0.6,
-                "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "thickness" : 0.3,
+                "long1" : 0.06,
+                "long2" : 0.13,
+                "long3" : 0.8,
+                "notch" : 0.06,
+                "pinDia" : 0.5,
+                "pinLength" : 0.5
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -1780,7 +1780,7 @@
                 "height" : 35.0,
                 "width" : 33.6,
                 "thickness" : 14.0,
-                "diameter" : 7.0,
+                "phi" : 7.0,
                 "centerOffset1" : 28.0,
                 "notchOffset" : 9.8,
                 "centerOffset2" : 15.4,
@@ -1793,13 +1793,13 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.5,
-                "long1" : 0.2,
-                "long2" : 0.4,
-                "long3" : 0.6,
-                "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "thickness" : 0.35,
+                "long1" : 0.07,
+                "long2" : 0.14,
+                "long3" : 0.84,
+                "notch" : 0.07,
+                "pinDia" : 0.56,
+                "pinLength" : 0.56
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -1830,7 +1830,7 @@
                 "height" : 37.5,
                 "width" : 36.0,
                 "thickness" : 15.0,
-                "diameter" : 7.5,
+                "phi" : 7.5,
                 "centerOffset1" : 30.0,
                 "notchOffset" : 10.5,
                 "centerOffset2" : 16.5,
@@ -1843,13 +1843,13 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.5,
-                "long1" : 0.2,
-                "long2" : 0.4,
-                "long3" : 0.6,
-                "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "thickness" : 0.375,
+                "long1" : 0.075,
+                "long2" : 0.15,
+                "long3" : 0.9,
+                "notch" : 0.075,
+                "pinDia" : 0.6,
+                "pinLength" : 0.6
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -1880,7 +1880,7 @@
                 "height" : 50.0,
                 "width" : 48.0,
                 "thickness" : 20.0,
-                "diameter" : 10.0,
+                "phi" : 10.0,
                 "centerOffset1" : 40.0,
                 "notchOffset" : 14.0,
                 "centerOffset2" : 22.0,
@@ -1894,12 +1894,12 @@
             "lenTol" : 1.0e-5,
             "elemSize" : {
                 "thickness" : 0.5,
-                "long1" : 0.2,
-                "long2" : 0.4,
-                "long3" : 0.6,
-                "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 1.2,
+                "notch" : 0.1,
+                "pinDia" : 0.8,
+                "pinLength" : 0.8
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -1930,7 +1930,7 @@
                 "height" : 62.5,
                 "width" : 60.0,
                 "thickness" : 25.0,
-                "diameter" : 12.5,
+                "phi" : 12.5,
                 "centerOffset1" : 50.0,
                 "notchOffset" : 17.5,
                 "centerOffset2" : 27.5,
@@ -1943,13 +1943,13 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.5,
-                "long1" : 0.2,
-                "long2" : 0.4,
-                "long3" : 0.6,
-                "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "thickness" : 0.625,
+                "long1" : 0.125,
+                "long2" : 0.25,
+                "long3" : 1.5,
+                "notch" : 0.125,
+                "pinDia" : 1.0,
+                "pinLength" : 1.0
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -1980,7 +1980,7 @@
                 "height" : 75.0,
                 "width" : 72.0,
                 "thickness" : 30.0,
-                "diameter" : 15.0,
+                "phi" : 15.0,
                 "centerOffset1" : 60.0,
                 "notchOffset" : 21.0,
                 "centerOffset2" : 33.0,
@@ -1993,13 +1993,13 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.5,
-                "long1" : 0.2,
-                "long2" : 0.4,
-                "long3" : 0.6,
+                "thickness" : 0.75,
+                "long1" : 0.15,
+                "long2" : 0.3,
+                "long3" : 1.8,
                 "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "pinDia" : 1.2,
+                "pinLength" : 1.2
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -2030,7 +2030,7 @@
                 "height" : 100.0,
                 "width" : 96.0,
                 "thickness" : 40.0,
-                "diameter" : 20.0,
+                "phi" : 20.0,
                 "centerOffset1" : 80.0,
                 "notchOffset" : 28.0,
                 "centerOffset2" : 44.0,
@@ -2043,13 +2043,13 @@
             },
             "lenTol" : 1.0e-5,
             "elemSize" : {
-                "thickness" : 0.5,
+                "thickness" : 1.0,
                 "long1" : 0.2,
                 "long2" : 0.4,
-                "long3" : 0.6,
-                "notch" : 0.15,
-                "pinDia" : 0.4,
-                "pinLength" : 0.4
+                "long3" : 2.4,
+                "notch" : 0.2,
+                "pinDia" : 1.6,
+                "pinLength" : 1.6
             },
             "elemType" : {
                 "hexPart1" : "C3D8HS",
@@ -2150,6 +2150,27 @@
             },
             "thickness" : 10.0,
             "lenTol" : 1.0e-5,
+            "elemSize" : {
+                "thickness" : 0.5,
+                "long1" : 0.5,
+                "long2" : 2.5,
+                "arc" : 0.25,
+                "notch" : 0.1
+            },
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "pinLoad" : 20.0
+            },
             "version" : ""
         },
         "Crack_Growth_Coupon_48" : {
