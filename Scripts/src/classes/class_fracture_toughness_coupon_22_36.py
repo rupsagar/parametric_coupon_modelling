@@ -28,7 +28,7 @@ class fracture_coupon_22_36(coupon_generic):
         self.height = couponData['geometry']['height']
         self.width = couponData['geometry']['width']
         self.thickness = couponData['geometry']['thickness']
-        self.diameter = couponData['geometry']['diameter']
+        self.phi = couponData['geometry']['phi']
         self.centerOffset1 = couponData['geometry']['centerOffset1']
         self.centerOffset2 = couponData['geometry']['centerOffset2']
         self.notchOffset = couponData['geometry']['notchOffset']
@@ -137,10 +137,10 @@ class fracture_coupon_22_36(coupon_generic):
         self.profileSketch[0].CoincidentConstraint(entity1=self.profileVertices1[7], entity2=self.profileGeometry1[3])
         self.profileSketch[0].DistanceDimension(entity1=self.profileGeometry1[12], entity2=self.profileGeometry1[2], textPoint=(-(self.xG+self.xC1)/2.0, self.yG), value=self.height)
         ## circle
-        self.profileSketch[0].CircleByCenterPerimeter(center=(self.xC1, self.yC1), point1=(self.xC1, self.yC1-self.diameter/2.0))
+        self.profileSketch[0].CircleByCenterPerimeter(center=(self.xC1, self.yC1), point1=(self.xC1, self.yC1-self.phi/2.0))
         self.profileSketch[0].DistanceDimension(entity1=self.profileGeometry1[12], entity2=self.profileVertices1[8], textPoint=(self.xC1, self.yC1/2.0), value=self.centerOffset1)
         self.profileSketch[0].DistanceDimension(entity1=self.profileGeometry1[3], entity2=self.profileVertices1[8], textPoint=(self.xC1/2.0, self.yC1), value=self.centerOffset2/2.0)
-        self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[13], textPoint=(self.xC1+self.diameter, self.yC1), radius=self.diameter/2.0)
+        self.profileSketch[0].RadialDimension(curve=self.profileGeometry1[13], textPoint=(self.xC1+self.phi, self.yC1), radius=self.phi/2.0)
         self.profileSketch[0].VerticalDimension(vertex1=self.profileVertices1[4], vertex2=self.profileVertices1[8], textPoint=(-self.xC1, (self.yE-self.yC1)/2.0), value=self.notchOffset)
         ## copy and mirror
         self.profileSketch[0].copyMirror(mirrorLine=self.profileGeometry1[3], objectList=(self.profileGeometry1[6], self.profileGeometry1[7], self.profileGeometry1[8], self.profileGeometry1[9], 
@@ -152,7 +152,7 @@ class fracture_coupon_22_36(coupon_generic):
         self.profileSketch[1] = self.model.ConstrainedSketch(name=self.couponName+'_Profile_Sketch_2', sheetSize=200.0)
         self.profileGeometry2, self.profileVertices2 = self.profileSketch[1].geometry, self.profileSketch[1].vertices
         self.profileSketch[1].setPrimaryObject(option=STANDALONE)
-        self.profileSketch[1].CircleByCenterPerimeter(center=(self.xO, self.yO), point1=(self.xO+self.diameter/2.0, self.yO))
+        self.profileSketch[1].CircleByCenterPerimeter(center=(self.xO, self.yO), point1=(self.xO+self.phi/2.0, self.yO))
         self.profileSketch[1].unsetPrimaryObject()
         #######################################################################################################################################################
         (self.xA, self.yA) = self.profileVertices1[0].coords
@@ -229,29 +229,42 @@ class fracture_coupon_22_36(coupon_generic):
             edges2 = self.getByCylinderDifference(self.part[0].edges, (0, self.yE, self.thickness+self.lenTol), (0, self.yE, self.thickness-self.lenTol), (((self.xD**2+self.yD**2)**0.5+self.lenTol), (((((self.xD+self.xE)/2.0)**2+((self.yD+self.yE)/2.0)**2))**0.5+self.lenTol)))
             edges2Arc = self.getArcEdge(edges2)
             self.part[0].PartitionCellBySweepEdge(sweepPath=self.part[0].edges.findAt(coordinates=(self.xD, self.yD, self.lenTol)), cells=self.part[0].cells, edges=(edges2Arc[0],))
-        def createPartitionDatumPlane(thisPart, thisPlane, offsetDistance):
+        def createPartitionDatumPlane(thisPart, thisCells, thisPlane, offsetDistance):
             self.datumPlane_ID = thisPart.DatumPlaneByPrincipalPlane(principalPlane=SymbolicConstant(thisPlane), offset=offsetDistance).id
-            thisPart.PartitionCellByDatumPlane(datumPlane=thisPart.datums[self.datumPlane_ID], cells=thisPart.cells)
+            thisPart.PartitionCellByDatumPlane(datumPlane=thisPart.datums[self.datumPlane_ID], cells=thisCells)
         # createPartitionCyl()
-        createPartitionDatumPlane(self.part[0], 'XZPLANE', self.yC1)
-        createPartitionDatumPlane(self.part[0], 'XZPLANE', self.yB)
-        createPartitionDatumPlane(self.part[0], 'XZPLANE', self.yC1-abs(self.yC1-self.yB))
-        createPartitionDatumPlane(self.part[0], 'XZPLANE', self.yE-self.xC1)
-        createPartitionDatumPlane(self.part[0], 'XZPLANE', self.yD)
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', self.xO)
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', self.xC1)
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', -self.xC1)
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', self.xD)
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', -self.xD)
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', (self.xC1+(self.xC1-self.xD)))
-        createPartitionDatumPlane(self.part[0], 'YZPLANE', -(self.xC1+(self.xC1-self.xD)))
-        self.part[0].PartitionCellByExtendFace(extendFace=self.part[0].faces.findAt(coordinates=((self.xA+self.xB)/2.0, (self.yA+self.yB)/2.0, self.lenTol)), cells=self.part[0].cells.findAt(((self.xC, self.yC, 0), )))
-        self.part[0].PartitionCellByExtendFace(extendFace=self.part[0].faces.findAt(coordinates=(-(self.xA+self.xB)/2.0, (self.yA+self.yB)/2.0, self.lenTol)), cells=self.part[0].cells.findAt(((-self.xC, self.yC, 0), )))
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'XZPLANE', self.yC1)
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'XZPLANE', self.yB)
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'XZPLANE', self.yC)
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'XZPLANE', self.yC1-abs(self.yC1-self.yC))
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'XZPLANE', self.yE-self.xC1)
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'XZPLANE', self.yD)
+        createPartitionDatumPlane(self.part[0], self.part[0].cells, 'YZPLANE', self.xO)
+        for i in range(2):
+            createPartitionDatumPlane(self.part[0], self.part[0].cells, 'YZPLANE', (-1)**i*self.xC1)
+            createPartitionDatumPlane(self.part[0], self.part[0].cells, 'YZPLANE', (-1)**i*(self.xC1+(self.xC1-self.xD)))
+            cellLowerBox = self.part[0].cells.getByBoundingBox(xMin=-(self.xF+self.lenTol), yMin=self.yG-self.lenTol, zMin=-self.lenTol, xMax=(self.xF+self.lenTol), yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+            createPartitionDatumPlane(self.part[0], cellLowerBox, 'YZPLANE', (-1)**i*self.xD)
+        # cellLowerBox = self.part[0].cells.getByBoundingBox(xMin=-(self.xF+self.lenTol), yMin=self.yG-self.lenTol, zMin=-self.lenTol, xMax=(self.xF+self.lenTol), yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+        # cellLower = []
+        # for thisCell in cellLowerBox:
+        #     cellLower.append(thisCell)
+        # createPartitionDatumPlane(part.CellArray(cellLower), 'YZPLANE', self.xD)
+        # cellLowerBox = self.part[0].cells.getByBoundingBox(xMin=-(self.xF+self.lenTol), yMin=self.yG-self.lenTol, zMin=-self.lenTol, xMax=(self.xF+self.lenTol), yMax=self.yD+self.lenTol, zMax=self.thickness+self.lenTol)
+        # cellLower = []
+        # for thisCell in cellLowerBox:
+        #     cellLower.append(thisCell)
+        # createPartitionDatumPlane(part.CellArray(cellLowerBox), 'YZPLANE', -self.xD)
+        # self.part[0].PartitionCellByExtendFace(extendFace=self.part[0].faces.findAt(coordinates=((self.xA+self.xB)/2.0, (self.yA+self.yB)/2.0, self.lenTol)), cells=self.part[0].cells.findAt(((self.xC, self.yC, 0), )))
+        # self.part[0].PartitionCellByExtendFace(extendFace=self.part[0].faces.findAt(coordinates=(-(self.xA+self.xB)/2.0, (self.yA+self.yB)/2.0, self.lenTol)), cells=self.part[0].cells.findAt(((-self.xC, self.yC, 0), )))
         # createPartitionDatumPlane(self.part[1], 'XZPLANE', self.yO)
-        createPartitionDatumPlane(self.part[1], 'YZPLANE', self.xO)
-        createPartitionDatumPlane(self.part[1], 'XYPLANE', self.pinLenFactor/2.0*self.thickness)
-        createPartitionDatumPlane(self.part[1], 'XYPLANE', (1+self.pinLenFactor/2.0)*self.thickness)
+        createPartitionDatumPlane(self.part[1], self.part[1].cells, 'YZPLANE', self.xO)
+        createPartitionDatumPlane(self.part[1], self.part[1].cells, 'XYPLANE', self.pinLenFactor/2.0*self.thickness)
+        createPartitionDatumPlane(self.part[1], self.part[1].cells, 'XYPLANE', (1+self.pinLenFactor/2.0)*self.thickness)
     def createMesh(self):
+        ## seed ==>> global
+        self.part[0].seedPart(size=max(self.seedSizeThickness, self.seedSizeLong1, self.seedSizeLong2, self.seedSizeLong3, self.seedSizeNotch), deviationFactor=0.1, minSizeFactor=0.1)
+        self.part[1].seedPart(size=max(self.seedSizePinDia, self.seedSizePinLength), deviationFactor=0.1, minSizeFactor=0.1)
         ## seed ==>> edges thickness
         numThicknessElem = self.thickness/self.seedSizeThickness
         if (numThicknessElem%2)!=0:
@@ -264,6 +277,9 @@ class fracture_coupon_22_36(coupon_generic):
         ## seed ==>> edges long 1
         edgesLong1 = self.part[0].edges.findAt(coordinates=((self.xE, self.yE-self.lenTol, 0), (self.xE, self.yE-self.lenTol, self.thickness)))
         self.seedEdge(self.part[0], 1, self.yE, edgesLong1, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong2)
+        elemNum = self.part[0].getEdgeSeeds(edgesLong1[0], attribute=NUMBER)
+        edgesLong1_2 = self.part[0].edges.findAt(coordinates=((self.xD, self.yD-self.lenTol, 0), (-self.xD, self.yD-self.lenTol, 0), (self.xD, self.yD-self.lenTol, self.thickness), (-self.xD, self.yD-self.lenTol, self.thickness)))
+        self.part[0].seedEdgeByNumber(edges=edgesLong1_2, number=elemNum, constraint=FIXED)
         ## seed ==>> edges long 2
         edgesLong2Temp1 = self.part[0].edges.getByBoundingBox(xMin=-(self.xF+self.lenTol), yMin=self.yG-self.lenTol, zMin=-self.lenTol, xMax=(self.xF+self.lenTol), yMax=self.yE-self.xC1+self.lenTol, zMax=self.thickness+self.lenTol)
         edgesLong2Temp2 = self.part[0].edges.getByBoundingBox(xMin=-(self.xF+self.lenTol), yMin=self.yE-self.xC1-self.lenTol, zMin=-self.lenTol, xMax=(self.xF+self.lenTol), yMax=self.yE-self.xC1+self.lenTol, zMax=self.thickness+self.lenTol)
@@ -287,18 +303,18 @@ class fracture_coupon_22_36(coupon_generic):
         ## seed ==>> pin circumference portion
         self.part[1].seedEdgeBySize(edges=self.getArcEdge(self.part[1].edges), size=self.seedSizePinDia, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> pin length portion
-        edgesPin1 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, -self.lenTol), (self.xO, self.yO, self.lenTol), (self.diameter/2.0+self.lenTol))
-        edgesPin2 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol-self.lenTol), (self.xO, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol), (self.diameter/2.0+self.lenTol))
-        edgesPin3 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, (1+self.pinLenFactor/2.0)*self.thickness-self.lenTol), (self.xO, self.yO, (1+self.pinLenFactor/2.0)*self.thickness+self.lenTol), (self.diameter/2.0+self.lenTol))
-        edgesPin4 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol), (self.xO, self.yO, (1+self.pinLenFactor)*self.thickness+self.lenTol), (self.diameter/2.0+self.lenTol))
-        edgesPinTemp1 = self.getByCylinderDifference(self.part[1].edges, (self.xO, self.yO, -self.lenTol), (self.xO, self.yO, (1+self.pinLenFactor)*self.thickness+self.lenTol), (self.diameter/2.0+self.lenTol), (self.diameter/2.0-self.lenTol))
+        edgesPin1 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, -self.lenTol), (self.xO, self.yO, self.lenTol), (self.phi/2.0+self.lenTol))
+        edgesPin2 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol-self.lenTol), (self.xO, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol), (self.phi/2.0+self.lenTol))
+        edgesPin3 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, (1+self.pinLenFactor/2.0)*self.thickness-self.lenTol), (self.xO, self.yO, (1+self.pinLenFactor/2.0)*self.thickness+self.lenTol), (self.phi/2.0+self.lenTol))
+        edgesPin4 = self.part[1].edges.getByBoundingCylinder((self.xO, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol), (self.xO, self.yO, (1+self.pinLenFactor)*self.thickness+self.lenTol), (self.phi/2.0+self.lenTol))
+        edgesPinTemp1 = self.getByCylinderDifference(self.part[1].edges, (self.xO, self.yO, -self.lenTol), (self.xO, self.yO, (1+self.pinLenFactor)*self.thickness+self.lenTol), (self.phi/2.0+self.lenTol), (self.phi/2.0-self.lenTol))
         edgesPinTemp2 = self.getByDifference(edgesPinTemp1, edgesPin1)
         edgesPinTemp3 = self.getByDifference(edgesPinTemp2, edgesPin2)
         edgesPinTemp4 = self.getByDifference(edgesPinTemp3, edgesPin3)
         edgesPin = self.getByDifference(edgesPinTemp4, edgesPin4)
         self.part[1].seedEdgeBySize(edges=edgesPin, size=self.seedSizePinLength, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> pin diameter portion
-        numDiaElem = self.diameter/self.seedSizePinDia
+        numDiaElem = self.phi/self.seedSizePinDia
         if (numDiaElem%2)!=0:
             numDiaElem = math.ceil(numDiaElem)
             if ((numDiaElem/2)%2)!=0:
@@ -336,10 +352,10 @@ class fracture_coupon_22_36(coupon_generic):
                 self.part[i].SectionAssignment(region=pickedRegion, sectionName=self.sectionPin.name, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
     def createEquation(self):
         i=1
-        nodesEqnPosY = self.part[i].nodes.getByBoundingSphere((self.xO, self.diameter/2.0, 0), self.lenTol)
+        nodesEqnPosY = self.part[i].nodes.getByBoundingSphere((self.xO, self.phi/2.0, 0), self.lenTol)
         nsetNameEqnPosY = 'Nset_Eqn_Part_'+str(i+1)+'_PosY'
         self.part[i].Set(nodes=nodesEqnPosY, name=nsetNameEqnPosY)
-        nodesEqnNegY = self.part[i].nodes.getByBoundingSphere((self.xO, -self.diameter/2.0, 0), self.lenTol)
+        nodesEqnNegY = self.part[i].nodes.getByBoundingSphere((self.xO, -self.phi/2.0, 0), self.lenTol)
         nsetNameEqnNegY = 'Nset_Eqn_Part_'+str(i+1)+'_NegY'
         self.part[i].Set(nodes=nodesEqnNegY, name=nsetNameEqnNegY)
         self.model.Equation(name=self.couponName+'_Equation_1', terms=((1.0, self.instance[1].name+'.'+nsetNameEqnPosY, 1), (-1.0, self.instance[1].name+'.'+nsetNameEqnNegY, 1)))
@@ -348,18 +364,18 @@ class fracture_coupon_22_36(coupon_generic):
         for i in range(len(self.part)):
             if i==0:
                 ## contact surface ==> plate cyl1
-                faceCellPlateCyl1 = self.part[0].faces.getByBoundingCylinder((self.xC1, self.yC1, -self.lenTol), (self.xC1, self.yC1, self.thickness+self.lenTol), (self.diameter/2.0+self.lenTol))
+                faceCellPlateCyl1 = self.part[0].faces.getByBoundingCylinder((self.xC1, self.yC1, -self.lenTol), (self.xC1, self.yC1, self.thickness+self.lenTol), (self.phi/2.0+self.lenTol))
                 nameSurfPlateCyl1 = 'Surf_Contact_Part_'+str(i+1)+'_Cyl_1'
                 self.getElemSurfFromCellFace(self.part[i], faceCellPlateCyl1, nameSurfPlateCyl1)
                 regionPlateCyl1 = self.instance[0].surfaces[nameSurfPlateCyl1]
                 ## plate contact surface ==> cyl2
-                faceCellPlateCyl2 = self.part[0].faces.getByBoundingCylinder((-self.xC1, self.yC1, -self.lenTol), (-self.xC1, self.yC1, self.thickness+self.lenTol), (self.diameter/2.0+self.lenTol))
+                faceCellPlateCyl2 = self.part[0].faces.getByBoundingCylinder((-self.xC1, self.yC1, -self.lenTol), (-self.xC1, self.yC1, self.thickness+self.lenTol), (self.phi/2.0+self.lenTol))
                 nameSurfPlateCyl2 = 'Surf_Contact_Part_'+str(i+1)+'_Cyl_2'
                 self.getElemSurfFromCellFace(self.part[i], faceCellPlateCyl2, nameSurfPlateCyl2)
                 regionPlateCyl2 = self.instance[0].surfaces[nameSurfPlateCyl2]
             if i==1:
                 # contact surface ==> pin
-                faceCellPin = self.part[i].faces.findAt(coordinates=((self.xO-self.diameter/2.0, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol), (self.xO+self.diameter/2.0, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol)))
+                faceCellPin = self.part[i].faces.findAt(coordinates=((self.xO-self.phi/2.0, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol), (self.xO+self.phi/2.0, self.yO, self.pinLenFactor/2.0*self.thickness+self.lenTol)))
                 nameSurfPin = 'Surf_Contact_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], faceCellPin, nameSurfPin)
                 regionPin1 = self.instance[1].surfaces[nameSurfPin]
@@ -411,18 +427,18 @@ class fracture_coupon_22_36(coupon_generic):
                 self.model.DisplacementBC(name='BC_Z_Instance_'+str(3), createStepName='Load', region=regionPin2BC_Z, u1=UNSET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 # self.model.DisplacementBC(name='BC_Z_Instance_'+str(3), createStepName='Load', region=regionPin2BC_Z, u1=SET, u2=SET, u3=SET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=UNSET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## pin ==> BC_X
-                # faceCellPinBC_X = self.part[i].faces.findAt(coordinates=((self.xO+self.diameter/2.0, self.yO, self.lenTol), (self.xO+self.diameter/2.0, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol)))
+                # faceCellPinBC_X = self.part[i].faces.findAt(coordinates=((self.xO+self.phi/2.0, self.yO, self.lenTol), (self.xO+self.phi/2.0, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol)))
                 # nameNsetPinBC_X = 'Nset_BC_X_Part_'+str(i+1)
                 # self.getNsetFromCellFace(self.part[i], faceCellPinBC_X, nameNsetPinBC_X)
                 # regionPin2BC_X = self.instance[2].sets[nameNsetPinBC_X]
                 # self.model.DisplacementBC(name='BC_NegX_Instance_'+str(3), createStepName='Load', region=regionPin2BC_X, u1=SET, u2=UNSET, u3=UNSET, ur1=UNSET, ur2=UNSET, ur3=UNSET, amplitude=SET, distributionType=UNIFORM, fieldName='', localCsys=None)
                 ## pin ==> presssure/concentrated load
                 # self.model.ConcentratedForce(name='Point_Load_1', createStepName='Load', region=regionPin1BC_Z, cf1=self.pinLoad, distributionType=UNIFORM, field='', localCsys=None)
-                faceCellPinLoadNegX = self.part[i].faces.findAt(coordinates=((self.xO-self.diameter/2.0, self.yO, self.lenTol), (self.xO-self.diameter/2.0, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol)))
+                faceCellPinLoadNegX = self.part[i].faces.findAt(coordinates=((self.xO-self.phi/2.0, self.yO, self.lenTol), (self.xO-self.phi/2.0, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol)))
                 nameSurfPinLoadNegX = 'Surf_NegX_Load_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], faceCellPinLoadNegX, nameSurfPinLoadNegX)
                 regionPin1BC = self.instance[1].surfaces[nameSurfPinLoadNegX]
-                faceCellPinLoadPosX = self.part[i].faces.findAt(coordinates=((self.xO+self.diameter/2.0, self.yO, self.lenTol), (self.xO+self.diameter/2.0, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol)))
+                faceCellPinLoadPosX = self.part[i].faces.findAt(coordinates=((self.xO+self.phi/2.0, self.yO, self.lenTol), (self.xO+self.phi/2.0, self.yO, (1+self.pinLenFactor)*self.thickness-self.lenTol)))
                 nameSurfPinLoadPosX = 'Surf_PosX_Load_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], faceCellPinLoadPosX, nameSurfPinLoadPosX)
                 regionPin2BC = self.instance[2].surfaces[nameSurfPinLoadPosX]
