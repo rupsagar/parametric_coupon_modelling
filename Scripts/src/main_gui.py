@@ -7,7 +7,7 @@
 ## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
 ## +------------------------------------------------------------------------------------------------------------+
 ## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
-## |                                |           |             |                                                 |
+## |        Rupsagar Chatterjee     |   v2.0    | 08-Aug-2023 |                                                 |
 ## |                                |           |             |                                                 |
 ## |                                |           |             |                                                 |
 ## +------------------------------------------------------------------------------------------------------------+
@@ -23,7 +23,7 @@ import os, sys
 srcPath = os.getcwd()
 
 ## create gui window
-exec(open(srcPath+'/classes/class_coupon_gui.py').read())
-guiClass = getattr(sys.modules[__name__], 'coupon_gui')
+exec(open(srcPath+'/lib/gui.py').read())
+guiClass = getattr(sys.modules[__name__], 'gui')
 newGUI = guiClass(abqPath, srcPath)
 
