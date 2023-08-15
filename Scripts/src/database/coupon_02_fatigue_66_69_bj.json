@@ -1,0 +1,173 @@
+{
+    "Coupon_02_Fatigue_66_69_BJ" : {
+        "Coupon_02_Fatigue_66C": {
+            "geometry" : {
+                "phi1" : 2.82,
+                "phi2" : 5.0,
+                "phi3" : 8.0,
+                "rad1" : 0.71,
+                "rad2" : 10.0,
+                "len1" : 24.0,
+                "len2" : 40.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.03,
+                "radialOuter" : 0.01,
+                "radialMiddle" : 0.03,
+                "radialInner" : 0.03,
+                "long1" : 0.01,
+                "long2" : 0.3,
+                "part2" : 0.3
+            }
+        },
+        "Coupon_02_Fatigue_66E": {
+            "geometry" : {
+                "phi1" : 2.82,
+                "phi2" : 5.0,
+                "phi3" : 8.0,
+                "rad1" : 0.13,
+                "rad2" : 10.0,
+                "len1" : 24.0,
+                "len2" : 40.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.03,
+                "radialOuter" : 0.01,
+                "radialMiddle" : 0.03,
+                "radialInner" : 0.03,
+                "long1" : 0.01,
+                "long2" : 0.3,
+                "part2" : 0.3
+            }
+        },
+        "Coupon_02_Fatigue_67C": {
+            "geometry" : {
+                "phi1" : 3.99,
+                "phi2" : 7.0,
+                "phi3" : 12.0,
+                "rad1" : 1.0,
+                "rad2" : 13.0,
+                "len1" : 34.0,
+                "len2" : 60.0,
+                "thetaDeg" : 60.0
+            },  
+            "elemSize" : {
+                "arcOuter" : 0.04,
+                "radialOuter" : 0.015,
+                "radialMiddle" : 0.04,
+                "radialInner" : 0.04,
+                "long1" : 0.015,
+                "long2" : 0.4,
+                "part2" : 0.4
+            }
+        },
+        "Coupon_02_Fatigue_67E": {
+            "geometry" : {
+                "phi1" : 3.99,
+                "phi2" : 7.0,
+                "phi3" : 12.0,
+                "rad1" : 0.18,
+                "rad2" : 13.0,
+                "len1" : 34.0,
+                "len2" : 60.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.04,
+                "radialOuter" : 0.015,
+                "radialMiddle" : 0.04,
+                "radialInner" : 0.04,
+                "long1" : 0.015,
+                "long2" : 0.4,
+                "part2" : 0.4
+            }
+        },
+        "Coupon_02_Fatigue_68C": {
+            "geometry" : {
+                "phi1" : 5.64,
+                "phi2" : 10.0,
+                "phi3" : 16.0,
+                "rad1" : 1.41,
+                "rad2" : 20.0,
+                "len1" : 48.0,
+                "len2" : 80.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.06,
+                "radialOuter" : 0.02,
+                "radialMiddle" : 0.06,
+                "radialInner" : 0.06,
+                "long1" : 0.02,
+                "long2" : 0.6,
+                "part2" : 0.6
+            }
+        },
+        "Coupon_02_Fatigue_68E": {
+            "geometry" : {
+                "phi1" : 5.64,
+                "phi2" : 10.0,
+                "phi3" : 16.0,
+                "rad1" : 0.25,
+                "rad2" : 20.0,
+                "len1" : 48.0,
+                "len2" : 80.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.06,
+                "radialOuter" : 0.02,
+                "radialMiddle" : 0.06,
+                "radialInner" : 0.06,
+                "long1" : 0.02,
+                "long2" : 0.6,
+                "part2" : 0.6
+            }
+        },
+        "Coupon_02_Fatigue_69C": {
+            "geometry" : {
+                "phi1" : 7.98,
+                "phi2" : 14.0,
+                "phi3" : 22.0,
+                "rad1" : 2.0,
+                "rad2" : 31.0,
+                "len1" : 68.0,
+                "len2" : 110.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.085,
+                "radialOuter" : 0.03,
+                "radialMiddle" : 0.085,
+                "radialInner" : 0.085,
+                "long1" : 0.03,
+                "long2" : 0.85,
+                "part2" : 0.85
+            }
+        },
+        "Coupon_02_Fatigue_69E": {
+            "geometry" : {
+                "phi1" : 7.98,
+                "phi2" : 14.0,
+                "phi3" : 22.0,
+                "rad1" : 0.36,
+                "rad2" : 31.0,
+                "len1" : 68.0,
+                "len2" : 110.0,
+                "thetaDeg" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.085,
+                "radialOuter" : 0.03,
+                "radialMiddle" : 0.085,
+                "radialInner" : 0.085,
+                "long1" : 0.03,
+                "long2" : 0.85,
+                "part2" : 0.85
+            }
+        }
+    }
+}
+
