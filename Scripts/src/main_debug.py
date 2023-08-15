@@ -7,7 +7,7 @@
 ## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
 ## +------------------------------------------------------------------------------------------------------------+
 ## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
-## |                                |           |             |                                                 |
+## |        Rupsagar Chatterjee     |   v2.0    | 08-Aug-2023 |                                                 |
 ## |                                |           |             |                                                 |
 ## |                                |           |             |                                                 |
 ## +------------------------------------------------------------------------------------------------------------+
@@ -17,45 +17,45 @@
 #################################################################################################################
 
 
-srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src', 
-        r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
-        r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
+srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',]
+           #r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
+           #r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
 
-# template = 'Fatigue_Coupon_66_69_A'
-# coupon = 'Fatigue_Coupon_69A'
+# template = 'Coupon_01_Fatigue_66_69_A'
+# coupon = 'Coupon_01_Fatigue_69A'
 
-# template = 'Fatigue_Coupon_66_69_BJ'
-# coupon = 'Fatigue_Coupon_69E'
+# template = 'Coupon_02_Fatigue_66_69_BJ'
+# coupon = 'Coupon_02_Fatigue_69E'
 
-# template = 'Fatigue_Coupon_70_73_A'
-# coupon = 'Fatigue_Coupon_72A'
+# template = 'Coupon_03_Fatigue_70_73_A'
+# coupon = 'Coupon_03_Fatigue_72A'
 
-# template = 'Fatigue_Coupon_70_73_BE'
-# coupon = 'Fatigue_Coupon_70C'
+# template = 'Coupon_04_Fatigue_70_73_BE'
+# coupon = 'Coupon_04_Fatigue_70C'
 
-# template = 'Fatigue_Coupon_74_75'
-# coupon = 'Fatigue_Coupon_74'
+# template = 'Coupon_05_Fatigue_74_75'
+# coupon = 'Coupon_05_Fatigue_74'
 
-# template = 'Static_Coupon_1_Full_1_7'
-# coupon = 'Static_Coupon_1_Full_6'
+# template = 'Coupon_06A_Static_1_Symm_1_7'
+# coupon = 'Coupon_06A_Static_1_Symm_5'
 
-# template = 'Static_Coupon_1_Symmetric_1_7'
-# coupon = 'Static_Coupon_1_Symmetric_5'
+# template = 'Coupon_06B_Static_1_Full_1_7'
+# coupon = 'Coupon_06B_Static_1_Full_6'
 
-# template = 'Static_Coupon_2_Full_1_6'
-# coupon = 'Static_Coupon_2_Full_6'
+# template = 'Coupon_07A_Static_2_Symm_1_6'
+# coupon = 'Coupon_07A_Static_2_Symm_4'
 
-# template = 'Static_Coupon_2_Symmetric_1_6'
-# coupon = 'Static_Coupon_2_Symmetric_4'
+# template = 'Coupon_07B_Static_2_Full_1_6'
+# coupon = 'Coupon_07B_Static_2_Full_6'
 
-# template = 'Static_Coupon_18_21'
-# coupon = 'Static_Coupon_19'
+# template = 'Coupon_08_Static_18_21'
+# coupon = 'Coupon_08_Static_19'
 
-# template = 'Fracture_Coupon_22_36'
-# coupon = 'Fracture_Coupon_30'
+template = 'Coupon_09_Fracture_22_36'
+coupon = 'Coupon_09_Fracture_30'
 
-template = 'Crack_Growth_Coupon_44_50'
-coupon = 'Crack_Growth_Coupon_47'
+# template = 'Coupon_10_Crack_44_50'
+# coupon = 'Coupon_10_Crack_47'
 
 import os, sys
 
@@ -64,7 +64,7 @@ for i in range(len(srcPath)):
         srcPathID = i
         break
 
-execfile(srcPath[srcPathID]+'/utils/util_debug.py')
+execfile(srcPath[srcPathID]+'/lib/debug.py')
 debugFunc = getattr(sys.modules[__name__], 'debug')
 self = debugFunc(srcPath[srcPathID], template, coupon)
 
