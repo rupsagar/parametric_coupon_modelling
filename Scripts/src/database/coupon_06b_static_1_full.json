@@ -1,0 +1,59 @@
+{
+    "Coupon_06B_Static_1_Full" : {
+        "Coupon_06B_Static_1_Full_5" : {
+            "geometry" : {
+                "lt" : 80.0,
+                "d" : 6.0,
+                "D" : 10.0,
+                "R" : 10.0,
+                "C" : 13.0,
+                "lc" : 42.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.1,
+                "radialOuter" : 0.1,
+                "radialInner" : 0.15,
+                "long1" : 0.1,
+                "long2" : 0.4,
+                "long3" : 0.6
+            }
+        },
+        "Coupon_06B_Static_1_Full_6" : {
+            "geometry" : {
+                "lt" : 110.0,
+                "d" : 8.0,
+                "D" : 16.0,
+                "R" : 16.0,
+                "C" : 20.0,
+                "lc" : 49.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.14,
+                "radialOuter" : 0.14,
+                "radialInner" : 0.2,
+                "long1" : 0.14,
+                "long2" : 0.55,
+                "long3" : 0.83
+            }
+        },
+        "Coupon_06B_Static_1_Full_7" : {
+            "geometry" : {
+                "lt" : 130.0,
+                "d" : 10.0,
+                "D" : 16.0,
+                "R" : 18.0,
+                "C" : 25.0,
+                "lc" : 60.0
+            },
+            "elemSize" : {
+                "arcOuter" : 0.16,
+                "radialOuter" : 0.16,
+                "radialInner" : 0.24,
+                "long1" : 0.16,
+                "long2" : 0.7,
+                "long3" : 0.9
+            }
+        }
+    }
+}
+
