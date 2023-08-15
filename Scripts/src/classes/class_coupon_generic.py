@@ -118,6 +118,15 @@ class coupon_generic(object):
                 elemWithFace[thisfaceID] = mesh.MeshFaceArray(elemWithFace[thisfaceID])
                 surfDict.update({'face'+str(thisfaceID+1)+'Elements':elemWithFace[thisfaceID]})
         part.Surface(**surfDict)
+    def getNsetFromCellFace(self, part, cellFaceArr, nsetName):
+        ## method to extract node set from cell face
+        nodes = []
+        for thisCellFace in cellFaceArr:
+            nodeArray = thisCellFace.getNodes()
+            for thisNode in nodeArray:
+                nodes.append(thisNode)
+        nodes = mesh.MeshNodeArray(nodes)
+        part.Set(nodes=nodes, name=nsetName)
     def inpFileSplitter(self):
         dictFileID = {0:'Job', 
                       1:'Parts', 
