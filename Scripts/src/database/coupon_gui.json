@@ -1,0 +1,273 @@
+{
+    "Coupon_Data" : {
+        "Coupon_01_Fatigue_66_69_A" : {
+            "partitionRadialFraction" : 0.67,
+            "elemType" : {
+                "hex" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_02_Fatigue_66_69_BJ" : {
+            "partitionRadialFraction" : 0.67,
+            "elemType" : {
+                "hex" : "C3D8HS",
+                "tet" : "C3D4"
+            },
+            "material" :{
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_03_Fatigue_70_73_A" : {
+            "elemType" : {
+                "hex" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_04_Fatigue_70_73_BE" : {
+            "partitionVerticalFraction" : 0.67,
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_05_Fatigue_74_75" : {
+            "isChamfer" : "true",
+            "elemType" : {
+                "hexPart1" : "C3D8HS",
+                "hexPart2" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_06A_Static_1_Symm" : {
+            "partitionRadialFraction" : 0.67,
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_06B_Static_1_Full" : {
+            "partitionRadialFraction" : 0.67,
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_07A_Static_2_Symm" : {
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_07B_Static_2_Full" : {
+            "elemType" : {
+                "hexPart1" : "C3D8HS"
+            },
+            "material" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "step" : {
+                "nlGeom" : "OFF",
+                "initIncr" : 1.0,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_08_Static_18_21" : {
+            "elemType" : {
+                "hexPart1" : "C3D20H",
+                "hexPart2" : "C3D8HS",
+                "hexPart3" : "C3D8HS"
+            },
+            "materialPlate" : {
+                "name" : "Aluminum",
+                "density" : 2.85e-6,
+                "youngsModulus" : 72000.0,
+                "poissonsRatio" : 0.3309
+            },
+            "materialPin" : {
+                "name" : "Steel",
+                "density" : 7.72e-06,
+                "youngsModulus" : 192500.0,
+                "poissonsRatio" : 0.2816
+            },
+            "step" : {
+                "nlGeom" : "ON",
+                "initIncr" : 0.2,
+                "nominalStress" : 250.0
+            }
+        },
+        "Coupon_09_Fracture_22_36" : {
+            "Geometry" : {
+                "Height" : ["display-yes", "editable-no"],
+                "Width" : ["display-yes", "editable-no"],
+                "Thickness" : ["display-yes", "editable-no"],
+                "Diameter" : ["display-yes", "editable-no"],
+                "Center_Offset_1" : ["display-yes", "editable-no"],
+                "Notch_Offset" : ["display-yes", "editable-no"],
+                "Center_Offset_2" : ["display-yes", "editable-no"],
+                "Notch_Opening_Angle_1" : ["display-yes", "editable-no"],
+                "Notch_Opening_Angle_2" : ["display-yes", "editable-no"],
+                "Notch_Tip_Angle" : ["display-yes", "editable-no"],
+                "Notch_Opening_Top" : ["display-yes", "editable-no"],
+                "Notch_Opening_Bottom" : ["display-yes", "editable-no"],
+                "Notch_Opening_Depth" : ["display-yes", "editable-no"]
+            },
+            "Element_Size" : {
+                "Thickness" : ["display-yes", "editable-yes"],
+                "Long_1" : ["display-yes", "editable-yes"],
+                "Long_2" : ["display-yes", "editable-yes"],
+                "Long_3" : ["display-yes", "editable-yes"],
+                "Notch" : ["display-yes", "editable-yes"],
+                "Pin_Dia" : ["display-yes", "editable-yes"],
+                "Pin_Length" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_10_Crack_44_50" : {
+            "Geometry" : {
+                "Length" : ["display-yes", "editable-no"],
+                "Width" : ["display-yes", "editable-no"],
+                "Diameter_1" : ["display-yes", "editable-no"],
+                "Notch_Length" : ["display-yes", "editable-no"],
+                "Notch_Width" : ["display-yes", "editable-no"],
+                "Num_Hole_Row_1" : ["display-yes", "editable-no"],
+                "Num_Hole_Row_2" : ["display-yes", "editable-no"],
+                "Diameter_2" : ["display-yes", "editable-no"],
+                "Center_Offset_Row_1" : ["display-yes", "editable-no"],
+                "Center_Offset_Row_2" : ["display-yes", "editable-no"],
+                "Center_Offset_Column" : ["display-yes", "editable-no"],
+                "Thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "Thickness" : ["display-yes", "editable-yes"],
+                "Long_1" : ["display-yes", "editable-yes"],
+                "Long_2" : ["display-yes", "editable-yes"],
+                "Arc" : ["display-yes", "editable-yes"],
+                "Notch" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        }
+    },
+    "Constant_Data" : {
+        "Length_Tolerance" : ["display-no", "editable-no"],
+        "Version" : ["display-yes", "editable-yes"]
+    },
+    "Material_Data" : {
+        "Material_ID" : {
+            "Name" : ["display-yes", "editable-yes"],
+            "Density" : ["display-yes", "editable-yes"],
+            "Youngs_Modulus" : ["display-yes", "editable-yes"],
+            "Poissons_Ratio" : ["display-yes", "editable-yes"]
+        }
+    }
+}
+
