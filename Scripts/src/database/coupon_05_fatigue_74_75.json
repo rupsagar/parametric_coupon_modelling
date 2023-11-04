@@ -1,15 +1,16 @@
 {
     "Coupon_05_Fatigue_74_75" : {
         "Coupon_05_Fatigue_74": {
-            "geometry" : {
+            "Geometry" : {
                 "len" : 150.0,
                 "width" : 30.0,
                 "phi" : 10.0,
                 "chamferEdgeLength" : 0.3,
-                "chamferAngle" : 45.0
+                "chamferAngle" : 45.0,
+                "thickness" : 3.0,
+                "isChamfer" : "true"
             },
-            "thickness" : 3.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.05,
                 "thickness2" : 0.3,
                 "arc" : 0.05,
@@ -21,15 +22,16 @@
             }
         },
         "Coupon_05_Fatigue_75": {
-            "geometry" : {
+            "Geometry" : {
                 "len" : 100.0,
                 "width" : 20.0,
                 "phi" : 6.35,
                 "chamferEdgeLength" : 0.3,
-                "chamferAngle" : 45.0
+                "chamferAngle" : 45.0,
+                "thickness" : 3.0,
+                "isChamfer" : "true"
             },
-            "thickness" : 3.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.05,
                 "thickness2" : 0.3,
                 "arc" : 0.033,
