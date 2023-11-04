@@ -1,16 +1,16 @@
 {
     "Coupon_07A_Static_2_Symm" : {
         "Coupon_07A_Static_2_Symm_4" : {
-            "geometry" : {
+            "Geometry" : {
                 "lt" : 150.0,
                 "b" : 12.0,
                 "B" : 25.0,
                 "R" : 25.0,
                 "C" : 28.0,
-                "lc" : 60.0
+                "lc" : 60.0,
+                "thickness" : 4.0
             },
-            "thickness" : 4.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness" : 0.1,
                 "vertical" : 0.2,
                 "long1" : 0.1,
@@ -20,16 +20,16 @@
             }
         },
         "Coupon_07A_Static_2_Symm_5" : {
-            "geometry" : {
+            "Geometry" : {
                 "lt" : 95.0,
                 "b" : 10.0,
                 "B" : 15.0,
                 "R" : 10.0,
                 "C" : 23.0,
-                "lc" : 35.0
+                "lc" : 35.0,
+                "thickness" : 3.0
             },
-            "thickness" : 3.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness" : 0.1,
                 "vertical" : 0.1,
                 "long1" : 0.05,
@@ -39,16 +39,16 @@
             }
         },
         "Coupon_07A_Static_2_Symm_6" : {
-            "geometry" : {
+            "Geometry" : {
                 "lt" : 45.0,
                 "b" : 8.0,
                 "B" : 12.0,
                 "R" : 8.0,
                 "C" : 7.0,
-                "lc" : 20.0
+                "lc" : 20.0,
+                "thickness" : 2.0
             },
-            "thickness" : 2.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness" : 0.05,
                 "vertical" : 0.09,
                 "long1" : 0.05,
