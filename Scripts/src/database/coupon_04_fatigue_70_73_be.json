@@ -1,7 +1,7 @@
 {
     "Coupon_04_Fatigue_70_73_BE" : {
         "Coupon_04_Fatigue_70C": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 5.0,
                 "h2" : 7.0,
                 "h3" : 12.0,
@@ -9,10 +9,10 @@
                 "rad2" : 8.0,
                 "len1" : 65.0,
                 "len2" : 15.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 2.0
             },
-            "thickness" : 2.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.1,
                 "thickness2" : 0.1,
                 "verticalOuter" : 0.01,
@@ -26,7 +26,7 @@
             }
         },
         "Coupon_04_Fatigue_70E": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 5.0,
                 "h2" : 7.0,
                 "h3" : 12.0,
@@ -34,10 +34,10 @@
                 "rad2" : 8.0,
                 "len1" : 65.0,
                 "len2" : 15.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 2.0
             },
-            "thickness" : 2.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.1,
                 "thickness2" : 0.1,
                 "verticalOuter" : 0.01,
@@ -51,7 +51,7 @@
             }
         },
         "Coupon_04_Fatigue_71C": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 7.0,
                 "h2" : 10.0,
                 "h3" : 17.0,
@@ -59,10 +59,10 @@
                 "rad2" : 12.0,
                 "len1" : 90.0,
                 "len2" : 21.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 2.5
             },
-            "thickness" : 2.5,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.14,
                 "thickness2" : 0.14,
                 "verticalOuter" : 0.014,
@@ -76,7 +76,7 @@
             }
         },
         "Coupon_04_Fatigue_71E": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 7.0,
                 "h2" : 10.0,
                 "h3" : 17.0,
@@ -84,10 +84,10 @@
                 "rad2" : 12.0,
                 "len1" : 90.0,
                 "len2" : 21.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 2.5
             },
-            "thickness" : 2.5,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.14,
                 "thickness2" : 0.14,
                 "verticalOuter" : 0.014,
@@ -101,7 +101,7 @@
             }
         },
         "Coupon_04_Fatigue_72C": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 10.0,
                 "h2" : 14.0,
                 "h3" : 24.0,
@@ -109,10 +109,10 @@
                 "rad2" : 16.0,
                 "len1" : 130.0,
                 "len2" : 30.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 4.0
             },
-            "thickness" : 4.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.2,
                 "thickness2" : 0.2,
                 "verticalOuter" : 0.02,
@@ -126,7 +126,7 @@
             }
         },
         "Coupon_04_Fatigue_72E": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 10.0,
                 "h2" : 14.0,
                 "h3" : 24.0,
@@ -134,10 +134,10 @@
                 "rad2" : 16.0,
                 "len1" : 130.0,
                 "len2" : 30.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 4.0
             },
-            "thickness" : 4.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.2,
                 "thickness2" : 0.2,
                 "verticalOuter" : 0.02,
@@ -151,7 +151,7 @@
             }
         },
         "Coupon_04_Fatigue_73C": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 15.0,
                 "h2" : 21.0,
                 "h3" : 36.0,
@@ -159,10 +159,10 @@
                 "rad2" : 25.0,
                 "len1" : 195.0,
                 "len2" : 45.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 6.0
             },
-            "thickness" : 6.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.3,
                 "thickness2" : 0.3,
                 "verticalOuter" : 0.03,
@@ -176,7 +176,7 @@
             }
         },
         "Coupon_04_Fatigue_73E": {
-            "geometry" : {
+            "Geometry" : {
                 "h1" : 15.0,
                 "h2" : 21.0,
                 "h3" : 36.0,
@@ -184,10 +184,10 @@
                 "rad2" : 25.0,
                 "len1" : 195.0,
                 "len2" : 45.0,
-                "thetaDeg" : 60.0
+                "thetaDeg" : 60.0,
+                "thickness" : 6.0
             },
-            "thickness" : 6.0,
-            "elemSize" : {
+            "Element_Size" : {
                 "thickness1" : 0.3,
                 "thickness2" : 0.3,
                 "verticalOuter" : 0.03,
