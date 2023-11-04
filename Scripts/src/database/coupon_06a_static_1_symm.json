@@ -1,7 +1,7 @@
 {
     "Coupon_06A_Static_1_Symm" : {
         "Coupon_06A_Static_1_Symm_5" : {
-            "geometry" : {
+            "Geometry" : {
                 "lt" : 80.0,
                 "d" : 6.0,
                 "D" : 10.0,
@@ -9,7 +9,7 @@
                 "C" : 13.0,
                 "lc" : 42.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.1,
                 "radialOuter" : 0.1,
                 "radialInner" : 0.15,
@@ -19,7 +19,7 @@
             }
         },
         "Coupon_06A_Static_1_Symm_6" : {
-            "geometry" : {
+            "Geometry" : {
                 "lt" : 110.0,
                 "d" : 8.0,
                 "D" : 16.0,
@@ -27,7 +27,7 @@
                 "C" : 20.0,
                 "lc" : 49.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.14,
                 "radialOuter" : 0.14,
                 "radialInner" : 0.2,
@@ -37,7 +37,7 @@
             }
         },
         "Coupon_06A_Static_1_Symm_7" : {
-            "geometry" : {
+            "Geometry" : {
                 "lt" : 130.0,
                 "d" : 10.0,
                 "D" : 16.0,
@@ -45,7 +45,7 @@
                 "C" : 25.0,
                 "lc" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.16,
                 "radialOuter" : 0.16,
                 "radialInner" : 0.24,
