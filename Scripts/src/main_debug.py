@@ -17,7 +17,8 @@
 #################################################################################################################
 
 
-srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',]
+srcPath = [r'\\fr0-svm20\St_RnT_METAL2\05_A350_FREIGHTER\Parametric_Coupon_Modelling\Scripts\2023_08_25\src']
+           #r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',
            #r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
            #r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
 
@@ -25,7 +26,7 @@ srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',]
 # coupon = 'Coupon_01_Fatigue_69A'
 
 # template = 'Coupon_02_Fatigue_66_69_BJ'
-# coupon = 'Coupon_02_Fatigue_69E'
+# coupon = 'Coupon_02_Fatigue_66E'
 
 # template = 'Coupon_03_Fatigue_70_73_A'
 # coupon = 'Coupon_03_Fatigue_72A'
@@ -33,8 +34,8 @@ srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',]
 # template = 'Coupon_04_Fatigue_70_73_BE'
 # coupon = 'Coupon_04_Fatigue_70C'
 
-# template = 'Coupon_05_Fatigue_74_75'
-# coupon = 'Coupon_05_Fatigue_74'
+template = 'Coupon_05_Fatigue_74_75'
+coupon = 'Coupon_05_Fatigue_74'
 
 # template = 'Coupon_06A_Static_1_Symm_1_7'
 # coupon = 'Coupon_06A_Static_1_Symm_5'
@@ -49,13 +50,13 @@ srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',]
 # coupon = 'Coupon_07B_Static_2_Full_6'
 
 # template = 'Coupon_08_Static_18_21'
-# coupon = 'Coupon_08_Static_19'
+# coupon = 'Coupon_08_Static_18'
 
-template = 'Coupon_09_Fracture_22_36'
-coupon = 'Coupon_09_Fracture_30'
+# template = 'Coupon_09_Fracture_22_36'
+# coupon = 'Coupon_09_Fracture_30'
 
 # template = 'Coupon_10_Crack_44_50'
-# coupon = 'Coupon_10_Crack_47'
+# coupon = 'Coupon_10_Crack_44'
 
 import os, sys
 
