@@ -1,7 +1,7 @@
 {
     "Coupon_02_Fatigue_66_69_BJ" : {
         "Coupon_02_Fatigue_66C": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 2.82,
                 "phi2" : 5.0,
                 "phi3" : 8.0,
@@ -11,7 +11,7 @@
                 "len2" : 40.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.03,
                 "radialOuter" : 0.01,
                 "radialMiddle" : 0.03,
@@ -22,7 +22,7 @@
             }
         },
         "Coupon_02_Fatigue_66E": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 2.82,
                 "phi2" : 5.0,
                 "phi3" : 8.0,
@@ -32,7 +32,7 @@
                 "len2" : 40.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.03,
                 "radialOuter" : 0.01,
                 "radialMiddle" : 0.03,
@@ -43,7 +43,7 @@
             }
         },
         "Coupon_02_Fatigue_67C": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 3.99,
                 "phi2" : 7.0,
                 "phi3" : 12.0,
@@ -53,7 +53,7 @@
                 "len2" : 60.0,
                 "thetaDeg" : 60.0
             },  
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.04,
                 "radialOuter" : 0.015,
                 "radialMiddle" : 0.04,
@@ -64,7 +64,7 @@
             }
         },
         "Coupon_02_Fatigue_67E": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 3.99,
                 "phi2" : 7.0,
                 "phi3" : 12.0,
@@ -74,7 +74,7 @@
                 "len2" : 60.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.04,
                 "radialOuter" : 0.015,
                 "radialMiddle" : 0.04,
@@ -85,7 +85,7 @@
             }
         },
         "Coupon_02_Fatigue_68C": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 5.64,
                 "phi2" : 10.0,
                 "phi3" : 16.0,
@@ -95,7 +95,7 @@
                 "len2" : 80.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.06,
                 "radialOuter" : 0.02,
                 "radialMiddle" : 0.06,
@@ -106,7 +106,7 @@
             }
         },
         "Coupon_02_Fatigue_68E": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 5.64,
                 "phi2" : 10.0,
                 "phi3" : 16.0,
@@ -116,7 +116,7 @@
                 "len2" : 80.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.06,
                 "radialOuter" : 0.02,
                 "radialMiddle" : 0.06,
@@ -127,7 +127,7 @@
             }
         },
         "Coupon_02_Fatigue_69C": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 7.98,
                 "phi2" : 14.0,
                 "phi3" : 22.0,
@@ -137,7 +137,7 @@
                 "len2" : 110.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.085,
                 "radialOuter" : 0.03,
                 "radialMiddle" : 0.085,
@@ -148,7 +148,7 @@
             }
         },
         "Coupon_02_Fatigue_69E": {
-            "geometry" : {
+            "Geometry" : {
                 "phi1" : 7.98,
                 "phi2" : 14.0,
                 "phi3" : 22.0,
@@ -158,7 +158,7 @@
                 "len2" : 110.0,
                 "thetaDeg" : 60.0
             },
-            "elemSize" : {
+            "Element_Size" : {
                 "arcOuter" : 0.085,
                 "radialOuter" : 0.03,
                 "radialMiddle" : 0.085,
