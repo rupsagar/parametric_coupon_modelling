@@ -7,7 +7,7 @@
 ## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
 ## +------------------------------------------------------------------------------------------------------------+
 ## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
-## |                                |           |             |                                                 |
+## |        Rupsagar Chatterjee     |   v2.0    | 24-Aug-2023 |                                                 |
 ## |                                |           |             |                                                 |
 ## |                                |           |             |                                                 |
 ## +------------------------------------------------------------------------------------------------------------+
@@ -20,46 +20,36 @@ from caeModules import *
 
 class coupon_06a_static_1_symm(coupon_generic):
     def __init__(self, couponData):
-        super(coupon_06a_static_1_symm, self).__init__()
+        super(coupon_06a_static_1_symm, self).__init__(couponData)
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
-        self.couponData = couponData
-        self.couponName = couponData['couponName']
-        self.lt = couponData['geometry']['lt']
-        self.d = couponData['geometry']['d']
-        self.D = couponData['geometry']['D']
-        self.R = couponData['geometry']['R']
-        self.C = couponData['geometry']['C']
-        self.lc = couponData['geometry']['lc']
-        self.lenTol = couponData['lenTol']
-        self.partitionRadialFraction = couponData['partitionRadialFraction']
-        self.seedSizeArcOuter = couponData['elemSize']['arcOuter']
-        self.seedSizeRadialOuter = couponData['elemSize']['radialOuter']
-        self.seedSizeRadialInner = couponData['elemSize']['radialInner']
-        self.seedSizeLong1 = couponData['elemSize']['long1']
-        self.seedSizeLong2 = couponData['elemSize']['long2']
-        self.seedSizeLong3 = couponData['elemSize']['long3']
-        self.elemTypeHexPart1 = SymbolicConstant(couponData['elemType']['hexPart1'])
-        self.materialName = couponData['material']['name']
-        self.density = couponData['material']['density']
-        self.youngsModulus = couponData['material']['youngsModulus']
-        self.poissonsRatio = couponData['material']['poissonsRatio']
-        self.nlGeom = SymbolicConstant(couponData['step']['nlGeom'])
-        self.initIncr = couponData['step']['initIncr']
-        self.nominalStress = couponData['step']['nominalStress']
-        self.version = couponData['version']
+        self.lt = self.geometry['lt']
+        self.d = self.geometry['d']
+        self.D = self.geometry['D']
+        self.R = self.geometry['R']
+        self.C = self.geometry['C']
+        self.lc = self.geometry['lc']
+        self.seedSizeArcOuter = self.seedSize['arcOuter']
+        self.seedSizeRadialOuter = self.seedSize['radialOuter']
+        self.seedSizeRadialInner = self.seedSize['radialInner']
+        self.seedSizeLong1 = self.seedSize['long1']
+        self.seedSizeLong2 = self.seedSize['long2']
+        self.seedSizeLong3 = self.seedSize['long3']
         ## derived quantities
+        self.partitionRadialFraction = 0.67
         self.partitionRadius = self.partitionRadialFraction*self.d/2
-        self.endStress = -self.nominalStress*(self.d/self.D)**2
+        self.endStress = -self.stepLoad*(self.d/self.D)**2
         ## create coupon
         self.createModel()
         self.createProfileSketch()
         self.createPart()
         self.createAssembly()
         self.createPartition()
+        self.createLocalSeed()
         self.createMesh()
         self.createMaterial()
         self.createSection()
         self.createStep()
+        self.createLoadBC()
         self.createJob()
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
@@ -181,7 +171,7 @@ class coupon_06a_static_1_symm(coupon_generic):
         createPartitionCyl()
         createPartitionLong(self.xB)
         createPartitionLong(self.xC)
-    def createMesh(self):
+    def createLocalSeed(self):
         def seedLong(part, xLeft, xRight, yMax, **kwargs):
             pickedEdges = part.edges.getByBoundingCylinder((xLeft-self.lenTol, 0, 0), (xRight+self.lenTol, 0, 0), (yMax+self.lenTol))
             edgesLong = self.getEdgeByLength(pickedEdges, abs(xRight-xLeft))
@@ -218,19 +208,9 @@ class coupon_06a_static_1_symm(coupon_generic):
         edgesTemp2 = self.part[0].edges.getByBoundingCylinder((self.xB-self.lenTol, 0, 0), (self.xC+self.lenTol, 0, 0), (self.yC+self.lenTol))
         edgesArc = self.getArcEdge(edgesTemp2)
         self.seedEdge(self.part[0], 0, self.xB, edgesArc, ratio=ratioBias, number=elemNum)
-        ## set element types
-        elemType1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
-        self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemType1, ))
-        ## generate mesh
-        self.couponData.update({'elemNum':dict()})
-        for i in range(len(self.part)):
-            self.part[i].generateMesh()
-            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
-    def createStep(self):
-        ## create step for load and boundary conditions
-        self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
-        self.couponData['step'].update({'endPressure':self.endStress})
+    def createLoadBC(self):
+        ## create load and boundary conditions
+        self.couponData['Step'].update({'End_Pressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=-self.lenTol, yMin=-self.lenTol, zMin=-self.yD-self.lenTol, xMax=self.xD+self.lenTol, yMax=self.lenTol, zMax=self.lenTol)
