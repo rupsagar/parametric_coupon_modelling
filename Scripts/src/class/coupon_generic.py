@@ -24,28 +24,30 @@ class coupon_generic(object):
         self.version = self.couponData['Version'] if self.couponData['Version']=='' else '_'+self.couponData['Version']
         self.geometry = self.couponData['Geometry']
         self.seedSize = self.couponData['Element_Size']
+        self.stepLoad = self.couponData['Step']['Load']
         self.outputFieldVariables = ('S', 'U', 'RF', 'CF')
+        self.isContactEnforced = False
     def createModel(self):
         ## define model
         session.journalOptions.setValues(replayGeometry=COORDINATE, recoverGeometry=COORDINATE)
         self.model = mdb.Model(name=self.couponName+'_Model')
     def createMesh(self):
         ## seed ==>> global
-        thisPartMaxSeedSize = 0
+        self.maxSeedSize = 0
         for seedValue in self.seedSize.values():
-            if seedValue>thisPartMaxSeedSize:
-                thisPartMaxSeedSize = seedValue
+            if seedValue>self.maxSeedSize:
+                self.maxSeedSize = seedValue
         for i in range(len(self.part)):
-            self.part[i].seedPart(size=thisPartMaxSeedSize, deviationFactor=0.1, minSizeFactor=0.1)
+            self.part[i].seedPart(size=self.maxSeedSize, deviationFactor=0.1, minSizeFactor=0.1)
         ## set element types
         for thisPart, thisElemType in self.couponData['Element_Type'].items():
             thisPartElemTypes = ()
             for thisElemTypeVal in thisElemType.values():
                 thisPartElemTypes = thisPartElemTypes+(mesh.ElemType(elemCode=SymbolicConstant(thisElemTypeVal), elemLibrary=STANDARD),)
             partID = re.findall("\d", thisPart)
-            tempID=''
+            tempID = ''
             for i in partID:
-                tempID=tempID+i
+                tempID = tempID+i
             self.part[int(tempID)-1].setElementType(regions=(self.part[int(tempID)-1].cells,), elemTypes=thisPartElemTypes)
         ## generate mesh
         self.couponData.update({'Element_Number':dict()})
@@ -68,6 +70,12 @@ class coupon_generic(object):
         for i in range(len(self.part)):
             elsetAllElem = self.part[i].Set(elements=self.part[i].elements, name='Elset_All_Part_'+str(i+1))
             self.part[i].SectionAssignment(region=elsetAllElem, sectionName=self.section[self.couponData['Section']['Part_'+str(i+1)]].name, offset=0.0, offsetType=MIDDLE_SURFACE, offsetField='', thicknessAssignment=FROM_SECTION)
+    def createStep(self):
+        ## create step
+        if self.isContactEnforced==True:
+            self.outputFieldVariables = self.outputFieldVariables+('CDISP', 'CSTRESS')
+        self.model.StaticStep(name='Load', previous='Initial', nlgeom=SymbolicConstant(self.couponData['Step']['NLGEOM']), initialInc=self.couponData['Step']['Initial_Increment'], timePeriod=1.0, minInc=1e-4, maxInc=1.0)
+        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=self.outputFieldVariables)
     def createJob(self):
         ## create job
         self.job = mdb.Job(name=self.couponName+'_Job'+self.version, model=self.model, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, memoryUnits=PERCENTAGE, 
