@@ -7,7 +7,7 @@
 ## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
 ## +------------------------------------------------------------------------------------------------------------+
 ## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
-## |                                |           |             |                                                 |
+## |        Rupsagar Chatterjee     |   v2.0    | 24-Aug-2023 |                                                 |
 ## |                                |           |             |                                                 |
 ## |                                |           |             |                                                 |
 ## +------------------------------------------------------------------------------------------------------------+
@@ -21,53 +21,42 @@ from caeModules import *
 
 class coupon_02_fatigue_66_69_bj(coupon_generic):
     def __init__(self, couponData):
-        super(coupon_02_fatigue_66_69_bj, self).__init__()
+        super(coupon_02_fatigue_66_69_bj, self).__init__(couponData)
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
-        self.couponData = couponData
-        self.couponName = couponData['couponName']
-        self.phi1 = couponData['geometry']['phi1']
-        self.phi2 = couponData['geometry']['phi2']
-        self.phi3 = couponData['geometry']['phi3']
-        self.rad1 = couponData['geometry']['rad1']
-        self.rad2 = couponData['geometry']['rad2']
-        self.len1 = couponData['geometry']['len1']
-        self.len2 = couponData['geometry']['len2']
-        self.thetaDeg = couponData['geometry']['thetaDeg']
-        self.lenTol = couponData['lenTol']
-        self.partitionRadialFraction = couponData['partitionRadialFraction']
-        self.seedSizePart2 = couponData['elemSize']['part2']
-        self.seedSizeArcOuter = couponData['elemSize']['arcOuter']
-        self.seedRadialOuter = couponData['elemSize']['radialOuter']
-        self.seedRadialMiddle = couponData['elemSize']['radialMiddle']
-        self.seedRadialInner = couponData['elemSize']['radialInner']
-        self.seedSizeLong1 = couponData['elemSize']['long1']
-        self.seedSizeLong2 = couponData['elemSize']['long2']
-        self.elemTypeHex = SymbolicConstant(couponData['elemType']['hex'])
-        self.elemTypeTet = SymbolicConstant(couponData['elemType']['tet'])
-        self.materialName = couponData['material']['name']
-        self.density = couponData['material']['density']
-        self.youngsModulus = couponData['material']['youngsModulus']
-        self.poissonsRatio = couponData['material']['poissonsRatio']
-        self.nlGeom = SymbolicConstant(couponData['step']['nlGeom'])
-        self.initIncr = couponData['step']['initIncr']
-        self.nominalStress = couponData['step']['nominalStress']
-        self.version = couponData['version']
+        self.phi1 = self.geometry['phi1']
+        self.phi2 = self.geometry['phi2']
+        self.phi3 = self.geometry['phi3']
+        self.rad1 = self.geometry['rad1']
+        self.rad2 = self.geometry['rad2']
+        self.len1 = self.geometry['len1']
+        self.len2 = self.geometry['len2']
+        self.thetaDeg = self.geometry['thetaDeg']
+        self.seedSizePart2 = self.seedSize['part2']
+        self.seedSizeArcOuter = self.seedSize['arcOuter']
+        self.seedRadialOuter = self.seedSize['radialOuter']
+        self.seedRadialMiddle = self.seedSize['radialMiddle']
+        self.seedRadialInner = self.seedSize['radialInner']
+        self.seedSizeLong1 = self.seedSize['long1']
+        self.seedSizeLong2 = self.seedSize['long2']
         ## derived quantities
+        self.partitionRadialFraction = 0.67
         self.alphaDeg = 90.0-self.thetaDeg/2.0
         self.alphaRad = math.pi/180*self.alphaDeg
         self.partitionRadius = self.partitionRadialFraction*self.phi1/2
-        self.endStress = -self.nominalStress*(self.phi1/self.phi3)**2
+        self.endStress = -self.stepLoad*(self.phi1/self.phi3)**2
         ## create coupon
         self.createModel()
         self.createProfileSketch()
         self.createPart()
         self.createAssembly()
         self.createPartition()
+        self.createLocalSeed()
         self.createMesh()
         self.createMaterial()
         self.createSection()
         self.createTie()
         self.createStep()
+        self.createLoadBC()
         self.createJob()
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
@@ -277,7 +266,7 @@ class coupon_02_fatigue_66_69_bj(coupon_generic):
         createPartitionCyl(self.xD)
         createPartitionLong(self.xB)
         createPartitionLong(self.xC)
-    def createMesh(self):
+    def createLocalSeed(self):
         def seedRadial(radiusOuter, radiusInner, seedSize, **kwargs):
             edgesOuterCyl = self.getByCylinderDifference(self.part[0].edges, (self.xA-self.lenTol, 0, 0), (self.xA+self.lenTol, 0, 0), radiusOuter, radiusInner)
             edgesOuterArc = self.getArcEdge(edgesOuterCyl)
@@ -309,9 +298,9 @@ class coupon_02_fatigue_66_69_bj(coupon_generic):
         edgesOuterArc2 = self.part[0].edges.findAt(coordinates=((self.xB, self.yB*math.cos(math.pi/4.0), -self.yB*math.sin(math.pi/4.0)), ))
         self.part[0].seedEdgeByNumber(edges=edgesOuterArc2, number=elemNum, constraint=FINER)
         ## seed radial edges
-        seedRadial((self.yA+self.lenTol), (self.yA-self.yOffset+self.lenTol), self.seedRadialOuter, constraint=FIXED) ## outer radial edge
-        seedRadial((self.yA-self.lenTol), (self.partitionRadius+self.lenTol), self.seedRadialMiddle, constraint=FIXED) ## mid radial edge
-        seedRadial((self.partitionRadius+self.lenTol), (self.partitionRadius-self.lenTol), self.seedRadialInner, constraint=FIXED) ## inner radial edge
+        seedRadial((self.yA+self.lenTol), (self.yA-self.yOffset+self.lenTol), self.seedRadialOuter, constraint=FINER) ## outer radial edge
+        seedRadial((self.yA-self.lenTol), (self.partitionRadius+self.lenTol), self.seedRadialMiddle, constraint=FINER) ## mid radial edge
+        seedRadial((self.partitionRadius+self.lenTol), (self.partitionRadius-self.lenTol), self.seedRadialInner, constraint=FINER) ## inner radial edge
         ## seed long edges
         seedLong(self.xA, self.xB, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong1)
         seedLong(self.xB, self.xC, minSize=self.seedSizeLong1, maxSize=self.seedSizeLong1)
@@ -322,16 +311,6 @@ class coupon_02_fatigue_66_69_bj(coupon_generic):
         seedInnerCyl(self.xC, self.xD)
         ## seed and set mesh ==>> part-2 ==>> region away from area of interest
         seedCylRight()
-        ## set element types
-        elemType1 = mesh.ElemType(elemCode=self.elemTypeHex, elemLibrary=STANDARD)
-        self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemType1,))
-        elemType3 = mesh.ElemType(elemCode=self.elemTypeTet, elemLibrary=STANDARD)
-        self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemType3,))
-        ## generate mesh
-        self.couponData.update({'elemNum':dict()})
-        for i in range(len(self.part)):
-            self.part[i].generateMesh()
-            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
     def createTie(self):
         region = len(self.part)*[None]
         for i in range(len(self.part)):
@@ -340,11 +319,9 @@ class coupon_02_fatigue_66_69_bj(coupon_generic):
             self.getElemSurfFromCellFace(self.part[i], surf, surfName)
             region[i] = self.instance[i].surfaces[surfName]
         self.model.Tie(name=self.couponName+'_Tie', master=region[1], slave=region[0], positionToleranceMethod=COMPUTED, adjust=OFF, tieRotations=ON, thickness=ON, constraintEnforcement = SURFACE_TO_SURFACE)
-    def createStep(self):
-        ## create step for load and boundary conditions
-        self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
-        self.couponData['step'].update({'endPressure':self.endStress})
+    def createLoadBC(self):
+        ## create load and boundary conditions
+        self.couponData['Step'].update({'End_Pressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xO-self.lenTol, yMin=-self.lenTol, zMin=-self.yF-self.lenTol, xMax=self.xG+self.lenTol, yMax=self.lenTol, zMax=self.lenTol)
