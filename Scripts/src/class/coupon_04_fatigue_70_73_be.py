@@ -7,7 +7,7 @@
 ## |            PROGRAMMER          |  VERSION  |    DATE     |                     COMMENTS                    |
 ## +------------------------------------------------------------------------------------------------------------+
 ## |        Rupsagar Chatterjee     |   v1.0    | 21-Mar-2023 |                                                 |
-## |                                |           |             |                                                 |
+## |        Rupsagar Chatterjee     |   v2.0    | 24-Aug-2023 |                                                 |
 ## |                                |           |             |                                                 |
 ## |                                |           |             |                                                 |
 ## +------------------------------------------------------------------------------------------------------------+
@@ -21,57 +21,46 @@ from caeModules import *
 
 class coupon_04_fatigue_70_73_be(coupon_generic):
     def __init__(self, couponData):
-        super(coupon_04_fatigue_70_73_be, self).__init__()
+        super(coupon_04_fatigue_70_73_be, self).__init__(couponData)
         ## initialize the user-defined parameters; dimensional inputs converted to float to avoid truncation while division
-        self.couponData = couponData
-        self.couponName = couponData['couponName']
-        self.h1 = couponData['geometry']['h1']
-        self.h2 = couponData['geometry']['h2']
-        self.h3 = couponData['geometry']['h3']
-        self.rad1 = couponData['geometry']['rad1']
-        self.rad2 = couponData['geometry']['rad2']
-        self.len1 = couponData['geometry']['len1']
-        self.len2 = couponData['geometry']['len2']
-        self.thetaDeg = couponData['geometry']['thetaDeg']
-        self.thickness = couponData['thickness']
-        self.lenTol = couponData['lenTol']
-        self.partitionVerticalFraction = couponData['partitionVerticalFraction']
-        self.seedSizeThickness1 = couponData['elemSize']['thickness1']
-        self.seedSizeThickness2 = couponData['elemSize']['thickness2']
-        self.seedSizeVerticalOuter = couponData['elemSize']['verticalOuter']
-        self.seedSizeVerticalMiddle = couponData['elemSize']['verticalMiddle']
-        self.seedSizeVerticalInner = couponData['elemSize']['verticalInner']
-        self.seedSizeVertical2 = couponData['elemSize']['vertical2']
-        self.seedSizeLong1 = couponData['elemSize']['long1']
-        self.seedSizeLong2 = couponData['elemSize']['long2']
-        self.seedSizeLong3 = couponData['elemSize']['long3']
-        self.seedSizeLong4 = couponData['elemSize']['long4']
-        self.elemTypeHexPart1 = SymbolicConstant(couponData['elemType']['hexPart1'])
-        self.elemTypeHexPart2 = SymbolicConstant(couponData['elemType']['hexPart2'])
-        self.materialName = couponData['material']['name']
-        self.density = couponData['material']['density']
-        self.youngsModulus = couponData['material']['youngsModulus']
-        self.poissonsRatio = couponData['material']['poissonsRatio']
-        self.nlGeom = SymbolicConstant(couponData['step']['nlGeom'])
-        self.initIncr = couponData['step']['initIncr']
-        self.nominalStress = couponData['step']['nominalStress']
-        self.version = couponData['version']
+        self.h1 = self.geometry['h1']
+        self.h2 = self.geometry['h2']
+        self.h3 = self.geometry['h3']
+        self.rad1 = self.geometry['rad1']
+        self.rad2 = self.geometry['rad2']
+        self.len1 = self.geometry['len1']
+        self.len2 = self.geometry['len2']
+        self.thetaDeg = self.geometry['thetaDeg']
+        self.thickness = self.geometry['thickness']
+        self.seedSizeThickness1 = self.seedSize['thickness1']
+        self.seedSizeThickness2 = self.seedSize['thickness2']
+        self.seedSizeVerticalOuter = self.seedSize['verticalOuter']
+        self.seedSizeVerticalMiddle = self.seedSize['verticalMiddle']
+        self.seedSizeVerticalInner = self.seedSize['verticalInner']
+        self.seedSizeVertical2 = self.seedSize['vertical2']
+        self.seedSizeLong1 = self.seedSize['long1']
+        self.seedSizeLong2 = self.seedSize['long2']
+        self.seedSizeLong3 = self.seedSize['long3']
+        self.seedSizeLong4 = self.seedSize['long4']
         ## derived quantities
+        self.partitionVerticalFraction = 0.67
         self.alphaDeg = 90.0-self.thetaDeg/2.0
         self.alphaRad = math.pi/180*self.alphaDeg
         self.partitionVertical = self.partitionVerticalFraction*self.h1/2
-        self.endStress = -self.nominalStress*self.h1/self.h3
+        self.endStress = -self.stepLoad*self.h1/self.h3
         ## create coupon
         self.createModel()
         self.createProfileSketch()
         self.createPart()
         self.createAssembly()
         self.createPartition()
+        self.createLocalSeed()
         self.createMesh()
         self.createMaterial()
         self.createSection()
         self.createTie()
         self.createStep()
+        self.createLoadBC()
         self.createJob()
     def createProfileSketch(self):
         ## method to draw sketch of coupon profile
@@ -278,7 +267,7 @@ class coupon_04_fatigue_70_73_be(coupon_generic):
         createPartitionLong(self.part[0], self.xB)
         createPartitionLong(self.part[0], self.xC)
         createPartitionLong(self.part[1], self.xE)
-    def createMesh(self):
+    def createLocalSeed(self):
         edgesThickness1 = self.part[0].edges.findAt(((0, 0, self.lenTol),))
         self.part[0].seedEdgeBySize(edges=edgesThickness1, size=self.seedSizeThickness1, deviationFactor=0.1, constraint=FINER)
         ## seed ==>> outer vertical edge
@@ -318,16 +307,6 @@ class coupon_04_fatigue_70_73_be(coupon_generic):
         ## seed ==>> vertical edge part 2
         edgesVerticalPart2 = self.part[1].edges.findAt(coordinates=((self.xD, self.lenTol, 0), ))
         self.part[1].seedEdgeBySize(edges=edgesVerticalPart2, size=self.seedSizeVertical2, deviationFactor=0.1, constraint=FINER)
-        ## set element types
-        elemTypeHex1 = mesh.ElemType(elemCode=self.elemTypeHexPart1, elemLibrary=STANDARD)
-        self.part[0].setElementType(regions=(self.part[0].cells,), elemTypes=(elemTypeHex1,))
-        elemTypeHex2 = mesh.ElemType(elemCode=self.elemTypeHexPart2, elemLibrary=STANDARD)
-        self.part[1].setElementType(regions=(self.part[1].cells,), elemTypes=(elemTypeHex2,))
-        ## generate mesh
-        self.couponData.update({'elemNum':dict()})
-        for i in range(len(self.part)):
-            self.part[i].generateMesh()
-            self.couponData['elemNum'].update({'part'+str(i+1):len(self.part[i].elements)})
     def createTie(self):
         region = len(self.part)*[None]
         for i in range(len(self.part)):
@@ -336,11 +315,9 @@ class coupon_04_fatigue_70_73_be(coupon_generic):
             self.getElemSurfFromCellFace(self.part[i], surf, surfName)
             region[i] = self.instance[i].surfaces[surfName]
         self.model.Tie(name=self.couponName+'_Tie', master=region[1], slave=region[0], positionToleranceMethod=COMPUTED, adjust=OFF, tieRotations=ON, thickness=ON, constraintEnforcement = SURFACE_TO_SURFACE)
-    def createStep(self):
-        ## create step for load and boundary conditions
-        self.model.StaticStep(name='Load', previous='Initial', nlgeom=self.nlGeom, initialInc=self.initIncr, timePeriod=1.0, minInc=1e-4, maxInc=1.0)
-        self.model.fieldOutputRequests['F-Output-1'].setValues(variables=('S', 'U', 'RF'))
-        self.couponData['step'].update({'endPressure':self.endStress})
+    def createLoadBC(self):
+        ## create load and boundary conditions
+        self.couponData['Step'].update({'End_Pressure':self.endStress})
         for i in range(len(self.part)):
             ## create BC at negY face
             nodesNegY = self.part[i].nodes.getByBoundingBox(xMin=self.xA-self.lenTol, yMin=-self.lenTol, zMin=-self.lenTol, xMax=self.xF+self.lenTol, yMax=self.lenTol, zMax=self.thickness+self.lenTol)
