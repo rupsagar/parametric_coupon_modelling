@@ -26,8 +26,9 @@ h. Upon successful run, 6 files (Data.json, Geom.txt, Job.inp, Model.cae, Model.
 a. Use the script 'main_debug.py'. This method of generating model (and hence the script) was originally intended for debugging purpose.
 b. Add the path of the 'src' folder to variable 'srcPath' if the script is run from a location whose path is not included in the list.
    New paths can be appended to the existing list by separating with commas.
-c. Uncomment the desired the template and coupon and comment out the remaining ones.
-d. Copy the script and paste in Abaqus CLI to generate the model. Alternatively, run the script from Abaqus menu option: File -> Run Script.
-e. Upon successful run, 6 files (Data.json, Geom.txt, Job.inp, Model.cae, Model.jnl, Status.txt) and 1 folder (InpFolder) are generated in the current working directory.
+c. Update srcPathID to the list index of the correct srcPath entry.
+d. Uncomment the desired the template and coupon and comment out the remaining ones.
+e. Copy the script and paste in Abaqus CLI to generate the model. Alternatively, run the script from Abaqus menu option: File -> Run Script.
+f. Upon successful run, 6 files (Data.json, Geom.txt, Job.inp, Model.cae, Model.jnl, Status.txt) and 1 folder (InpFolder) are generated in the current working directory.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
