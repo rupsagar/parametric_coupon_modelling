@@ -327,6 +327,6 @@ class coupon_09_fracture_22_36(coupon_generic):
                 nameSurfPinLoadPosX = 'Surf_PosX_Load_Part_'+str(i+1)
                 self.getElemSurfFromCellFace(self.part[i], faceCellPinLoadPosX, nameSurfPinLoadPosX)
                 regionPin2BC = self.instance[2].surfaces[nameSurfPinLoadPosX]
-                self.model.Pressure(name='Load_NegX_Pressure_Instance_'+str(2), createStepName='Load', region=regionPin1BC, distributionType=UNIFORM, field='', magnitude=-self.stepLoad, amplitude=UNSET)
-                self.model.Pressure(name='Load_PosX_Pressure_Instance_'+str(3), createStepName='Load', region=regionPin2BC, distributionType=UNIFORM, field='', magnitude=-self.stepLoad, amplitude=UNSET)
+                self.model.Pressure(name='Load_NegX_Pressure_Instance_'+str(2), createStepName='Load', region=regionPin1BC, distributionType=UNIFORM, field='', magnitude=self.stepLoad, amplitude=UNSET)
+                self.model.Pressure(name='Load_PosX_Pressure_Instance_'+str(3), createStepName='Load', region=regionPin2BC, distributionType=UNIFORM, field='', magnitude=self.stepLoad, amplitude=UNSET)
 
