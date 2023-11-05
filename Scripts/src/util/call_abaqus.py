@@ -30,8 +30,8 @@ try:
     fileJson.close()
     couponData = ast.literal_eval(json.dumps(couponDataUnicode))
 
-    execfile(srcPath+'/class/coupon_generic.py')
-    execfile(srcPath+'/class/'+template.lower()+'.py')
+    execfile(srcPath+'/lib/coupon_generic.py')
+    execfile(srcPath+'/lib/'+template.lower()+'.py')
     couponClass = getattr(sys.modules[__name__], template.lower())
     os.chdir(savePath)
     couponClass(couponData)
