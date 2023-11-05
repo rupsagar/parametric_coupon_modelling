@@ -16,12 +16,17 @@
 ## USER MAY NEED TO UPDATE srcPath LIST TO INCLUDE THE SRC FOLDER WHERE THE SCRIPT IS LOCATED
 #################################################################################################################
 
+import sys
 
-srcPath = [r'\\fr0-svm20\St_RnT_METAL2\05_A350_FREIGHTER\Parametric_Coupon_Modelling\Scripts\2023_08_25\src']
-           #r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\01_WIP\Scripts\src',
-           #r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src',
-           #r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src']
+## set current src path
+srcPath = [r'Z:\Rupsagar\04_Coupon_Parametric_Modelling\02_WIP\01_Scripts\src',
+           r'\\fr0-svm20\St_RnT_METAL2\05_A350_FREIGHTER\Parametric_Coupon_Modelling\Scripts\2023_08_25\src',
+           r'\\fr0-svm21\St_RnT_METAL3\01-SIMU_STnS_USE_CASES\13_A350F\09_Coupon_Parametric_Modelling\Scripts\src'
+           r'D:\Programming\python\abaqus_scripts\Coupon_Parametric_Modelling\Scripts\src']
 
+srcPathID = 0
+
+## set template and coupon
 # template = 'Coupon_01_Fatigue_66_69_A'
 # coupon = 'Coupon_01_Fatigue_69A'
 
@@ -34,8 +39,8 @@ srcPath = [r'\\fr0-svm20\St_RnT_METAL2\05_A350_FREIGHTER\Parametric_Coupon_Model
 # template = 'Coupon_04_Fatigue_70_73_BE'
 # coupon = 'Coupon_04_Fatigue_70C'
 
-template = 'Coupon_05_Fatigue_74_75'
-coupon = 'Coupon_05_Fatigue_74'
+# template = 'Coupon_05_Fatigue_74_75'
+# coupon = 'Coupon_05_Fatigue_74'
 
 # template = 'Coupon_06A_Static_1_Symm_1_7'
 # coupon = 'Coupon_06A_Static_1_Symm_5'
@@ -58,14 +63,11 @@ coupon = 'Coupon_05_Fatigue_74'
 # template = 'Coupon_10_Crack_44_50'
 # coupon = 'Coupon_10_Crack_44'
 
-import os, sys
+template = 'Coupon_11_HLT_1'
+coupon = 'Coupon_11_HLT_1'
 
-for i in range(len(srcPath)):
-    if os.path.isdir(srcPath[i]):
-        srcPathID = i
-        break
-
-execfile(srcPath[srcPathID]+'/lib/debug.py')
+## call util script
+execfile(srcPath[srcPathID]+'/util/debug.py')
 debugFunc = getattr(sys.modules[__name__], 'debug')
 self = debugFunc(srcPath[srcPathID], template, coupon)
 
