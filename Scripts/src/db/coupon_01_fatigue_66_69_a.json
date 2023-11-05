@@ -1,0 +1,73 @@
+{
+    "Coupon_01_Fatigue_66_69_A" : {
+        "Coupon_01_Fatigue_66A": {
+            "Geometry" :{
+                "phi1" : 2.82,
+                "phi2" : 5.0,
+                "phi3" : 8.0,
+                "rad1" : 20.0,
+                "rad2" : 10.0,
+                "len1" : 24.0,
+                "len2" : 40.0
+            },
+            "Element_Size" : {
+                "arcOuter" : 0.07,
+                "long1" : 0.07,
+                "long2" : 0.14,
+                "long3" : 0.21
+            }
+        },
+        "Coupon_01_Fatigue_67A": {
+            "Geometry" : {
+                "phi1" : 3.99,
+                "phi2" : 7.0,
+                "phi3" : 12.0,
+                "rad1" : 28.0,
+                "rad2" : 13.0,
+                "len1" : 34.0,
+                "len2" : 60.0
+            },
+            "Element_Size" : {
+                "arcOuter" : 0.1,
+                "long1" : 0.1,
+                "long2" : 0.2,
+                "long3" : 0.3
+            }
+        },
+        "Coupon_01_Fatigue_68A": {
+            "Geometry" : {
+                "phi1" : 5.64,
+                "phi2" : 10.0,
+                "phi3" : 16.0,
+                "rad1" : 40.0,
+                "rad2" : 20.0,
+                "len1" : 48.0,
+                "len2" : 80.0
+            },
+            "Element_Size" : {
+                "arcOuter" : 0.14,
+                "long1" : 0.14,
+                "long2" : 0.28,
+                "long3" : 0.42
+            }
+        },
+        "Coupon_01_Fatigue_69A": {
+            "Geometry" : {
+                "phi1" : 7.98,
+                "phi2" : 14.0,
+                "phi3" : 22.0,
+                "rad1" : 56.0,
+                "rad2" : 31.0,
+                "len1" : 68.0,
+                "len2" : 110.0
+            },
+            "Element_Size" : {
+                "arcOuter" : 0.2,
+                "long1" : 0.2,
+                "long2" : 0.4,
+                "long3" : 0.6
+            }
+        }
+    }
+}
+

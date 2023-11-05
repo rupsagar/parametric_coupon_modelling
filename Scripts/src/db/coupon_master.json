@@ -1,0 +1,279 @@
+{
+    "Coupon_Data" : {
+        "Coupon_01_Fatigue_66_69_A" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_02_Fatigue_66_69_BJ" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Tet" : "C3D4"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_03_Fatigue_70_73_A" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_04_Fatigue_70_73_BE" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_05_Fatigue_74_75" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_06A_Static_1_Symm" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_06B_Static_1_Full" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_07A_Static_2_Symm" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "OFF",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_07B_Static_2_Full" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "ON",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_08_Static_18_21" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_3" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum", "Steel"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Aluminum",
+                "Part_3" : "Steel"
+            },
+            "Step" : {
+                "NLGEOM" : "ON",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_09_Fracture_22_36" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum", "Steel"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Steel"
+            },
+            "Step" : {
+                "NLGEOM" : "ON",
+                "Initial_Increment" : 0.2,
+                "Load" : 20.0
+            }
+        },
+        "Coupon_10_Crack_44_50" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_3" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Aluminum",
+                "Part_3" : "Aluminum"
+            },
+            "Step" : {
+                "NLGEOM" : "ON",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        },
+        "Coupon_11_HLT_1" : {
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_2" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_3" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_4" : {
+                    "Hex" : "C3D8HS"
+                },
+                "Part_5" : {
+                    "Hex" : "C3D8HS"
+                }
+            },
+            "Material" : ["Aluminum","Steel"],
+            "Section" : {
+                "Part_1" : "Aluminum",
+                "Part_2" : "Aluminum",
+                "Part_3" : "Steel",
+                "Part_4" : "Steel",
+                "Part_5" : "Steel"
+            },
+            "Step" : {
+                "NLGEOM" : "ON",
+                "Initial_Increment" : 0.2,
+                "Load" : 250.0
+            }
+        }
+    },
+    "Constant_Data" : {
+        "Length_Tolerance" : 1.0e-5,
+        "Version" : ""
+    },
+    "Material_Data" : {
+        "Aluminum" : {
+            "Name" : "Aluminum",
+            "Density" : 2.85e-6,
+            "Youngs_Modulus" : 72000.0,
+            "Poissons_Ratio" : 0.3309
+        },
+        "Steel" : {
+            "Name" : "Steel",
+            "Density" : 7.72e-06,
+            "Youngs_Modulus" : 192500.0,
+            "Poissons_Ratio" : 0.2816
+        }
+    }
+}
+

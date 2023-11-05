@@ -1,0 +1,105 @@
+{
+    "Coupon_08_Static_18_21" : {
+        "Coupon_08_Static_18" : {
+            "Geometry" : {
+                "Length" : 144.0,
+                "Width" : 30.0,
+                "Diameter" : 4.0,
+                "Edge_Distance" : 6.0,
+                "Pin_Extension" : 5.0,
+                "Thickness" : 2.0
+            },
+            "Element_Size" : {
+                "Arc": 0.075,
+                "Long_1": 0.2,
+                "Long_2": 0.35,
+                "Long_3": 0.9,
+                "Pin_Diameter": 0.2,
+                "Pin_Length": 0.3,
+                "Radial_Inner": 0.1,
+                "Radial_Outer": 0.1,
+                "Thickness_1": 0.1,
+                "Thickness_2": 0.3,
+                "Vertical_1": 0.2,
+                "Vertical_2": 0.4,
+                "Vertical_3": 0.7
+            }
+        },
+        "Coupon_08_Static_19" : {
+            "Geometry" : {
+                "Length" : 144.0,
+                "Width" : 30.0,
+                "Diameter" : 4.0,
+                "Edge_Distance" : 8.0,
+                "Pin_Extension" : 5.0,
+                "Thickness" : 2.0
+            },
+            "Element_Size" : {
+                "Arc": 0.075,
+                "Long_1": 0.2,
+                "Long_2": 0.35,
+                "Long_3": 0.9,
+                "Pin_Diameter": 0.2,
+                "Pin_Length": 0.3,
+                "Radial_Inner": 0.1,
+                "Radial_Outer": 0.1,
+                "Thickness_1": 0.1,
+                "Thickness_2": 0.3,
+                "Vertical_1": 0.2,
+                "Vertical_2": 0.4,
+                "Vertical_3": 0.7
+            }
+        },
+        "Coupon_08_Static_20" : {
+            "Geometry" : {
+                "Length" : 144.0,
+                "Width" : 38.0,
+                "Diameter" : 6.35,
+                "Edge_Distance" : 9.5,
+                "Pin_Extension" : 5.0,
+                "Thickness" : 2.0
+            },
+            "Element_Size" : {
+                "Arc": 0.075,
+                "Long_1": 0.2,
+                "Long_2": 0.35,
+                "Long_3": 0.9,
+                "Pin_Diameter": 0.2,
+                "Pin_Length": 0.3,
+                "Radial_Inner": 0.1,
+                "Radial_Outer": 0.1,
+                "Thickness_1": 0.1,
+                "Thickness_2": 0.3,
+                "Vertical_1": 0.2,
+                "Vertical_2": 0.4,
+                "Vertical_3": 0.7
+            }
+        },
+        "Coupon_08_Static_21" : {
+            "Geometry" : {
+                "Length" : 144.0,
+                "Width" : 38.0,
+                "Diameter" : 6.35,
+                "Edge_Distance" : 12.7,
+                "Pin_Extension" : 5.0,
+                "Thickness" : 2.0
+            },
+            "Element_Size" : {
+                "Arc": 0.075,
+                "Long_1": 0.2,
+                "Long_2": 0.35,
+                "Long_3": 0.9,
+                "Pin_Diameter": 0.2,
+                "Pin_Length": 0.3,
+                "Radial_Inner": 0.1,
+                "Radial_Outer": 0.1,
+                "Thickness_1": 0.1,
+                "Thickness_2": 0.3,
+                "Vertical_1": 0.2,
+                "Vertical_2": 0.4,
+                "Vertical_3": 0.7
+            }
+        }
+    }
+}
+

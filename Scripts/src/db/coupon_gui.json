@@ -1,0 +1,458 @@
+{
+    "Coupon_Data" : {
+        "Coupon_01_Fatigue_66_69_A" : {
+            "Geometry" : {
+                "phi1" : ["display-yes", "editable-no"],
+                "phi2" : ["display-yes", "editable-no"],
+                "phi3" : ["display-yes", "editable-no"],
+                "rad1" : ["display-yes", "editable-no"],
+                "rad2" : ["display-yes", "editable-no"],
+                "len1" : ["display-yes", "editable-no"],
+                "len2" : ["display-yes", "editable-no"]
+            },
+            "Element_Size" : {
+                "arcOuter" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_02_Fatigue_66_69_BJ" : {
+            "Geometry" : {
+                "phi1" : ["display-yes", "editable-no"],
+                "phi2" : ["display-yes", "editable-no"],
+                "phi3" : ["display-yes", "editable-no"],
+                "rad1" : ["display-yes", "editable-no"],
+                "rad2" : ["display-yes", "editable-no"],
+                "len1" : ["display-yes", "editable-no"],
+                "len2" : ["display-yes", "editable-no"],
+                "thetaDeg" : ["display-yes", "editable-no"]
+            },
+            "Element_Size" : {
+                "arcOuter" : ["display-yes", "editable-yes"],
+                "radialOuter" : ["display-yes", "editable-yes"],
+                "radialMiddle" : ["display-yes", "editable-yes"],
+                "radialInner" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "part2" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Tet" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_03_Fatigue_70_73_A" : {
+            "Geometry" : {
+                "h1" : ["display-yes", "editable-no"],
+                "h2" : ["display-yes", "editable-no"],
+                "rad1" : ["display-yes", "editable-no"],
+                "len1" : ["display-yes", "editable-no"],
+                "thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "thickness" : ["display-yes", "editable-yes"],
+                "vertical" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_04_Fatigue_70_73_BE" : {
+            "Geometry" : {
+                "h1" : ["display-yes", "editable-no"],
+                "h2" : ["display-yes", "editable-no"],
+                "h3" : ["display-yes", "editable-no"],
+                "rad1" : ["display-yes", "editable-no"],
+                "rad2" : ["display-yes", "editable-no"],
+                "len1" : ["display-yes", "editable-no"],
+                "len2" : ["display-yes", "editable-no"],
+                "thetaDeg" : ["display-yes", "editable-no"],
+                "thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "thickness1" : ["display-yes", "editable-yes"],
+                "thickness2" : ["display-yes", "editable-yes"],
+                "verticalOuter" : ["display-yes", "editable-yes"],
+                "verticalMiddle" : ["display-yes", "editable-yes"],
+                "verticalInner" : ["display-yes", "editable-yes"],
+                "vertical2" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"],
+                "long4" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_05_Fatigue_74_75" : {
+            "Geometry" : {
+                "len" : ["display-yes", "editable-no"],
+                "width" : ["display-yes", "editable-no"],
+                "phi" : ["display-yes", "editable-no"],
+                "chamferEdgeLength" : ["display-yes", "editable-no"],
+                "chamferAngle" : ["display-yes", "editable-no"],
+                "thickness" : ["display-yes", "editable-yes"],
+                "isChamfer" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "thickness1" : ["display-yes", "editable-yes"],
+                "thickness2" : ["display-yes", "editable-yes"],
+                "arc" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"],
+                "long4" : ["display-yes", "editable-yes"],
+                "width" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_06A_Static_1_Symm" : {
+            "Geometry" : {
+                "lt" : ["display-yes", "editable-no"],
+                "d" : ["display-yes", "editable-no"],
+                "D" : ["display-yes", "editable-no"],
+                "R" : ["display-yes", "editable-no"],
+                "C" : ["display-yes", "editable-no"],
+                "lc" : ["display-yes", "editable-no"]
+            },
+            "Element_Size" : {
+                "arcOuter" : ["display-yes", "editable-yes"],
+                "radialOuter" : ["display-yes", "editable-yes"],
+                "radialInner" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_06B_Static_1_Full" : {
+            "Geometry" : {
+                "lt" : ["display-yes", "editable-no"],
+                "d" : ["display-yes", "editable-no"],
+                "D" : ["display-yes", "editable-no"],
+                "R" : ["display-yes", "editable-no"],
+                "C" : ["display-yes", "editable-no"],
+                "lc" : ["display-yes", "editable-no"]
+            },
+            "Element_Size" : {
+                "arcOuter" : ["display-yes", "editable-yes"],
+                "radialOuter" : ["display-yes", "editable-yes"],
+                "radialInner" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_07A_Static_2_Symm" : {
+            "Geometry" : {
+                "lt" : ["display-yes", "editable-no"],
+                "b" : ["display-yes", "editable-no"],
+                "B" : ["display-yes", "editable-no"],
+                "R" : ["display-yes", "editable-no"],
+                "C" : ["display-yes", "editable-no"],
+                "lc" : ["display-yes", "editable-no"],
+                "thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "thickness" : ["display-yes", "editable-yes"],
+                "vertical" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"],
+                "long4" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_07B_Static_2_Full" : {
+            "Geometry" : {
+                "lt" : ["display-yes", "editable-no"],
+                "b" : ["display-yes", "editable-no"],
+                "B" : ["display-yes", "editable-no"],
+                "R" : ["display-yes", "editable-no"],
+                "C" : ["display-yes", "editable-no"],
+                "lc" : ["display-yes", "editable-no"],
+                "thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "thickness" : ["display-yes", "editable-yes"],
+                "vertical" : ["display-yes", "editable-yes"],
+                "long1" : ["display-yes", "editable-yes"],
+                "long2" : ["display-yes", "editable-yes"],
+                "long3" : ["display-yes", "editable-yes"],
+                "long4" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_08_Static_18_21" : {
+            "Geometry" : {
+                "Length" : ["display-yes", "editable-no"],
+                "Width" : ["display-yes", "editable-no"],
+                "Diameter" : ["display-yes", "editable-no"],
+                "Edge_Distance" : ["display-yes", "editable-no"],
+                "Pin_Extension" : ["display-yes", "editable-no"],
+                "Thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "Arc": ["display-yes", "editable-yes"],
+                "Long_1": ["display-yes", "editable-yes"],
+                "Long_2": ["display-yes", "editable-yes"],
+                "Long_3": ["display-yes", "editable-yes"],
+                "Pin_Diameter": ["display-yes", "editable-yes"],
+                "Pin_Length": ["display-yes", "editable-yes"],
+                "Radial_Inner": ["display-yes", "editable-yes"],
+                "Radial_Outer": ["display-yes", "editable-yes"],
+                "Thickness_1": ["display-yes", "editable-yes"],
+                "Thickness_2": ["display-yes", "editable-yes"],
+                "Vertical_1": ["display-yes", "editable-yes"],
+                "Vertical_2": ["display-yes", "editable-yes"],
+                "Vertical_3": ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_3" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"],
+                "Part_3" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_09_Fracture_22_36" : {
+            "Geometry" : {
+                "Height" : ["display-yes", "editable-no"],
+                "Width" : ["display-yes", "editable-no"],
+                "Thickness" : ["display-yes", "editable-no"],
+                "Diameter" : ["display-yes", "editable-no"],
+                "Center_Offset_1" : ["display-yes", "editable-no"],
+                "Notch_Offset" : ["display-yes", "editable-no"],
+                "Center_Offset_2" : ["display-yes", "editable-no"],
+                "Notch_Opening_Angle_1" : ["display-yes", "editable-no"],
+                "Notch_Opening_Angle_2" : ["display-yes", "editable-no"],
+                "Notch_Tip_Angle" : ["display-yes", "editable-no"],
+                "Notch_Opening_Top" : ["display-yes", "editable-no"],
+                "Notch_Opening_Bottom" : ["display-yes", "editable-no"],
+                "Notch_Opening_Depth" : ["display-yes", "editable-no"]
+            },
+            "Element_Size" : {
+                "Thickness" : ["display-yes", "editable-yes"],
+                "Long_1" : ["display-yes", "editable-yes"],
+                "Long_2" : ["display-yes", "editable-yes"],
+                "Long_3" : ["display-yes", "editable-yes"],
+                "Notch" : ["display-yes", "editable-yes"],
+                "Pin_Dia" : ["display-yes", "editable-yes"],
+                "Pin_Length" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        },
+        "Coupon_10_Crack_44_50" : {
+            "Geometry" : {
+                "Length" : ["display-yes", "editable-no"],
+                "Width" : ["display-yes", "editable-no"],
+                "Diameter_1" : ["display-yes", "editable-no"],
+                "Notch_Length" : ["display-yes", "editable-no"],
+                "Notch_Width" : ["display-yes", "editable-no"],
+                "Num_Hole_Row_1" : ["display-yes", "editable-no"],
+                "Num_Hole_Row_2" : ["display-yes", "editable-no"],
+                "Diameter_2" : ["display-yes", "editable-no"],
+                "Center_Offset_Row_1" : ["display-yes", "editable-no"],
+                "Center_Offset_Row_2" : ["display-yes", "editable-no"],
+                "Center_Offset_Column" : ["display-yes", "editable-no"],
+                "Thickness" : ["display-yes", "editable-yes"]
+            },
+            "Element_Size" : {
+                "Thickness_1" : ["display-yes", "editable-yes"],
+                "Long_1" : ["display-yes", "editable-yes"],
+                "Long_2" : ["display-yes", "editable-yes"],
+                "Long_3" : ["display-yes", "editable-yes"],
+                "Width_1" : ["display-yes", "editable-yes"],
+                "Width_2" : ["display-yes", "editable-yes"],
+                "Arc" : ["display-yes", "editable-yes"],
+                "Notch" : ["display-yes", "editable-yes"],
+                "Thickness_2" : ["display-yes", "editable-yes"],
+                "Width_3" : ["display-yes", "editable-yes"]
+            },
+            "Element_Type" : {
+                "Part_1" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_2" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                },
+                "Part_3" : {
+                    "Hex" : ["display-yes", "editable-yes"]
+                }
+            },
+            "Section" : {
+                "Part_1" : ["display-yes", "editable-yes"],
+                "Part_2" : ["display-yes", "editable-yes"],
+                "Part_3" : ["display-yes", "editable-yes"]
+            },
+            "Step" : {
+                "NLGEOM" : ["display-yes", "editable-yes"],
+                "Initial_Increment" : ["display-yes", "editable-yes"],
+                "Load" : ["display-yes", "editable-yes"]
+            }
+        }
+    },
+    "Constant_Data" : {
+        "Length_Tolerance" : ["display-no", "editable-no"],
+        "Version" : ["display-yes", "editable-yes"]
+    },
+    "Material_Data" : {
+        "Material_ID" : {
+            "Name" : ["display-yes", "editable-yes"],
+            "Density" : ["display-yes", "editable-yes"],
+            "Youngs_Modulus" : ["display-yes", "editable-yes"],
+            "Poissons_Ratio" : ["display-yes", "editable-yes"]
+        }
+    }
+}
+

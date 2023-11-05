@@ -1,0 +1,26 @@
+{
+    "Coupon_11_HLT_1" : {
+        "Coupon_11_HLT_1" : {
+            "Geometry" : {
+                "Diameter" : 6.35,
+                "Fastener_Length" : 35.0,
+                "Head_Diameter" : 15.0,
+                "Head_Height" : 5.0,
+                "Nut_Diameter" : 10.0,
+                "Nut_Height" : 2.0
+            },
+            "Element_Size" : {
+                "Thickness_Plate_1" : 0.5,
+                "Thickness_Plate_2" : 0.5,
+                "Thickness_Shim" : 0.7,
+                "Vertical" : 0.5,
+                "Long1" : 0.5,
+                "Long2" : 1.0,
+                "Long3" : 2.0,
+                "LongFast" : 0.7,
+                "DiaFast" : 0.5,
+                "ArcFast" : 0.5
+            }
+        }
+    }
+}
