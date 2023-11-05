@@ -15,15 +15,14 @@
 ## USER MAY NEED TO MODIFY abqPath DEPENDING ON THE LOCAL MACHINE OR OPERATING SYSTEM
 #################################################################################################################
 
+import os, sys
 
 abqPath = [r'C:/SIMULIA/Commands']
-
-import os, sys
 
 srcPath = os.getcwd()
 
 ## create gui window
-exec(open(srcPath+'/lib/gui.py').read())
+exec(open(srcPath+'/util/gui.py').read())
 guiClass = getattr(sys.modules[__name__], 'gui')
 newGUI = guiClass(abqPath, srcPath)
 
